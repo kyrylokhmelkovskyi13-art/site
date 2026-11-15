@@ -33,9 +33,9 @@ You can also deploy the included `render.yaml` Blueprint. It deliberately leaves
 ## Important limitations
 
 - The API reports **Render host/service status**, not Discord Gateway presence. A running web service does not prove that the Discord bot is connected.
-- The current dashboard HTML is still the original frontend preview and is not yet wired to these endpoints. The login screen and live bot cards are the next frontend integration step.
+- The dashboard includes an owner-only live settings editor for the IvynX bot. It requires the bot API deployment and matching shared secret.
 - Live application logs and Discord guild/member/latency metrics are not implemented yet.
-- The IvynX service must deploy the matching control API and have `BOTCONTROL_SHARED_SECRET` set. Its `config.json` is still stored on the bot service filesystem; configure persistent storage on that service if the host filesystem is ephemeral, otherwise config changes may be lost after a redeploy/restart.
+- The IvynX service must deploy the matching control API and have `BOTCONTROL_SHARED_SECRET` set to the exact same value. Its `config.json` is stored on the bot service filesystem; configure persistent storage on that service if the host filesystem is ephemeral, otherwise config changes may be lost after a redeploy/restart.
 - Restart is a real action against Render once a valid API key and service ID are configured. The API only permits IDs in the server-side allowlist.
 - Render API keys are powerful secrets. Use a dedicated key if possible and revoke it if exposed.
 
