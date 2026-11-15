@@ -481,11 +481,6 @@
       toast(error.message);
     }
   }
-  function parseDiscordIds(value, fieldName) {
-    const values = textToList(value);
-    if (values.some(x => !/^[0-9]{15,22}$/.test(x))) throw new Error(fieldName + ': каждый ID должен содержать 15–22 цифры.');
-    return values;
-  }
   async function saveBotConfig() {
     try {
       if (!selectedGuildId || !selectedBotId) throw new Error('Сначала выбери бота и Discord-сервер.');
