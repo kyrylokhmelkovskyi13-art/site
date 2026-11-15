@@ -184,7 +184,7 @@ function requireSameOrigin(req, res, next) {
   next();
 }
 
-function getBots() {
+function getEnvironmentBots() {
   try {
     const parsed = JSON.parse(process.env.BOT_SERVICES || "[]");
     if (!Array.isArray(parsed)) return [];
@@ -200,6 +200,25 @@ function getBots() {
   } catch {
     return [];
   }
+}
+
+async function getBots() {
+  const bots = new Map(getEnvironmentBots().map(bot => [bot.id, bot]));
+  if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
+    const rows = await supabaseRequest("botcontrol_bots?select=*&enabled=eq.true&limit=200");
+    for (const row of rows) {
+      if (row && typeof row.id === "string" && typeof row.name === "string" &&
+          typeof row.render_service_id === "string" && typeof row.control_url === "string") {
+        bots.set(row.id, {
+          id: row.id,
+          name: row.name,
+          renderServiceId: row.render_service_id,
+          controlUrl: row.control_url
+        });
+      }
+    }
+  }
+  return [...bots.values()];
 }
 
 async function renderRequest(endpoint, method = "GET") {
@@ -311,6 +330,46 @@ app.get("/api/auth/me", (req, res) => {
   });
 });
 
+app.post("/api/bots", requireSameOrigin, requireAuth, requireOwner, async (req, res) => {
+  const id = String(req.body?.id || "").trim().toLowerCase();
+  const name = String(req.body?.name || "").trim();
+  const renderServiceId = String(req.body?.render_service_id || "").trim();
+  const controlUrl = String(req.body?.control_url || "").trim();
+  if (!/^[a-z0-9_-]{2,40}$/.test(id)) return res.status(400).json({ error: "ID бота: 2–40 символов, латиница, цифры, _ или -." });
+  if (!name || name.length > 80) return res.status(400).json({ error: "Название бота должно содержать 1–80 символов." });
+  if (!/^srv-[a-zA-Z0-9]+$/.test(renderServiceId)) return res.status(400).json({ error: "Укажи корректный Render Service ID (srv-...)."});
+  let parsedUrl;
+  try { parsedUrl = new URL(controlUrl); } catch { return res.status(400).json({ error: "Укажи корректный HTTPS URL control API бота." }); }
+  if (parsedUrl.protocol !== "https:" || !parsedUrl.hostname.endsWith(".onrender.com") || parsedUrl.port || parsedUrl.pathname !== "/" || parsedUrl.search || parsedUrl.hash) {
+    return res.status(400).json({ error: "Control URL должен быть корневым HTTPS-адресом сервиса *.onrender.com." });
+  }
+  try {
+    const saved = await supabaseRequest("botcontrol_bots?on_conflict=id", "POST", {
+      id, name, render_service_id: renderServiceId, control_url: parsedUrl.origin,
+      enabled: true, created_by: req.user.discordId
+    });
+    await writeAudit(req.user, "bot_registered", id, null, { name, renderServiceId });
+    res.json({ ok: true, bot: saved[0] || { id, name, renderServiceId, controlUrl: parsedUrl.origin } });
+  } catch (error) {
+    res.status(error.status || 502).json({ error: error.message });
+  }
+});
+
+app.delete("/api/bots/:id", requireSameOrigin, requireAuth, requireOwner, async (req, res) => {
+  const id = String(req.params.id || "");
+  if (getEnvironmentBots().some(bot => bot.id === id)) {
+    return res.status(400).json({ error: "Бот задан в BOT_SERVICES и не удаляется из панели. Удали его из переменной Render." });
+  }
+  try {
+    await supabaseRequest("botcontrol_bots?id=eq." + encodeURIComponent(id), "DELETE");
+    await supabaseRequest("botcontrol_access?bot_id=eq." + encodeURIComponent(id), "DELETE");
+    await writeAudit(req.user, "bot_unregistered", id, null, {});
+    res.json({ ok: true });
+  } catch (error) {
+    res.status(error.status || 502).json({ error: error.message });
+  }
+});
+
 app.get("/api/access", requireAuth, requireOwner, async (_req, res) => {
   try {
     const rows = await supabaseRequest("botcontrol_access?select=*&order=created_at.desc&limit=500");
@@ -326,7 +385,7 @@ app.post("/api/access", requireSameOrigin, requireAuth, requireOwner, async (req
   const guildId = String(req.body?.guild_id || "*");
   const permissions = req.body?.permissions || {};
   if (!/^\\d{15,22}$/.test(discordId)) return res.status(400).json({ error: "Укажи корректный Discord ID пользователя." });
-  if (!getBots().some(bot => bot.id === botId)) return res.status(400).json({ error: "Выбранный бот не зарегистрирован в BotControl." });
+  if (!(await getBots()).some(bot => bot.id === botId)) return res.status(400).json({ error: "Выбранный бот не зарегистрирован в BotControl." });
   if (guildId !== "*" && !/^\\d{15,22}$/.test(guildId)) return res.status(400).json({ error: "Укажи корректный ID Discord-сервера или *." });
   for (const key of ["can_view", "can_configure", "can_restart"]) {
     if (typeof permissions[key] !== "boolean") return res.status(400).json({ error: "Все права должны быть true или false." });
@@ -434,7 +493,7 @@ async function botControlRequest(bot, method = "GET", body, endpoint = "/control
 }
 
 app.get("/api/bots/:id/manifest", requireAuth, async (req, res) => {
-  const bot = getBots().find(item => item.id === req.params.id);
+  const bot = (await getBots()).find(item => item.id === req.params.id);
   if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
   try {
     if (!isOwner(req.user)) {
@@ -454,7 +513,7 @@ app.get("/api/bots/:id/manifest", requireAuth, async (req, res) => {
 });
 
 app.get("/api/bots/:id/guilds", requireAuth, async (req, res) => {
-  const bot = getBots().find(item => item.id === req.params.id);
+  const bot = (await getBots()).find(item => item.id === req.params.id);
   if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
   try {
     if (!isOwner(req.user) && !(await getUserAccess(req.user.discordId, bot.id)).length) {
