@@ -190,13 +190,13 @@ app.get("/api/bots", requireAuth, async (_req, res) => {
   res.json({ connected: true, bots: results });
 });
 
-async function botControlRequest(bot, method = "GET", body) {
+async function botControlRequest(bot, method = "GET", body, endpoint = "/control/config") {
   if (!BOTCONTROL_SHARED_SECRET) {
     const error = new Error("BOTCONTROL_SHARED_SECRET не настроен на BotControl.");
     error.status = 503;
     throw error;
   }
-  const response = await fetch(bot.controlUrl + "/control/config", {
+  const response = await fetch(bot.controlUrl + endpoint, {
     method,
     headers: {
       "Accept": "application/json",
@@ -215,12 +215,25 @@ async function botControlRequest(bot, method = "GET", body) {
   return data;
 }
 
-app.get("/api/bots/:id/config", requireAuth, async (req, res) => {
+app.get("/api/bots/:id/guilds", requireAuth, async (req, res) => {
   const bot = getBots().find(item => item.id === req.params.id);
   if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
   try {
-    const result = await botControlRequest(bot);
-    res.json({ ok: true, config: result.config });
+    const result = await botControlRequest(bot, "GET", undefined, "/control/guilds");
+    res.json({ ok: true, guilds: Array.isArray(result.guilds) ? result.guilds : [] });
+  } catch (error) {
+    res.status(error.status || 502).json({ error: error.message || "Не удалось получить Discord-серверы бота." });
+  }
+});
+
+app.get("/api/bots/:id/config", requireAuth, async (req, res) => {
+  const bot = getBots().find(item => item.id === req.params.id);
+  const guildId = typeof req.query.guild_id === "string" ? req.query.guild_id : "";
+  if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
+  if (!/^\\d{15,22}$/.test(guildId)) return res.status(400).json({ error: "Выбери Discord-сервер." });
+  try {
+    const result = await botControlRequest(bot, "GET", undefined, "/control/config?guild_id=" + encodeURIComponent(guildId));
+    res.json({ ok: true, guildId, config: result.config });
   } catch (error) {
     res.status(error.status || 502).json({ error: error.message || "Не удалось связаться с API бота." });
   }
@@ -228,10 +241,12 @@ app.get("/api/bots/:id/config", requireAuth, async (req, res) => {
 
 app.put("/api/bots/:id/config", requireSameOrigin, requireAuth, async (req, res) => {
   const bot = getBots().find(item => item.id === req.params.id);
+  const guildId = typeof req.query.guild_id === "string" ? req.query.guild_id : "";
   if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
+  if (!/^\\d{15,22}$/.test(guildId)) return res.status(400).json({ error: "Выбери Discord-сервер." });
   try {
-    const result = await botControlRequest(bot, "PUT", req.body);
-    res.json({ ok: true, config: result.config, message: "Настройки применены ботом." });
+    const result = await botControlRequest(bot, "PUT", req.body, "/control/config?guild_id=" + encodeURIComponent(guildId));
+    res.json({ ok: true, guildId, config: result.config, message: "Настройки этого Discord-сервера применены." });
   } catch (error) {
     res.status(error.status || 502).json({ error: error.message || "Не удалось отправить настройки боту." });
   }
