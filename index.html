@@ -85,8 +85,9 @@
       <div class="notice">Настройки пока сохраняются только в текущем открытом окне. Постоянное хранение появится на серверной стороне.</div>
     </section>
     <section class="page" id="botconfig">
-      <header class="top"><div><div class="eyebrow">Живая конфигурация</div><h1>Настройки Kingdom of IvynX</h1><p>Изменения отправляются напрямую в работающий бот.</p></div><button class="btn" id="loadBotConfig">↻ Загрузить</button></header>
-      <div class="notice" id="botConfigNotice">Загрузи текущую конфигурацию бота. Если API ещё не настроен, проверь переменные Render.</div>
+      <header class="top"><div><div class="eyebrow">Живая конфигурация</div><h1>Настройки Kingdom of IvynX</h1><p>Сначала выбери Discord-сервер. Его настройки хранятся отдельно от остальных.</p></div><button class="btn" id="loadBotConfig">↻ Загрузить</button></header>
+      <div class="toolbar"><label for="botGuildSelect" class="muted">Discord-сервер:</label><select class="search" id="botGuildSelect"><option value="">Загружаю серверы бота…</option></select><button class="btn" id="loadGuilds">Обновить список</button></div>
+      <div class="notice" id="botConfigNotice">Выбери сервер, чтобы загрузить его настройки.</div>
       <div class="configgrid">
         <div class="card configbox">
           <h3>Основные настройки</h3>
@@ -276,6 +277,8 @@
     keywords: document.getElementById('cfgKeywords')
   };
   const configNotice = document.getElementById('botConfigNotice');
+  const guildSelect = document.getElementById('botGuildSelect');
+  let selectedGuildId = '';
   const listToText = values => (values || []).join(', ');
   const textToList = value => value.split(',').map(x => x.trim()).filter(Boolean);
   function showBotConfig(config) {
@@ -290,14 +293,38 @@
     configFields.words.value = listToText(config.forbidden_words);
     configFields.keywords.value = JSON.stringify(config.review_keywords || {}, null, 2);
   }
-  async function loadBotConfig() {
-    configNotice.textContent = 'Загружаю настройки бота…';
+  async function loadGuilds() {
+    guildSelect.replaceChildren(new Option('Загружаю серверы…', ''));
     try {
-      const result = await api('/api/bots/ivynx/config');
-      showBotConfig(result.config);
-      configNotice.textContent = 'Настройки загружены с Kingdom of IvynX. Можно редактировать.';
+      const result = await api('/api/bots/ivynx/guilds');
+      guildSelect.replaceChildren();
+      if (!result.guilds.length) {
+        guildSelect.add(new Option('Бот пока не состоит на серверах', ''));
+        selectedGuildId = '';
+        return;
+      }
+      result.guilds.forEach(guild => guildSelect.add(new Option(guild.name, guild.id)));
+      selectedGuildId = guildSelect.value;
+      await loadBotConfig();
     } catch (error) {
+      guildSelect.replaceChildren(new Option('Не удалось получить серверы', ''));
       configNotice.textContent = error.message + ' Проверь BOTCONTROL_SHARED_SECRET и controlUrl в BOT_SERVICES.';
+      toast(error.message);
+    }
+  }
+  async function loadBotConfig() {
+    selectedGuildId = guildSelect.value;
+    if (!selectedGuildId) {
+      configNotice.textContent = 'Сначала выбери Discord-сервер, на котором состоит бот.';
+      return;
+    }
+    configNotice.textContent = 'Загружаю настройки выбранного сервера…';
+    try {
+      const result = await api('/api/bots/ivynx/config?guild_id=' + encodeURIComponent(selectedGuildId));
+      showBotConfig(result.config);
+      configNotice.textContent = 'Настройки сервера «' + guildSelect.selectedOptions[0].textContent + '» загружены. Можно редактировать.';
+    } catch (error) {
+      configNotice.textContent = error.message + ' Проверь, что обновлённая версия IvynX запущена на Render.';
       toast(error.message);
     }
   }
@@ -325,7 +352,8 @@
       for (const key of ['rules_channel_id','violations_channel_id']) {
         if (payload[key] !== null && !/^[0-9]{15,22}$/.test(payload[key])) throw new Error('ID каналов должен содержать 15–22 цифры.');
       }
-      const result = await api('/api/bots/ivynx/config', { method: 'PUT', body: JSON.stringify(payload) });
+      if (!selectedGuildId) throw new Error('Сначала выбери Discord-сервер.');
+      const result = await api('/api/bots/ivynx/config?guild_id=' + encodeURIComponent(selectedGuildId), { method: 'PUT', body: JSON.stringify(payload) });
       showBotConfig(result.config);
       configNotice.textContent = result.message || 'Настройки применены.';
       toast('Настройки сохранены и применены ботом.');
@@ -335,9 +363,11 @@
     }
   }
   document.getElementById('loadBotConfig').addEventListener('click', loadBotConfig);
+  document.getElementById('loadGuilds').addEventListener('click', loadGuilds);
+  guildSelect.addEventListener('change', loadBotConfig);
   document.getElementById('reloadBotConfig').addEventListener('click', loadBotConfig);
   document.getElementById('saveBotConfig').addEventListener('click', saveBotConfig);
-  document.querySelector('[data-page="botconfig"]').addEventListener('click', loadBotConfig);
+  document.querySelector('[data-page="botconfig"]').addEventListener('click', loadGuilds);
 
   api('/api/auth/me').then(result => {
     if (result.authenticated) loadBots();
