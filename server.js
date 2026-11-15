@@ -439,7 +439,7 @@ app.get("/api/logs", requireAuth, requireOwner, async (_req, res) => {
 });
 
 app.get("/api/bots", requireAuth, async (req, res) => {
-  let bots = getBots();
+  let bots = await getBots();
   if (!isOwner(req.user)) {
     const allowed = await Promise.all(bots.map(async bot => ({
       bot, access: await getUserAccess(req.user.discordId, bot.id)
@@ -535,7 +535,7 @@ app.get("/api/bots/:id/guilds", requireAuth, async (req, res) => {
 });
 
 app.get("/api/bots/:id/config", requireAuth, async (req, res) => {
-  const bot = getBots().find(item => item.id === req.params.id);
+  const bot = (await getBots()).find(item => item.id === req.params.id);
   const guildId = typeof req.query.guild_id === "string" ? req.query.guild_id : "";
   if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
   if (!/^\d{15,22}$/.test(guildId)) return res.status(400).json({ error: "Выбери Discord-сервер." });
@@ -549,7 +549,7 @@ app.get("/api/bots/:id/config", requireAuth, async (req, res) => {
 });
 
 app.put("/api/bots/:id/config", requireSameOrigin, requireAuth, async (req, res) => {
-  const bot = getBots().find(item => item.id === req.params.id);
+  const bot = (await getBots()).find(item => item.id === req.params.id);
   const guildId = typeof req.query.guild_id === "string" ? req.query.guild_id : "";
   if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
   if (!/^\d{15,22}$/.test(guildId)) return res.status(400).json({ error: "Выбери Discord-сервер." });
@@ -565,7 +565,7 @@ app.put("/api/bots/:id/config", requireSameOrigin, requireAuth, async (req, res)
 
 app.post("/api/bots/:id/restart", requireSameOrigin, requireAuth, async (req, res) => {
   if (!RENDER_API_TOKEN) return res.status(503).json({ error: "Render API ещё не настроен." });
-  const bot = getBots().find(item => item.id === req.params.id);
+  const bot = (await getBots()).find(item => item.id === req.params.id);
   if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
   if (!isOwner(req.user) && !(await hasBotPermission(req.user, bot.id, "*", "can_restart"))) {
     return res.status(403).json({ error: "Нет права перезапускать этого бота." });
