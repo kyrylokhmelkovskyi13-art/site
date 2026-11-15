@@ -54,12 +54,14 @@ Use the same `BOTCONTROL_SHARED_SECRET` value in the BotControl service and each
 
 Deploy the matching `botcontrol-v2-guild-settings` branch of the IvynX repository. Set `BOTCONTROL_SHARED_SECRET` on its Render service.
 
+On the IvynX Render service, set `DISCORD_TOKEN`, `BOTCONTROL_SHARED_SECRET`, `SUPABASE_URL`, and `SUPABASE_SERVICE_ROLE_KEY`.
+
 IvynX now exposes:
 - `GET /control/guilds`
 - `GET /control/config?guild_id=DISCORD_SERVER_ID`
 - `PUT /control/config?guild_id=DISCORD_SERVER_ID`
 
-Every settings request requires a valid guild ID, and the bot must actually be a member of that server. Runtime configuration is stored under separate guild IDs in `config.json`.
+Every settings request requires a valid guild ID, and the bot must actually be a member of that server. Runtime configuration is stored under separate guild IDs in Supabase table `botcontrol_guild_configs` and cached in `config.json` on the bot service.
 
 ## 5. Granting access
 
