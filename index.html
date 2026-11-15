@@ -38,7 +38,8 @@
     <nav class="nav">
       <button class="active" data-page="overview"><span class="ico">▦</span>Обзор</button>
       <button data-page="bots"><span class="ico">◈</span>Мои боты</button>
-      <button data-page="logs"><span class="ico">≋</span>Журнал событий</button>
+      <button data-page="logs" id="navLogs"><span class="ico">≋</span>Журнал событий</button>
+      <button data-page="access" id="navAccess"><span class="ico">♙</span>Доступы</button>
       <button data-page="settings"><span class="ico">⚙</span>Настройки</button>
       <button data-page="botconfig"><span class="ico">🛠</span>Настройки бота</button>
     </nav>
@@ -70,6 +71,23 @@
       <header class="top"><div><div class="eyebrow">Мониторинг</div><h1>Журнал событий</h1><p>Запуски, ошибки и действия ботов.</p></div></header>
       <div class="toolbar"><input class="search" id="logSearch" placeholder="Поиск по событиям…"></div>
       <div class="card" id="logList"><div class="logitem"><span>🔒</span><div><b>Интерфейс BotControl инициализирован</b><div class="muted">Демо-событие · Реальные логи появятся после подключения API</div></div><span class="tag">INFO</span></div></div>
+    </section>
+    <section class="page" id="access">
+      <header class="top"><div><div class="eyebrow">Владелец</div><h1>Доступ пользователей</h1><p>Выдавай доступ только к нужному боту и Discord-серверу.</p></div><button class="btn" id="reloadAccess">↻ Обновить</button></header>
+      <div class="card configbox">
+        <h3>Выдать или обновить доступ</h3>
+        <label for="accessDiscordId">Discord ID пользователя</label><input id="accessDiscordId" inputmode="numeric" placeholder="Например, 123456789012345678">
+        <label for="accessBotId">ID бота из BOT_SERVICES</label><input id="accessBotId" value="ivynx" placeholder="ivynx">
+        <label for="accessGuildId">Discord-сервер (* — все серверы этого бота)</label><input id="accessGuildId" value="*" placeholder="* или ID сервера">
+        <div class="settingsgrid">
+          <label class="settingrow"><span>Просмотр настроек</span><input class="toggle" id="accessView" type="checkbox" checked></label>
+          <label class="settingrow"><span>Изменение настроек</span><input class="toggle" id="accessConfigure" type="checkbox"></label>
+          <label class="settingrow"><span>Перезапуск бота</span><input class="toggle" id="accessRestart" type="checkbox"></label>
+        </div>
+        <div class="configactions"><button class="btn primary" id="grantAccess">Сохранить доступ</button></div>
+      </div>
+      <div class="sectionhead"><h2>Выданные разрешения</h2><span>Управление доступом</span></div>
+      <div class="card" id="accessList"><div class="empty">Загрузка…</div></div>
     </section>
     <section class="page" id="settings">
       <header class="top"><div><div class="eyebrow">Конфигурация</div><h1>Настройки</h1><p>Параметры будущей панели управления.</p></div></header>
@@ -246,6 +264,97 @@
   });
 
   document.getElementById('refresh').addEventListener('click', () => loadBots());
+
+  async function loadAccess() {
+    const list = document.getElementById('accessList');
+    list.replaceChildren(Object.assign(document.createElement('div'), { className: 'empty', textContent: 'Загрузка…' }));
+    try {
+      const result = await api('/api/access');
+      list.replaceChildren();
+      if (!result.access.length) {
+        list.append(Object.assign(document.createElement('div'), { className: 'empty', textContent: 'Пока никому не выдан доступ.' }));
+        return;
+      }
+      result.access.forEach(row => {
+        const item = document.createElement('div');
+        item.className = 'logitem';
+        const info = document.createElement('div');
+        info.style.flex = '1';
+        const title = document.createElement('b');
+        title.textContent = row.discord_id + ' · ' + row.bot_id;
+        const detail = document.createElement('div');
+        detail.className = 'muted';
+        detail.textContent = 'Сервер: ' + (row.guild_id === '*' ? 'все' : row.guild_id) +
+          ' · Просмотр: ' + (row.can_view ? 'да' : 'нет') +
+          ' · Изменение: ' + (row.can_configure ? 'да' : 'нет') +
+          ' · Перезапуск: ' + (row.can_restart ? 'да' : 'нет');
+        info.append(title, detail);
+        const remove = document.createElement('button');
+        remove.className = 'btn small';
+        remove.textContent = 'Отозвать';
+        remove.addEventListener('click', async () => {
+          if (!confirm('Отозвать это разрешение?')) return;
+          try {
+            await api('/api/access', { method: 'DELETE', body: JSON.stringify({
+              discord_id: row.discord_id, bot_id: row.bot_id, guild_id: row.guild_id
+            })});
+            await loadAccess();
+          } catch (error) { toast(error.message); }
+        });
+        item.append(info, remove);
+        list.append(item);
+      });
+    } catch (error) {
+      list.replaceChildren(Object.assign(document.createElement('div'), { className: 'empty', textContent: error.message }));
+    }
+  }
+
+  document.getElementById('grantAccess').addEventListener('click', async () => {
+    const discord_id = document.getElementById('accessDiscordId').value.trim();
+    const bot_id = document.getElementById('accessBotId').value.trim();
+    const guild_id = document.getElementById('accessGuildId').value.trim() || '*';
+    try {
+      await api('/api/access', { method: 'POST', body: JSON.stringify({
+        discord_id, bot_id, guild_id,
+        permissions: {
+          can_view: document.getElementById('accessView').checked,
+          can_configure: document.getElementById('accessConfigure').checked,
+          can_restart: document.getElementById('accessRestart').checked
+        }
+      })});
+      toast('Доступ сохранён.');
+      await loadAccess();
+    } catch (error) { toast(error.message); }
+  });
+  document.getElementById('reloadAccess').addEventListener('click', loadAccess);
+  document.querySelector('[data-page="access"]').addEventListener('click', loadAccess);
+
+  async function loadAuditLogs() {
+    const list = document.getElementById('logList');
+    try {
+      const result = await api('/api/logs');
+      list.replaceChildren();
+      if (!result.logs.length) {
+        list.append(Object.assign(document.createElement('div'), { className: 'empty', textContent: 'Событий пока нет.' }));
+        return;
+      }
+      result.logs.forEach(log => {
+        const item = document.createElement('div');
+        item.className = 'logitem';
+        const body = document.createElement('div');
+        body.style.flex = '1';
+        const title = document.createElement('b');
+        title.textContent = log.action + (log.bot_id ? ' · ' + log.bot_id : '');
+        const sub = document.createElement('div');
+        sub.className = 'muted';
+        sub.textContent = (log.actor_username || log.actor_discord_id) + ' · ' + (log.guild_id || 'без сервера') + ' · ' + new Date(log.created_at).toLocaleString();
+        body.append(title, sub);
+        item.append(body);
+        list.append(item);
+      });
+    } catch (error) { toast(error.message); }
+  }
+  document.querySelector('[data-page="logs"]').addEventListener('click', loadAuditLogs);
   const configFields = {
     monitoring: document.getElementById('cfgMonitoring'),
     rules: document.getElementById('cfgRulesChannel'),
@@ -352,8 +461,18 @@
   document.querySelector('[data-page="botconfig"]').addEventListener('click', loadGuilds);
 
   api('/api/auth/me').then(result => {
-    if (result.authenticated) { hideLogin(); loadBots(); }
-    else showLogin();
+    if (result.authenticated) {
+      hideLogin();
+      const owner = !!result.user?.isOwner;
+      document.getElementById('navAccess').hidden = !owner;
+      document.getElementById('navLogs').hidden = !owner;
+      const profileName = document.querySelector('.sidebottom .profile b');
+      const profileMeta = document.querySelector('.sidebottom .profile .muted');
+      if (profileName) profileName.textContent = result.user?.globalName || result.user?.username || 'Discord user';
+      if (profileMeta) profileMeta.textContent = owner ? 'Владелец BotControl' : 'Ограниченный доступ';
+      loadBots();
+      if (owner) loadAccess();
+    } else showLogin();
   }).catch(showLogin);
 })();
 </script>
