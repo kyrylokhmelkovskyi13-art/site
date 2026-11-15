@@ -444,8 +444,9 @@ app.get("/api/bots/:id/guilds", requireAuth, async (req, res) => {
     let guilds = Array.isArray(result.guilds) ? result.guilds : [];
     if (!isOwner(req.user)) {
       const access = await getUserAccess(req.user.discordId, bot.id);
-      const allGuilds = access.some(row => row.guild_id === "*");
-      const permitted = new Set(access.map(row => String(row.guild_id)));
+      const visibleAccess = access.filter(row => row.can_view || row.can_configure);
+      const allGuilds = visibleAccess.some(row => row.guild_id === "*");
+      const permitted = new Set(visibleAccess.map(row => String(row.guild_id)));
       if (!allGuilds) guilds = guilds.filter(guild => permitted.has(String(guild.id)));
     }
     res.json({ ok: true, guilds });
