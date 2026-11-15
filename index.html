@@ -303,7 +303,7 @@
   }
   function parseDiscordIds(value, fieldName) {
     const values = textToList(value);
-    if (values.some(x => !/^\\d{15,22}$/.test(x))) throw new Error(fieldName + ': каждый ID должен содержать 15–22 цифры.');
+    if (values.some(x => !/^[0-9]{15,22}$/.test(x))) throw new Error(fieldName + ': каждый ID должен содержать 15–22 цифры.');
     return values;
   }
   async function saveBotConfig() {
@@ -323,7 +323,7 @@
         review_keywords: keywords
       };
       for (const key of ['rules_channel_id','violations_channel_id']) {
-        if (payload[key] !== null && !/^\\d{15,22}$/.test(payload[key])) throw new Error('ID каналов должен содержать 15–22 цифры.');
+        if (payload[key] !== null && !/^[0-9]{15,22}$/.test(payload[key])) throw new Error('ID каналов должен содержать 15–22 цифры.');
       }
       const result = await api('/api/bots/ivynx/config', { method: 'PUT', body: JSON.stringify(payload) });
       showBotConfig(result.config);
