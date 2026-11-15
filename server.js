@@ -5,15 +5,18 @@ const path = require("node:path");
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
 const isProduction = process.env.NODE_ENV === "production";
-const OWNER_PASSWORD = process.env.OWNER_PASSWORD || "";
 const SESSION_SECRET = process.env.SESSION_SECRET || "";
+const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID || "";
+const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET || "";
+const DISCORD_REDIRECT_URI = process.env.DISCORD_REDIRECT_URI || "";
+const BOTCONTROL_OWNER_DISCORD_ID = process.env.BOTCONTROL_OWNER_DISCORD_ID || "";
+const SUPABASE_URL = (process.env.SUPABASE_URL || "").replace(/\\/$/, "");
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 const RENDER_API_TOKEN = process.env.RENDER_API_TOKEN || "";
 const BOTCONTROL_SHARED_SECRET = process.env.BOTCONTROL_SHARED_SECRET || "";
 const COOKIE_NAME = "botcontrol_session";
+const OAUTH_STATE_COOKIE = "botcontrol_oauth_state";
 const SESSION_TTL_SECONDS = 60 * 60 * 12;
-const LOGIN_WINDOW_MS = 15 * 60 * 1000;
-const LOGIN_MAX_ATTEMPTS = 8;
-const loginAttempts = new Map();
 
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
@@ -26,59 +29,146 @@ function safeEqual(a, b) {
 }
 
 function parseCookies(header = "") {
-  return Object.fromEntries(header.split(";").map(part => {
+  const result = {};
+  for (const part of header.split(";")) {
     const index = part.indexOf("=");
-    if (index < 0) return ["", ""];
-    return [part.slice(0, index).trim(), decodeURIComponent(part.slice(index + 1).trim())];
-  }).filter(([key]) => key));
+    if (index < 0) continue;
+    const key = part.slice(0, index).trim();
+    try { result[key] = decodeURIComponent(part.slice(index + 1).trim()); } catch {}
+  }
+  return result;
 }
 
 function sign(value) {
   return crypto.createHmac("sha256", SESSION_SECRET).update(value).digest("hex");
 }
 
-function createSession() {
-  const payload = Buffer.from(JSON.stringify({
-    owner: true,
-    exp: Math.floor(Date.now() / 1000) + SESSION_TTL_SECONDS
-  })).toString("base64url");
-  return payload + "." + sign(payload);
+function signValue(value) {
+  return crypto.createHmac("sha256", SESSION_SECRET).update(value).digest("hex");
 }
 
-function hasSession(req) {
-  const token = parseCookies(req.headers.cookie)[COOKIE_NAME];
-  if (!token) return false;
+function createSignedToken(data) {
+  const payload = Buffer.from(JSON.stringify(data)).toString("base64url");
+  return payload + "." + signValue(payload);
+}
+
+function readSignedToken(token) {
+  if (!SESSION_SECRET || !token) return null;
   const [payload, signature] = token.split(".");
-  if (!payload || !signature || !safeEqual(sign(payload), signature)) return false;
+  if (!payload || !signature || !safeEqual(signValue(payload), signature)) return null;
   try {
     const data = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
-    return data.owner === true && Number(data.exp) > Math.floor(Date.now() / 1000);
+    if (Number(data.exp) <= Math.floor(Date.now() / 1000)) return null;
+    return data;
   } catch {
-    return false;
+    return null;
   }
 }
 
-function setSessionCookie(res, value) {
-  const parts = [
-    COOKIE_NAME + "=" + encodeURIComponent(value),
-    "Path=/",
-    "HttpOnly",
-    "SameSite=Strict",
-    "Max-Age=" + SESSION_TTL_SECONDS
-  ];
-  if (isProduction) parts.push("Secure");
-  res.setHeader("Set-Cookie", parts.join("; "));
+function readSession(req) {
+  return readSignedToken(parseCookies(req.headers.cookie)[COOKIE_NAME]);
 }
 
-function clearSessionCookie(res) {
-  const parts = [COOKIE_NAME + "=", "Path=/", "HttpOnly", "SameSite=Strict", "Max-Age=0"];
+function setCookie(res, name, value, maxAge, sameSite = "Lax") {
+  const parts = [
+    name + "=" + encodeURIComponent(value),
+    "Path=/",
+    "HttpOnly",
+    "SameSite=" + sameSite,
+    "Max-Age=" + maxAge
+  ];
   if (isProduction) parts.push("Secure");
-  res.setHeader("Set-Cookie", parts.join("; "));
+  res.append("Set-Cookie", parts.join("; "));
+}
+
+function setSessionCookie(res, user) {
+  const token = createSignedToken({
+    discordId: String(user.id),
+    username: String(user.username || "Discord user").slice(0, 100),
+    globalName: String(user.global_name || "").slice(0, 100),
+    avatar: user.avatar ? String(user.avatar) : null,
+    exp: Math.floor(Date.now() / 1000) + SESSION_TTL_SECONDS
+  });
+  setCookie(res, COOKIE_NAME, token, SESSION_TTL_SECONDS, "Lax");
+}
+
+function clearCookie(res, name) {
+  const parts = [name + "=", "Path=/", "HttpOnly", "SameSite=Lax", "Max-Age=0"];
+  if (isProduction) parts.push("Secure");
+  res.append("Set-Cookie", parts.join("; "));
+}
+
+function isOwner(user) {
+  return !!user && !!BOTCONTROL_OWNER_DISCORD_ID &&
+    safeEqual(user.discordId, BOTCONTROL_OWNER_DISCORD_ID);
 }
 
 function requireAuth(req, res, next) {
-  if (!hasSession(req)) return res.status(401).json({ error: "Требуется вход." });
+  const user = readSession(req);
+  if (!user) return res.status(401).json({ error: "Сначала войди через Discord." });
+  req.user = user;
   next();
+}
+
+function requireOwner(req, res, next) {
+  if (!isOwner(req.user)) return res.status(403).json({ error: "Это действие доступно только владельцу BotControl." });
+  next();
+}
+
+async function supabaseRequest(tablePath, method = "GET", body) {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+    const error = new Error("Supabase не настроен на сервере BotControl.");
+    error.status = 503;
+    throw error;
+  }
+  const response = await fetch(SUPABASE_URL + "/rest/v1/" + tablePath, {
+    method,
+    headers: {
+      "apikey": SUPABASE_SERVICE_ROLE_KEY,
+      "Authorization": "Bearer " + SUPABASE_SERVICE_ROLE_KEY,
+      "Accept": "application/json",
+      ...(body ? { "Content-Type": "application/json", "Prefer": "return=representation" } : {})
+    },
+    ...(body ? { body: JSON.stringify(body) } : {}),
+    signal: AbortSignal.timeout(12000)
+  });
+  const text = await response.text();
+  if (!response.ok) {
+    const error = new Error("Supabase API вернул HTTP " + response.status);
+    error.status = response.status;
+    throw error;
+  }
+  return text ? JSON.parse(text) : [];
+}
+
+async function getUserAccess(discordId, botId) {
+  const query = "botcontrol_access?discord_id=eq." + encodeURIComponent(discordId) +
+    "&bot_id=eq." + encodeURIComponent(botId) + "&select=*&limit=100";
+  return supabaseRequest(query);
+}
+
+async function hasBotPermission(user, botId, guildId, permission) {
+  if (isOwner(user)) return true;
+  const rows = await getUserAccess(user.discordId, botId);
+  return rows.some(row =>
+    (row.guild_id === "*" || (guildId && row.guild_id === String(guildId))) &&
+    row[permission] === true
+  );
+}
+
+async function writeAudit(user, action, botId = null, guildId = null, details = {}) {
+  try {
+    await supabaseRequest("botcontrol_audit", "POST", {
+      actor_discord_id: user.discordId,
+      actor_username: user.username,
+      action,
+      bot_id: botId,
+      guild_id: guildId ? String(guildId) : null,
+      details
+    });
+  } catch (error) {
+    console.error("Audit write failed:", error.message);
+  }
 }
 
 function requireSameOrigin(req, res, next) {
@@ -132,43 +222,91 @@ async function renderRequest(endpoint, method = "GET") {
 
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
 
-app.post("/api/auth/login", requireSameOrigin, (req, res) => {
-  if (!OWNER_PASSWORD || !SESSION_SECRET) {
-    return res.status(503).json({ error: "Авторизация не настроена на сервере." });
+app.get("/auth/discord", (req, res) => {
+  if (!DISCORD_CLIENT_ID || !DISCORD_REDIRECT_URI || !SESSION_SECRET) {
+    return res.status(503).send("Discord OAuth2 не настроен. Проверь переменные Render.");
   }
+  const state = crypto.randomBytes(24).toString("hex");
+  const stateToken = createSignedToken({ state, exp: Math.floor(Date.now() / 1000) + 600 });
+  setCookie(res, OAUTH_STATE_COOKIE, stateToken, 600, "Lax");
+  const params = new URLSearchParams({
+    client_id: DISCORD_CLIENT_ID,
+    redirect_uri: DISCORD_REDIRECT_URI,
+    response_type: "code",
+    scope: "identify",
+    state
+  });
+  res.redirect("https://discord.com/oauth2/authorize?" + params.toString());
+});
 
-  const ip = req.ip || "unknown";
-  const now = Date.now();
-  const record = loginAttempts.get(ip) || { count: 0, resetAt: now + LOGIN_WINDOW_MS };
-  if (now > record.resetAt) {
-    record.count = 0;
-    record.resetAt = now + LOGIN_WINDOW_MS;
+app.get("/auth/discord/callback", async (req, res) => {
+  const stateCookie = readSignedToken(parseCookies(req.headers.cookie)[OAUTH_STATE_COOKIE]);
+  clearCookie(res, OAUTH_STATE_COOKIE);
+  if (!stateCookie || !req.query.state || !safeEqual(stateCookie.state, req.query.state)) {
+    return res.status(400).send("OAuth state mismatch. Вернись в BotControl и попробуй войти снова.");
   }
-  if (record.count >= LOGIN_MAX_ATTEMPTS) {
-    return res.status(429).json({ error: "Слишком много попыток. Попробуй позже." });
+  if (typeof req.query.code !== "string" || !DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET || !DISCORD_REDIRECT_URI) {
+    return res.status(400).send("Discord OAuth2 callback is incomplete.");
   }
+  try {
+    const tokenResponse = await fetch("https://discord.com/api/oauth2/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json" },
+      body: new URLSearchParams({
+        client_id: DISCORD_CLIENT_ID,
+        client_secret: DISCORD_CLIENT_SECRET,
+        grant_type: "authorization_code",
+        code: req.query.code,
+        redirect_uri: DISCORD_REDIRECT_URI
+      }),
+      signal: AbortSignal.timeout(12000)
+    });
+    const tokenData = await tokenResponse.json().catch(() => ({}));
+    if (!tokenResponse.ok || !tokenData.access_token) {
+      return res.status(502).send("Не удалось подтвердить вход через Discord.");
+    }
+    const userResponse = await fetch("https://discord.com/api/users/@me", {
+      headers: { "Authorization": "Bearer " + tokenData.access_token, "Accept": "application/json" },
+      signal: AbortSignal.timeout(12000)
+    });
+    const user = await userResponse.json().catch(() => ({}));
+    if (!userResponse.ok || !user.id) return res.status(502).send("Discord не вернул профиль пользователя.");
 
-  const password = typeof req.body?.password === "string" ? req.body.password : "";
-  if (!safeEqual(password, OWNER_PASSWORD)) {
-    record.count += 1;
-    loginAttempts.set(ip, record);
-    return res.status(401).json({ error: "Неверный пароль." });
+    if (!isOwner({ discordId: String(user.id) })) {
+      const rows = await supabaseRequest(
+        "botcontrol_access?discord_id=eq." + encodeURIComponent(String(user.id)) + "&select=discord_id&limit=1"
+      );
+      if (!rows.length) return res.status(403).send("У этого Discord-аккаунта пока нет доступа к BotControl. Попроси владельца выдать доступ.");
+    }
+    setSessionCookie(res, user);
+    res.redirect("/");
+  } catch (error) {
+    console.error("Discord OAuth error:", error.message);
+    res.status(error.status || 502).send("Ошибка входа через Discord или проверки доступа.");
   }
-
-  loginAttempts.delete(ip);
-  setSessionCookie(res, createSession());
-  res.json({ ok: true });
 });
 
 app.post("/api/auth/logout", requireSameOrigin, (_req, res) => {
-  clearSessionCookie(res);
+  clearCookie(res, COOKIE_NAME);
   res.json({ ok: true });
 });
 
-app.get("/api/auth/me", (req, res) => res.json({ authenticated: hasSession(req) }));
+app.get("/api/auth/me", (req, res) => {
+  const user = readSession(req);
+  res.json({
+    authenticated: !!user,
+    user: user ? { id: user.discordId, username: user.username, globalName: user.globalName, avatar: user.avatar, isOwner: isOwner(user) } : null
+  });
+});
 
-app.get("/api/bots", requireAuth, async (_req, res) => {
-  const bots = getBots();
+app.get("/api/bots", requireAuth, async (req, res) => {
+  let bots = getBots();
+  if (!isOwner(req.user)) {
+    const allowed = await Promise.all(bots.map(async bot => ({
+      bot, access: await getUserAccess(req.user.discordId, bot.id)
+    })));
+    bots = allowed.filter(item => item.access.length).map(item => item.bot);
+  }
   if (!RENDER_API_TOKEN) {
     return res.json({ connected: false, bots: bots.map(({ id, name }) => ({ id, name, hostStatus: "not_configured" })) });
   }
@@ -219,8 +357,18 @@ app.get("/api/bots/:id/guilds", requireAuth, async (req, res) => {
   const bot = getBots().find(item => item.id === req.params.id);
   if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
   try {
+    if (!isOwner(req.user) && !(await getUserAccess(req.user.discordId, bot.id)).length) {
+      return res.status(403).json({ error: "Нет доступа к этому боту." });
+    }
     const result = await botControlRequest(bot, "GET", undefined, "/control/guilds");
-    res.json({ ok: true, guilds: Array.isArray(result.guilds) ? result.guilds : [] });
+    let guilds = Array.isArray(result.guilds) ? result.guilds : [];
+    if (!isOwner(req.user)) {
+      const access = await getUserAccess(req.user.discordId, bot.id);
+      const allGuilds = access.some(row => row.guild_id === "*");
+      const permitted = new Set(access.map(row => String(row.guild_id)));
+      if (!allGuilds) guilds = guilds.filter(guild => permitted.has(String(guild.id)));
+    }
+    res.json({ ok: true, guilds });
   } catch (error) {
     res.status(error.status || 502).json({ error: error.message || "Не удалось получить Discord-серверы бота." });
   }
@@ -232,6 +380,7 @@ app.get("/api/bots/:id/config", requireAuth, async (req, res) => {
   if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
   if (!/^\\d{15,22}$/.test(guildId)) return res.status(400).json({ error: "Выбери Discord-сервер." });
   try {
+    if (!(await hasBotPermission(req.user, bot.id, guildId, "can_view"))) return res.status(403).json({ error: "Нет права просматривать настройки этого сервера." });
     const result = await botControlRequest(bot, "GET", undefined, "/control/config?guild_id=" + encodeURIComponent(guildId));
     res.json({ ok: true, guildId, config: result.config });
   } catch (error) {
@@ -245,7 +394,9 @@ app.put("/api/bots/:id/config", requireSameOrigin, requireAuth, async (req, res)
   if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
   if (!/^\\d{15,22}$/.test(guildId)) return res.status(400).json({ error: "Выбери Discord-сервер." });
   try {
+    if (!(await hasBotPermission(req.user, bot.id, guildId, "can_configure"))) return res.status(403).json({ error: "Нет права изменять настройки этого сервера." });
     const result = await botControlRequest(bot, "PUT", req.body, "/control/config?guild_id=" + encodeURIComponent(guildId));
+    await writeAudit(req.user, "bot_config_updated", bot.id, guildId, { changedKeys: Object.keys(req.body || {}) });
     res.json({ ok: true, guildId, config: result.config, message: "Настройки этого Discord-сервера применены." });
   } catch (error) {
     res.status(error.status || 502).json({ error: error.message || "Не удалось отправить настройки боту." });
@@ -256,9 +407,13 @@ app.post("/api/bots/:id/restart", requireSameOrigin, requireAuth, async (req, re
   if (!RENDER_API_TOKEN) return res.status(503).json({ error: "Render API ещё не настроен." });
   const bot = getBots().find(item => item.id === req.params.id);
   if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
+  if (!isOwner(req.user) && !(await hasBotPermission(req.user, bot.id, "*", "can_restart"))) {
+    return res.status(403).json({ error: "Нет права перезапускать этого бота." });
+  }
 
   try {
     await renderRequest("/services/" + encodeURIComponent(bot.renderServiceId) + "/restart", "POST");
+    await writeAudit(req.user, "bot_restarted", bot.id, null, {});
     res.json({ ok: true, message: "Команда перезапуска отправлена Render." });
   } catch (error) {
     res.status(error.status || 502).json({ error: error.status ? "Render API HTTP " + error.status : "Не удалось связаться с Render API." });
@@ -277,5 +432,7 @@ app.use((err, _req, res, _next) => {
 
 app.listen(PORT, () => {
   console.log("BotControl listening on port " + PORT);
-  if (!OWNER_PASSWORD || !SESSION_SECRET) console.warn("Set OWNER_PASSWORD and SESSION_SECRET before exposing this service.");
+  if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET || !DISCORD_REDIRECT_URI || !BOTCONTROL_OWNER_DISCORD_ID || !SESSION_SECRET) {
+    console.warn("Discord OAuth2 is not fully configured. Set the Discord OAuth and owner environment variables.");
+  }
 });
