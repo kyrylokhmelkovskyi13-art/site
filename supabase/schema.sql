@@ -24,6 +24,12 @@ create table if not exists public.botcontrol_access (
   primary key (discord_id, bot_id, guild_id)
 );
 
+create table if not exists public.botcontrol_guild_configs (
+  guild_id text primary key,
+  config jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now()
+);
+
 create table if not exists public.botcontrol_audit (
   id bigint generated always as identity primary key,
   actor_discord_id text not null,
@@ -44,6 +50,7 @@ create index if not exists botcontrol_audit_actor_idx
 
 alter table public.botcontrol_users enable row level security;
 alter table public.botcontrol_access enable row level security;
+alter table public.botcontrol_guild_configs enable row level security;
 alter table public.botcontrol_audit enable row level security;
 
 -- No anon/authenticated policies are intentionally created.
