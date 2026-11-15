@@ -15,3 +15,14 @@ jobs:
         with:
           node-version: 22
       - run: node --check server.js
+      - name: Check inline browser scripts
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const html = fs.readFileSync('index.html', 'utf8');
+          const scripts = [...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)];
+          if (!scripts.length) throw new Error('No inline scripts found');
+          scripts.forEach(([_, source], index) => fs.writeFileSync('/tmp/botcontrol-inline-' + index + '.js', source));
+          console.log('Extracted ' + scripts.length + ' inline script(s)');
+          NODE
+          for file in /tmp/botcontrol-inline-*.js; do node --check "$file"; done
