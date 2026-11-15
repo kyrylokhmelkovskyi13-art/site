@@ -1,23 +1,30 @@
 # BotControl
 
-Личная панель управления Discord-ботами.
+Private dashboard for managing Discord bot hosting services.
 
-## Сейчас реализовано
-- Адаптивный тёмный интерфейс.
-- Разделы «Обзор», «Мои боты», «Журнал событий», «Настройки».
-- Карточка первого бота Kingdom of IvynX.
-- Добавление ботов в локальный список предпросмотра.
-- Поиск по демо-журналу и базовые интерактивные элементы.
+## Current status
 
-## Важно
-Это пока frontend-предпросмотр. Он **не подключён** к Discord, Render или другим хостингам: статусы и логи не реальные, а кнопки подключения показывают следующий шаг. Никакие токены ботов не вводить в этот сайт.
+- Responsive dashboard UI with owner login.
+- Node.js/Express backend with signed HTTP-only sessions.
+- Owner-only API to inspect configured Render services and request a restart.
+- Render credentials and owner password are read only from server environment variables.
+- The API allowlists service IDs through `BOT_SERVICES`.
 
-## Запуск
-Открой `index.html` в браузере или опубликуй репозиторий через GitHub Pages:
-1. Открой Settings → Pages.
-2. В разделе Build and deployment выбери Deploy from a branch.
-3. Выбери ветку `main` и папку `/(root)`.
-4. Сохрани настройки и дождись публикации.
+See [BACKEND.md](BACKEND.md) for setup and deployment instructions.
 
-## Следующий этап
-Добавить backend API с авторизацией владельца, безопасным хранением секретов на сервере и адаптером для управления ботом на хостинге. Перезапуск возможен только через поддерживаемый API хостинга или отдельный агент на сервере.
+## Run locally
+
+Requires Node.js 20+.
+
+```bash
+npm install
+cp .env.example .env
+# Fill in local environment values; never commit .env.
+npm start
+```
+
+## Deploy
+
+The repository includes `render.yaml` for a Render Blueprint. You must still create/deploy the service and set the secret environment values in Render.
+
+**Important:** The dashboard reports Render service status, not Discord Gateway presence. Live Discord metrics and application log streaming are not implemented yet.
