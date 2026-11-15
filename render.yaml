@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: botcontrol
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: OWNER_PASSWORD
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: RENDER_API_TOKEN
+        sync: false
+      - key: BOT_SERVICES
+        sync: false
