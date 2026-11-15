@@ -189,7 +189,10 @@
         actions.append(restart);
         article.append(head, desc, metrics, actions);
         cards.append(article);
-        cards2.append(article.cloneNode(true));
+        const copy = article.cloneNode(true);
+        const copyRestart = copy.querySelector('button');
+        copyRestart.addEventListener('click', () => restart.click());
+        cards2.append(copy);
       });
       document.getElementById('totalBots').textContent = result.bots.length;
       document.getElementById('onlineBots').textContent = online;
