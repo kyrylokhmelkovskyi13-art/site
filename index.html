@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0d14">
+  <title>BotControl — Discord bot dashboard</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b0d14;--panel:#111522;--panel2:#151b2b;--line:#252c40;--muted:#8992aa;--text:#eef1fa;--purple:#8b6cff;--cyan:#56d6c9;--red:#ff6b7a;--yellow:#f5c56b}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 70% -15%,#29204c 0,transparent 38%),var(--bg);color:var(--text);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+    button,input{font:inherit}button{cursor:pointer}.shell{display:grid;grid-template-columns:250px 1fr;min-height:100vh}.side{padding:26px 17px;border-right:1px solid var(--line);background:#0d101a;display:flex;flex-direction:column}.brand{display:flex;align-items:center;gap:12px;padding:0 10px 30px;font-size:17px;font-weight:750;letter-spacing:.2px}.logo{width:36px;height:36px;border-radius:12px;background:linear-gradient(140deg,#a78bfa,#6650df);display:grid;place-items:center;font-size:19px;box-shadow:0 7px 25px #8062ff44}.muted{color:var(--muted)}.navlabel{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#69728b;padding:14px 12px 8px}.nav button{width:100%;border:0;background:transparent;color:#aeb6ca;text-align:left;padding:11px 12px;border-radius:10px;margin:2px 0;display:flex;align-items:center;gap:12px}.nav button:hover,.nav button.active{background:#211d38;color:#fff}.nav .ico{width:18px;text-align:center;font-size:16px}.sidebottom{margin-top:auto;border:1px solid var(--line);background:var(--panel);border-radius:13px;padding:14px}.profile{display:flex;align-items:center;gap:10px}.avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#30274d;color:#c8baff;font-weight:700}.main{padding:30px clamp(20px,4vw,54px);max-width:1600px;width:100%;margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:30px}.eyebrow{color:#a99aff;font-size:11px;text-transform:uppercase;letter-spacing:1.7px;font-weight:700}.top h1{font-size:27px;margin:5px 0 3px;letter-spacing:-.7px}.top p{margin:0;color:var(--muted)}.topactions{display:flex;gap:10px;align-items:center}.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:10px 14px;border-radius:10px;font-weight:600}.btn:hover{border-color:#6553a8}.btn.primary{background:linear-gradient(135deg,#8b6cff,#6548d6);border:0;box-shadow:0 7px 22px #7458ef33}.btn.small{padding:7px 10px;font-size:12px}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:24px}.stat,.card{border:1px solid var(--line);background:linear-gradient(145deg,#151a29,#101420);border-radius:15px}.stat{padding:17px 18px}.stathead{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.statnum{font-size:27px;font-weight:750;margin-top:8px;letter-spacing:-1px}.statfoot{font-size:11px;color:var(--muted);margin-top:3px}.dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--cyan);box-shadow:0 0 10px currentColor;margin-right:6px}.sectionhead{display:flex;justify-content:space-between;align-items:center;margin:27px 0 13px}.sectionhead h2{font-size:16px;margin:0}.sectionhead span{color:var(--muted);font-size:12px}.bots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.bot{padding:19px}.bothead{display:flex;justify-content:space-between;align-items:flex-start}.botidentity{display:flex;gap:12px;align-items:center}.botavatar{width:43px;height:43px;border-radius:13px;background:linear-gradient(145deg,#33315d,#222943);display:grid;place-items:center;font-size:21px}.botname{font-size:15px;font-weight:700}.botid{font-size:11px;color:var(--muted);margin-top:2px}.status{font-size:11px;border-radius:20px;padding:5px 9px;background:#12332f;color:#71e0c9}.status.off{background:#38232b;color:#ff8794}.botdesc{color:#9ca5ba;font-size:12px;margin:16px 0}.botmetrics{display:flex;gap:22px;border-top:1px solid var(--line);padding-top:13px}.metric b{display:block;font-size:15px}.metric span{font-size:10px;color:var(--muted)}.botactions{display:flex;gap:8px;margin-top:15px}.activity{overflow:hidden}.activityrow{display:grid;grid-template-columns:35px 1fr auto;gap:11px;align-items:center;padding:13px 17px;border-top:1px solid var(--line)}.activityrow:first-child{border-top:0}.eventicon{width:30px;height:30px;border-radius:9px;background:#1e2940;display:grid;place-items:center}.eventtitle{font-size:12px;font-weight:600}.eventsub{font-size:11px;color:var(--muted)}.time{font-size:11px;color:var(--muted)}.empty{padding:26px;text-align:center;color:var(--muted)}.notice{border:1px solid #51452c;background:#211d16;color:#e5c98b;padding:12px 14px;border-radius:11px;font-size:12px;margin-top:20px}.page{display:none}.page.active{display:block}.toolbar{display:flex;gap:10px;align-items:center;margin:14px 0}.search{background:var(--panel);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:10px;min-width:230px;outline:none}.search:focus{border-color:var(--purple)}.logitem{padding:14px 17px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}.logitem:last-child{border:0}.tag{font-size:10px;padding:3px 7px;border-radius:6px;background:#322a4e;color:#c6b8ff}.settingsgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.setting{padding:18px}.setting h3{margin:0 0 5px;font-size:14px}.setting p{margin:0;color:var(--muted);font-size:12px}.toggle{appearance:none;width:36px;height:21px;border-radius:20px;background:#343b50;position:relative;cursor:pointer;flex:none}.toggle:checked{background:#765ce8}.toggle:before{content:"";position:absolute;width:15px;height:15px;left:3px;top:3px;border-radius:50%;background:white;transition:.15s}.toggle:checked:before{left:18px}.settingrow{display:flex;justify-content:space-between;gap:15px;align-items:center}.modalback{position:fixed;inset:0;background:#05060bbd;display:none;place-items:center;padding:20px;z-index:5}.modalback.show{display:grid}.modal{width:min(440px,100%);background:#151a29;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 25px 90px #0009}.modal h2{margin:0 0 7px}.modal p{color:var(--muted);font-size:12px}.field{display:block;margin:15px 0 6px;color:#b8c0d3;font-size:12px}.modal input{width:100%;padding:11px;border:1px solid var(--line);border-radius:9px;background:#0d111c;color:white}.modalactions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}.toast{position:fixed;bottom:20px;right:20px;background:#1c2637;border:1px solid #39465e;padding:12px 16px;border-radius:10px;display:none;z-index:9}.toast.show{display:block}
+    @media(max-width:850px){.shell{grid-template-columns:1fr}.side{padding:12px 15px;border-right:0;border-bottom:1px solid var(--line)}.brand{padding:3px 8px 10px}.nav{display:flex;overflow:auto}.navlabel,.sidebottom{display:none}.nav button{white-space:nowrap;width:auto;padding:9px 12px}.main{padding:23px 16px}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.top{align-items:flex-start;flex-direction:column}.bots,.settingsgrid{grid-template-columns:1fr}.topactions{width:100%}.stats{gap:9px}.stat{padding:13px}.statnum{font-size:23px}.search{min-width:0;width:100%}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="brand"><div class="logo">⌘</div><span>BotControl</span></div>
+    <div class="navlabel">Рабочее пространство</div>
+    <nav class="nav">
+      <button class="active" data-page="overview"><span class="ico">▦</span>Обзор</button>
+      <button data-page="bots"><span class="ico">◈</span>Мои боты</button>
+      <button data-page="logs"><span class="ico">≋</span>Журнал событий</button>
+      <button data-page="settings"><span class="ico">⚙</span>Настройки</button>
+    </nav>
+    <div class="sidebottom"><div class="profile"><div class="avatar">K</div><div><b>Личный аккаунт</b><div class="muted" style="font-size:11px">Локальный предпросмотр</div></div></div></div>
+  </aside>
+  <main class="main">
+    <section class="page active" id="overview">
+      <header class="top"><div><div class="eyebrow">Панель управления</div><h1>С возвращением 👋</h1><p>Всё состояние Discord-ботов в одном месте.</p></div><div class="topactions"><button class="btn" id="refresh">↻ Обновить</button><button class="btn primary" id="addBot">＋ Добавить бота</button></div></header>
+      <div class="stats">
+        <div class="stat"><div class="stathead">Всего ботов <span>◈</span></div><div class="statnum" id="totalBots">1</div><div class="statfoot">В этом пространстве</div></div>
+        <div class="stat"><div class="stathead">В сети <span style="color:var(--cyan)">●</span></div><div class="statnum" id="onlineBots">—</div><div class="statfoot">Нет подключения к API</div></div>
+        <div class="stat"><div class="stathead">Ошибки <span style="color:var(--red)">!</span></div><div class="statnum">—</div><div class="statfoot">Ожидают интеграции</div></div>
+        <div class="stat"><div class="stathead">Аптайм <span>◷</span></div><div class="statnum">—</div><div class="statfoot">Будет доступен после подключения</div></div>
+      </div>
+      <div class="sectionhead"><h2>Твои Discord-боты</h2><span>Первое подключение</span></div>
+      <div class="bots" id="botCards">
+        <article class="card bot"><div class="bothead"><div class="botidentity"><div class="botavatar">👑</div><div><div class="botname">Kingdom of IvynX</div><div class="botid">Python · Disnake · Render</div></div></div><span class="status off">Не подключён</span></div><div class="botdesc">Бот модерации и проверки сообщений. Подключение к панели ещё не настроено.</div><div class="botmetrics"><div class="metric"><b>—</b><span>Серверов</span></div><div class="metric"><b>—</b><span>Задержка</span></div><div class="metric"><b>—</b><span>Последний запуск</span></div></div><div class="botactions"><button class="btn small primary" data-action="connect">Настроить подключение</button><button class="btn small" data-action="details">Подробнее</button></div></article>
+      </div>
+      <div class="notice">ⓘ Сейчас это интерфейс-предпросмотр. Статус, логи и управление станут реальными после подключения защищённого backend API. Никакие токены ботов здесь не запрашиваются.</div>
+      <div class="sectionhead"><h2>Последние события</h2><span>Демо-данные</span></div>
+      <div class="card activity"><div class="activityrow"><div class="eventicon">🔒</div><div><div class="eventtitle">Панель создана</div><div class="eventsub">Интерфейс готов к следующему этапу интеграции</div></div><span class="time">Сейчас</span></div><div class="activityrow"><div class="eventicon">🤖</div><div><div class="eventtitle">Kingdom of IvynX добавлен в список</div><div class="eventsub">Ожидает настройки безопасного подключения</div></div><span class="time">Сейчас</span></div></div>
+    </section>
+    <section class="page" id="bots">
+      <header class="top"><div><div class="eyebrow">Управление</div><h1>Мои боты</h1><p>Добавляй и подключай Discord-ботов.</p></div><button class="btn primary" id="addBot2">＋ Добавить бота</button></header>
+      <div class="bots" id="botCards2"></div>
+      <div class="notice">Подключение требует серверной части. Секретные токены нельзя вставлять в HTML, JavaScript браузера или GitHub.</div>
+    </section>
+    <section class="page" id="logs">
+      <header class="top"><div><div class="eyebrow">Мониторинг</div><h1>Журнал событий</h1><p>Запуски, ошибки и действия ботов.</p></div></header>
+      <div class="toolbar"><input class="search" id="logSearch" placeholder="Поиск по событиям…"></div>
+      <div class="card" id="logList"><div class="logitem"><span>🔒</span><div><b>Интерфейс BotControl инициализирован</b><div class="muted">Демо-событие · Реальные логи появятся после подключения API</div></div><span class="tag">INFO</span></div></div>
+    </section>
+    <section class="page" id="settings">
+      <header class="top"><div><div class="eyebrow">Конфигурация</div><h1>Настройки</h1><p>Параметры будущей панели управления.</p></div></header>
+      <div class="settingsgrid">
+        <div class="card setting"><div class="settingrow"><div><h3>Уведомления об ошибках</h3><p>Показывать оповещения о сбоях ботов.</p></div><input class="toggle" type="checkbox" checked></div></div>
+        <div class="card setting"><div class="settingrow"><div><h3>Подтверждать перезапуск</h3><p>Запрашивать подтверждение перед действием.</p></div><input class="toggle" type="checkbox" checked></div></div>
+        <div class="card setting"><div class="settingrow"><div><h3>Автообновление статуса</h3><p>Обновлять данные после подключения backend.</p></div><input class="toggle" type="checkbox"></div></div>
+        <div class="card setting"><div class="settingrow"><div><h3>Тёмная тема</h3><p>Основное оформление BotControl.</p></div><input class="toggle" type="checkbox" checked></div></div>
+      </div>
+      <div class="notice">Настройки пока сохраняются только в текущем открытом окне. Постоянное хранение появится на серверной стороне.</div>
+    </section>
+  </main>
+</div>
+<div class="modalback" id="modal"><div class="modal"><h2 id="modalTitle">Добавить бота</h2><p id="modalText">Добавим бота в список панели. Это пока локальная запись — токен не нужен.</p><label class="field" for="botName">Название бота</label><input id="botName" placeholder="Например, My Discord Bot"><label class="field" for="botHost">Хостинг (необязательно)</label><input id="botHost" placeholder="Например, Render"><div class="modalactions"><button class="btn" id="cancelModal">Отмена</button><button class="btn primary" id="saveBot">Добавить</button></div></div></div>
+<div class="toast" id="toast"></div>
+<script>
+  const $=s=>document.querySelector(s);const $$=s=>document.querySelectorAll(s);
+  function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2600)}
+  function showPage(id){$$('.page').forEach(p=>p.classList.toggle('active',p.id===id));$$('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id))}
+  $$('.nav button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+  $('#refresh').addEventListener('click',()=>toast('Backend ещё не подключён — обновлять реальные статусы пока неоткуда.'));
+  function openModal(){$('#modal').classList.add('show');$('#botName').focus()}
+  $('#addBot').onclick=openModal;$('#addBot2').onclick=openModal;$('#cancelModal').onclick=()=>$('#modal').classList.remove('show');
+  function card(name,host){const el=document.createElement('article');el.className='card bot';const avatar=name.toLowerCase().includes('ivyn')?'👑':'🤖';el.innerHTML='<div class="bothead"><div class="botidentity"><div class="botavatar">'+avatar+'</div><div><div class="botname"></div><div class="botid"></div></div></div><span class="status off">Не подключён</span></div><div class="botdesc">Добавлен в список панели. Для мониторинга и управления нужно настроить backend-интеграцию.</div><div class="botmetrics"><div class="metric"><b>—</b><span>Серверов</span></div><div class="metric"><b>—</b><span>Задержка</span></div><div class="metric"><b>—</b><span>Аптайм</span></div></div><div class="botactions"><button class="btn small primary" data-action="connect">Настроить подключение</button><button class="btn small" data-action="details">Подробнее</button></div>';el.querySelector('.botname').textContent=name;el.querySelector('.botid').textContent='Discord · '+(host||'Хостинг не указан');return el}
+  $('#saveBot').onclick=()=>{const name=$('#botName').value.trim();if(!name){toast('Введи название бота.');return}const host=$('#botHost').value.trim();$('#botCards').append(card(name,host));$('#botCards2').append(card(name,host));$('#totalBots').textContent=document.querySelectorAll('#botCards .bot').length;$('#modal').classList.remove('show');$('#botName').value='';$('#botHost').value='';toast('Бот добавлен в этот предпросмотр.');};
+  document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;if(b.dataset.action==='connect')toast('Следующий этап: защищённый backend и интеграция с хостингом.');else toast('Карточка бота. Подробные данные появятся после подключения.')});
+  $('#logSearch').addEventListener('input',e=>{$$('#logList .logitem').forEach(x=>x.style.display=x.textContent.toLowerCase().includes(e.target.value.toLowerCase())?'flex':'none')});
+</script>
+</body>
+</html>
