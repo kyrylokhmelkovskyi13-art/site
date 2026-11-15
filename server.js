@@ -392,6 +392,9 @@ app.post("/api/access", requireSameOrigin, requireAuth, requireOwner, async (req
   for (const key of ["can_view", "can_configure", "can_restart"]) {
     if (typeof permissions[key] !== "boolean") return res.status(400).json({ error: "Все права должны быть true или false." });
   }
+  if (!permissions.can_view && !permissions.can_configure && !permissions.can_restart) {
+    return res.status(400).json({ error: "Выбери хотя бы одно разрешение." });
+  }
   const row = {
     discord_id: discordId,
     bot_id: botId,
