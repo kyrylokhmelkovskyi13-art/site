@@ -24,15 +24,12 @@
 <body>
 
 <div class="authwall" id="authWall">
-  <form class="authbox" id="loginForm">
+  <div class="authbox">
     <div class="brand" style="padding:0 0 18px"><div class="logo">⌘</div><span>BotControl</span></div>
-    <h2>Вход владельца</h2>
-    <p>Панель доступна только владельцу. Пароль проверяется сервером.</p>
-    <label class="field" for="ownerPassword">Пароль</label>
-    <input id="ownerPassword" type="password" autocomplete="current-password" required>
-    <div class="autherror" id="authError"></div>
-    <button class="btn primary" style="width:100%" type="submit">Войти</button>
-  </form>
+    <h2>Вход через Discord</h2>
+    <p>Авторизуйся Discord-аккаунтом. Доступ к ботам выдаёт владелец панели.</p>
+    <a class="btn primary" style="display:block;text-align:center;text-decoration:none;width:100%" href="/auth/discord">Продолжить с Discord</a>
+  </div>
 </div>
 <div class="shell">
   <aside class="side">
@@ -137,10 +134,7 @@
 <script>
 (() => {
   const wall = document.getElementById('authWall');
-  const form = document.getElementById('loginForm');
-  const errorBox = document.getElementById('authError');
-  const passwordInput = document.getElementById('ownerPassword');
-  const cards = document.getElementById('botCards');
+    const cards = document.getElementById('botCards');
   const cards2 = document.getElementById('botCards2');
 
   async function api(url, options = {}) {
@@ -238,25 +232,13 @@
           ? 'Подключено к Render API. Показан статус хостинга, а не подтверждение соединения бота с Discord.'
           : 'Render API ещё не настроен. Добавь RENDER_API_TOKEN и BOT_SERVICES в секретные переменные сервера.';
     } catch (error) {
-      if (error.message.includes('Требуется вход')) showLogin();
+      if (error.message.includes('войти через Discord')) showLogin();
       else toast(error.message);
     }
   }
 
-  function showLogin() { wall.classList.add('show'); setTimeout(() => passwordInput.focus(), 50); }
-  function hideLogin() { wall.classList.remove('show'); passwordInput.value = ''; errorBox.textContent = ''; }
-
-  form.addEventListener('submit', async event => {
-    event.preventDefault();
-    errorBox.textContent = '';
-    try {
-      await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ password: passwordInput.value }) });
-      hideLogin();
-      await loadBots();
-    } catch (error) {
-      errorBox.textContent = error.message;
-    }
-  });
+  function showLogin() { wall.classList.add('show'); }
+  function hideLogin() { wall.classList.remove('show'); }
 
   document.getElementById('logout').addEventListener('click', async () => {
     try { await api('/api/auth/logout', { method: 'POST', body: '{}' }); } catch {}
@@ -370,7 +352,7 @@
   document.querySelector('[data-page="botconfig"]').addEventListener('click', loadGuilds);
 
   api('/api/auth/me').then(result => {
-    if (result.authenticated) loadBots();
+    if (result.authenticated) { hideLogin(); loadBots(); }
     else showLogin();
   }).catch(showLogin);
 })();
