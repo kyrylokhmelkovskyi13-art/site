@@ -200,13 +200,10 @@ app.post("/api/bots/:id/restart", requireSameOrigin, requireAuth, async (req, re
   }
 });
 
-app.use(express.static(path.join(__dirname), {
-  index: "index.html",
-  dotfiles: "ignore",
-  setHeaders(res, filePath) {
-    if (filePath.endsWith(".html")) res.setHeader("Cache-Control", "no-store");
-  }
-}));
+app.get("/", (_req, res) => {
+  res.setHeader("Cache-Control", "no-store");
+  res.sendFile(path.join(__dirname, "index.html"));
+});
 
 app.use((err, _req, res, _next) => {
   console.error("Request error:", err.message);
