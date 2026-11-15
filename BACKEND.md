@@ -23,8 +23,9 @@ This repository now includes a Node.js/Express backend. It serves the existing d
    - `OWNER_PASSWORD`: a long, unique dashboard password.
    - `SESSION_SECRET`: a random secret with at least 32 bytes.
    - `RENDER_API_TOKEN`: a Render API key. Keep it only in Render's secret environment settings.
-   - `BOT_SERVICES`: JSON array containing the exact Render service IDs, for example:
-     `[{"id":"ivynx","name":"Kingdom of IvynX","renderServiceId":"srv-dbssmff3r2c73b9d05g"}]`
+   - `BOTCONTROL_SHARED_SECRET`: a long random secret; set the same value in BotControl and the IvynX bot service.
+   - `BOT_SERVICES`: JSON array containing the Render service ID and bot service base URL:
+     `[{"id":"ivynx","name":"Kingdom of IvynX","renderServiceId":"srv-dbssmff3r2c73b9d05g","controlUrl":"https://ivynx.onrender.com"}]`
 4. Do not put bot tokens, Render API keys, or passwords in `index.html`, browser JavaScript, or GitHub.
 5. Open the service URL after deployment.
 
