@@ -1,30 +1,21 @@
 # BotControl
 
-Private dashboard for managing Discord bot hosting services.
+Private Discord bot management dashboard. BotControl runs as a Node.js web service on Render and keeps all bot tokens, Render credentials, OAuth secrets, and Supabase service credentials on the server.
 
-## Current status
+## Current implementation on `botcontrol-v2-guild-settings`
 
-- Responsive dashboard UI with owner login.
-- Node.js/Express backend with signed HTTP-only sessions.
-- Owner-only API to inspect configured Render services and request a restart.
-- Render credentials and owner password are read only from server environment variables.
-- The API allowlists service IDs through `BOT_SERVICES`.
+- Discord OAuth2 sign-in.
+- Owner identity configured by `BOTCONTROL_OWNER_DISCORD_ID`.
+- Owner-managed per-user access grants scoped to a bot and either one Discord server or all servers for that bot.
+- Separate permissions for viewing settings, changing settings, and restarting a bot.
+- Supabase-backed access records and audit events.
+- Render service status and allowlisted restart requests.
+- Authenticated bot control API using a shared secret.
+- IvynX guild discovery and guild-specific settings.
+- Owner-only access management and audit log pages.
 
-See [BACKEND.md](BACKEND.md) for setup and deployment instructions.
+## Important
 
-## Run locally
+This branch is a development build. It has not been deployed or production-tested. Run the Supabase SQL migration and configure the required Render environment variables before exposing it. The dashboard currently has a dedicated settings editor for the IvynX adapter; other bots need their own settings adapter/manifest before their controls can be rendered.
 
-Requires Node.js 20+.
-
-```bash
-npm install
-cp .env.example .env
-# Fill in local environment values; never commit .env.
-npm start
-```
-
-## Deploy
-
-The repository includes `render.yaml` for a Render Blueprint. You must still create/deploy the service and set the secret environment values in Render.
-
-**Important:** The dashboard reports Render service status, not Discord Gateway presence. Live Discord metrics and application log streaming are not implemented yet.
+See [BACKEND.md](BACKEND.md) for setup and security details.
