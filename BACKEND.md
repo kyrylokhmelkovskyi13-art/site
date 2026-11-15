@@ -57,6 +57,7 @@ Deploy the matching `botcontrol-v2-guild-settings` branch of the IvynX repositor
 On the IvynX Render service, set `DISCORD_TOKEN`, `BOTCONTROL_SHARED_SECRET`, `SUPABASE_URL`, and `SUPABASE_SERVICE_ROLE_KEY`.
 
 IvynX now exposes:
+- `GET /control/manifest` (describes the settings this bot supports)
 - `GET /control/guilds`
 - `GET /control/config?guild_id=DISCORD_SERVER_ID`
 - `PUT /control/config?guild_id=DISCORD_SERVER_ID`
