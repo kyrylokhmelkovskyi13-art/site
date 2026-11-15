@@ -12,6 +12,8 @@ This repository now includes a Node.js/Express backend. It serves the existing d
 - `GET /api/auth/me`, `POST /api/auth/login`, `POST /api/auth/logout`.
 - `GET /api/bots` reads configured Render services.
 - `POST /api/bots/:id/restart` restarts only a service explicitly listed in `BOT_SERVICES`.
+- `GET /api/bots/:id/config` reads the bot configuration through its authenticated control API.
+- `PUT /api/bots/:id/config` validates and applies live configuration changes without restarting the bot.
 
 ## Configure on Render
 
@@ -33,6 +35,7 @@ You can also deploy the included `render.yaml` Blueprint. It deliberately leaves
 - The API reports **Render host/service status**, not Discord Gateway presence. A running web service does not prove that the Discord bot is connected.
 - The current dashboard HTML is still the original frontend preview and is not yet wired to these endpoints. The login screen and live bot cards are the next frontend integration step.
 - Live application logs and Discord guild/member/latency metrics are not implemented yet.
+- The IvynX service must deploy the matching control API and have `BOTCONTROL_SHARED_SECRET` set. Its `config.json` is still stored on the bot service filesystem; configure persistent storage on that service if the host filesystem is ephemeral, otherwise config changes may be lost after a redeploy/restart.
 - Restart is a real action against Render once a valid API key and service ID are configured. The API only permits IDs in the server-side allowlist.
 - Render API keys are powerful secrets. Use a dedicated key if possible and revoke it if exposed.
 
