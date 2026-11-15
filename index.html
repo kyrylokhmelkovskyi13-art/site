@@ -237,7 +237,7 @@
         configure.className = 'btn small';
         configure.textContent = 'Настройки';
         configure.addEventListener('click', () => {
-          document.querySelector('[data-page="botconfig"]').click();
+          showPage('botconfig');
           botSelect.value = bot.id;
           selectedBotId = bot.id;
           loadGuilds();
