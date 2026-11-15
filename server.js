@@ -8,6 +8,7 @@ const isProduction = process.env.NODE_ENV === "production";
 const OWNER_PASSWORD = process.env.OWNER_PASSWORD || "";
 const SESSION_SECRET = process.env.SESSION_SECRET || "";
 const RENDER_API_TOKEN = process.env.RENDER_API_TOKEN || "";
+const BOTCONTROL_SHARED_SECRET = process.env.BOTCONTROL_SHARED_SECRET || "";
 const COOKIE_NAME = "botcontrol_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 12;
 const LOGIN_WINDOW_MS = 15 * 60 * 1000;
@@ -102,7 +103,9 @@ function getBots() {
       typeof bot.name === "string" &&
       typeof bot.renderServiceId === "string" &&
       /^[a-zA-Z0-9_-]+$/.test(bot.id) &&
-      /^srv-[a-zA-Z0-9]+$/.test(bot.renderServiceId)
+      /^srv-[a-zA-Z0-9]+$/.test(bot.renderServiceId) &&
+      typeof bot.controlUrl === "string" &&
+      /^https:\/\/[a-zA-Z0-9.-]+(?::\d+)?$/.test(bot.controlUrl)
     );
   } catch {
     return [];
@@ -185,6 +188,53 @@ app.get("/api/bots", requireAuth, async (_req, res) => {
     }
   }));
   res.json({ connected: true, bots: results });
+});
+
+async function botControlRequest(bot, method = "GET", body) {
+  if (!BOTCONTROL_SHARED_SECRET) {
+    const error = new Error("BOTCONTROL_SHARED_SECRET не настроен на BotControl.");
+    error.status = 503;
+    throw error;
+  }
+  const response = await fetch(bot.controlUrl + "/control/config", {
+    method,
+    headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer " + BOTCONTROL_SHARED_SECRET,
+      ...(body ? { "Content-Type": "application/json" } : {})
+    },
+    ...(body ? { body: JSON.stringify(body) } : {}),
+    signal: AbortSignal.timeout(12000)
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const error = new Error(data.error || "API бота вернул HTTP " + response.status);
+    error.status = response.status;
+    throw error;
+  }
+  return data;
+}
+
+app.get("/api/bots/:id/config", requireAuth, async (req, res) => {
+  const bot = getBots().find(item => item.id === req.params.id);
+  if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
+  try {
+    const result = await botControlRequest(bot);
+    res.json({ ok: true, config: result.config });
+  } catch (error) {
+    res.status(error.status || 502).json({ error: error.message || "Не удалось связаться с API бота." });
+  }
+});
+
+app.put("/api/bots/:id/config", requireSameOrigin, requireAuth, async (req, res) => {
+  const bot = getBots().find(item => item.id === req.params.id);
+  if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
+  try {
+    const result = await botControlRequest(bot, "PUT", req.body);
+    res.json({ ok: true, config: result.config, message: "Настройки применены ботом." });
+  } catch (error) {
+    res.status(error.status || 502).json({ error: error.message || "Не удалось отправить настройки боту." });
+  }
 });
 
 app.post("/api/bots/:id/restart", requireSameOrigin, requireAuth, async (req, res) => {
