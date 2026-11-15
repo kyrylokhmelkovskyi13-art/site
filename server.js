@@ -337,6 +337,7 @@ app.post("/api/bots", requireSameOrigin, requireAuth, requireOwner, async (req, 
   const renderServiceId = String(req.body?.render_service_id || "").trim();
   const controlUrl = String(req.body?.control_url || "").trim();
   if (!/^[a-z0-9_-]{2,40}$/.test(id)) return res.status(400).json({ error: "ID бота: 2–40 символов, латиница, цифры, _ или -." });
+  if (getEnvironmentBots().some(bot => bot.id === id)) return res.status(409).json({ error: "Этот ID уже занят ботом из BOT_SERVICES." });
   if (!name || name.length > 80) return res.status(400).json({ error: "Название бота должно содержать 1–80 символов." });
   if (!/^srv-[a-zA-Z0-9]+$/.test(renderServiceId)) return res.status(400).json({ error: "Укажи корректный Render Service ID (srv-...)."});
   let parsedUrl;
