@@ -244,8 +244,10 @@
         article.append(head, desc, metrics, actions);
         cards.append(article);
         const copy = article.cloneNode(true);
-        const copyRestart = copy.querySelector('button');
-        copyRestart.addEventListener('click', () => restart.click());
+        const copyButtons = copy.querySelectorAll('button');
+        copyButtons[0]?.addEventListener('click', () => restart.click());
+        copyButtons[1]?.addEventListener('click', () => configure.click());
+        if (bot.managed) copyButtons[2]?.addEventListener('click', () => article.querySelectorAll('button')[2]?.click());
         cards2.append(copy);
       });
       document.getElementById('totalBots').textContent = result.bots.length;
