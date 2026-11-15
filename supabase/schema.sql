@@ -11,6 +11,16 @@ create table if not exists public.botcontrol_users (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.botcontrol_bots (
+  id text primary key,
+  name text not null,
+  render_service_id text not null,
+  control_url text not null,
+  enabled boolean not null default true,
+  created_by text not null,
+  created_at timestamptz not null default now()
+);
+
 create table if not exists public.botcontrol_access (
   discord_id text not null,
   bot_id text not null,
@@ -49,6 +59,7 @@ create index if not exists botcontrol_audit_actor_idx
   on public.botcontrol_audit (actor_discord_id);
 
 alter table public.botcontrol_users enable row level security;
+alter table public.botcontrol_bots enable row level security;
 alter table public.botcontrol_access enable row level security;
 alter table public.botcontrol_guild_configs enable row level security;
 alter table public.botcontrol_audit enable row level security;
