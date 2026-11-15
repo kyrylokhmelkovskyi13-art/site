@@ -47,7 +47,7 @@
   </aside>
   <main class="main">
     <section class="page active" id="overview">
-      <header class="top"><div><div class="eyebrow">Панель управления</div><h1>С возвращением 👋</h1><p>Всё состояние Discord-ботов в одном месте.</p></div><div class="topactions"><button class="btn" id="refresh">↻ Обновить</button><button class="btn logout" id="logout">Выйти</button><button class="btn primary" id="addBot">＋ Добавить бота</button></div></header>
+      <header class="top"><div><div class="eyebrow">Панель управления</div><h1>С возвращением 👋</h1><p>Всё состояние Discord-ботов в одном месте.</p></div><div class="topactions"><button class="btn" id="refresh">↻ Обновить</button><button class="btn logout" id="logout">Выйти</button> </div></header>
       <div class="stats">
         <div class="stat"><div class="stathead">Всего ботов <span>◈</span></div><div class="statnum" id="totalBots">1</div><div class="statfoot">В этом пространстве</div></div>
         <div class="stat"><div class="stathead">В сети <span style="color:var(--cyan)">●</span></div><div class="statnum" id="onlineBots">—</div><div class="statfoot">Нет подключения к API</div></div>
@@ -63,9 +63,9 @@
       <div class="card activity"><div class="activityrow"><div class="eventicon">🔒</div><div><div class="eventtitle">Панель создана</div><div class="eventsub">Интерфейс готов к следующему этапу интеграции</div></div><span class="time">Сейчас</span></div><div class="activityrow"><div class="eventicon">🤖</div><div><div class="eventtitle">Kingdom of IvynX добавлен в список</div><div class="eventsub">Ожидает настройки безопасного подключения</div></div><span class="time">Сейчас</span></div></div>
     </section>
     <section class="page" id="bots">
-      <header class="top"><div><div class="eyebrow">Управление</div><h1>Мои боты</h1><p>Добавляй и подключай Discord-ботов.</p></div><button class="btn primary" id="addBot2">＋ Добавить бота</button></header>
+      <header class="top"><div><div class="eyebrow">Управление</div><h1>Мои боты</h1><p>Добавляй и подключай Discord-ботов.</p></div> </header>
       <div class="bots" id="botCards2"></div>
-      <div class="notice">Подключение требует серверной части. Секретные токены нельзя вставлять в HTML, JavaScript браузера или GitHub.</div>
+      <div class="notice">Список ботов загружается из серверного BOT_SERVICES. Секретные токены и Render API-ключи остаются только в переменных окружения.</div>
     </section>
     <section class="page" id="logs">
       <header class="top"><div><div class="eyebrow">Мониторинг</div><h1>Журнал событий</h1><p>Запуски, ошибки и действия ботов.</p></div></header>
@@ -100,8 +100,8 @@
       <div class="notice">Настройки пока сохраняются только в текущем открытом окне. Постоянное хранение появится на серверной стороне.</div>
     </section>
     <section class="page" id="botconfig">
-      <header class="top"><div><div class="eyebrow">Живая конфигурация</div><h1>Настройки Kingdom of IvynX</h1><p>Сначала выбери Discord-сервер. Его настройки хранятся отдельно от остальных.</p></div><button class="btn" id="loadBotConfig">↻ Загрузить</button></header>
-      <div class="toolbar"><label for="botGuildSelect" class="muted">Discord-сервер:</label><select class="search" id="botGuildSelect"><option value="">Загружаю серверы бота…</option></select><button class="btn" id="loadGuilds">Обновить список</button></div>
+      <header class="top"><div><div class="eyebrow">Живая конфигурация</div><h1>Настройки бота</h1><p>Выбери бота, затем Discord-сервер. Настройки каждого сервера хранятся отдельно.</p></div><button class="btn" id="loadBotConfig">↻ Загрузить</button></header>
+      <div class="toolbar"><label for="botSelect" class="muted">Бот:</label><select class="search" id="botSelect"><option value="">Загружаю ботов…</option></select><label for="botGuildSelect" class="muted">Discord-сервер:</label><select class="search" id="botGuildSelect"><option value="">Загружаю серверы бота…</option></select><button class="btn" id="loadGuilds">Обновить список</button></div>
       <div class="notice" id="botConfigNotice">Выбери сервер, чтобы загрузить его настройки.</div>
       <div class="configgrid">
         <div class="card configbox">
@@ -133,7 +133,6 @@
     </section>
   </main>
 </div>
-<div class="modalback" id="modal"><div class="modal"><h2 id="modalTitle">Добавить бота</h2><p id="modalText">Добавим бота в список панели. Это пока локальная запись — токен не нужен.</p><label class="field" for="botName">Название бота</label><input id="botName" placeholder="Например, My Discord Bot"><label class="field" for="botHost">Хостинг (необязательно)</label><input id="botHost" placeholder="Например, Render"><div class="modalactions"><button class="btn" id="cancelModal">Отмена</button><button class="btn primary" id="saveBot">Добавить</button></div></div></div>
 <div class="toast" id="toast"></div>
 <script>
   const $=s=>document.querySelector(s);const $$=s=>document.querySelectorAll(s);
@@ -141,11 +140,6 @@
   function showPage(id){$$('.page').forEach(p=>p.classList.toggle('active',p.id===id));$$('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id))}
   $$('.nav button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
   $('#refresh').addEventListener('click',()=>toast('Backend ещё не подключён — обновлять реальные статусы пока неоткуда.'));
-  function openModal(){$('#modal').classList.add('show');$('#botName').focus()}
-  $('#addBot').onclick=openModal;$('#addBot2').onclick=openModal;$('#cancelModal').onclick=()=>$('#modal').classList.remove('show');
-  function card(name,host){const el=document.createElement('article');el.className='card bot';const avatar=name.toLowerCase().includes('ivyn')?'👑':'🤖';el.innerHTML='<div class="bothead"><div class="botidentity"><div class="botavatar">'+avatar+'</div><div><div class="botname"></div><div class="botid"></div></div></div><span class="status off">Не подключён</span></div><div class="botdesc">Добавлен в список панели. Для мониторинга и управления нужно настроить backend-интеграцию.</div><div class="botmetrics"><div class="metric"><b>—</b><span>Серверов</span></div><div class="metric"><b>—</b><span>Задержка</span></div><div class="metric"><b>—</b><span>Аптайм</span></div></div><div class="botactions"><button class="btn small primary" data-action="connect">Настроить подключение</button><button class="btn small" data-action="details">Подробнее</button></div>';el.querySelector('.botname').textContent=name;el.querySelector('.botid').textContent='Discord · '+(host||'Хостинг не указан');return el}
-  $('#saveBot').onclick=()=>{const name=$('#botName').value.trim();if(!name){toast('Введи название бота.');return}const host=$('#botHost').value.trim();$('#botCards').append(card(name,host));$('#botCards2').append(card(name,host));$('#totalBots').textContent=document.querySelectorAll('#botCards .bot').length;$('#modal').classList.remove('show');$('#botName').value='';$('#botHost').value='';toast('Бот добавлен в этот предпросмотр.');};
-  document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;if(b.dataset.action==='connect')toast('Следующий этап: защищённый backend и интеграция с хостингом.');else toast('Карточка бота. Подробные данные появятся после подключения.')});
   $('#logSearch').addEventListener('input',e=>{$$('#logList .logitem').forEach(x=>x.style.display=x.textContent.toLowerCase().includes(e.target.value.toLowerCase())?'flex':'none')});
 </script>
 
@@ -182,6 +176,12 @@
       cards.replaceChildren();
       cards2.replaceChildren();
       let online = 0;
+      const botSelect = document.getElementById('botSelect');
+      const previousBotId = botSelect.value;
+      botSelect.replaceChildren();
+      result.bots.forEach(bot => botSelect.add(new Option(bot.name, bot.id)));
+      if (result.bots.some(bot => bot.id === previousBotId)) botSelect.value = previousBotId;
+      selectedBotId = botSelect.value;
       result.bots.forEach(bot => {
         const [label, healthy] = statusLabel(bot.hostStatus);
         if (healthy) online++;
@@ -233,7 +233,16 @@
             restart.disabled = false;
           }
         });
-        actions.append(restart);
+        const configure = document.createElement('button');
+        configure.className = 'btn small';
+        configure.textContent = 'Настройки';
+        configure.addEventListener('click', () => {
+          document.querySelector('[data-page="botconfig"]').click();
+          botSelect.value = bot.id;
+          selectedBotId = bot.id;
+          loadGuilds();
+        });
+        actions.append(restart, configure);
         article.append(head, desc, metrics, actions);
         cards.append(article);
         const copy = article.cloneNode(true);
@@ -370,6 +379,7 @@
   const configNotice = document.getElementById('botConfigNotice');
   const guildSelect = document.getElementById('botGuildSelect');
   let selectedGuildId = '';
+  let selectedBotId = '';
   const listToText = values => (values || []).join(', ');
   const textToList = value => value.split(',').map(x => x.trim()).filter(Boolean);
   function showBotConfig(config) {
@@ -387,7 +397,9 @@
   async function loadGuilds() {
     guildSelect.replaceChildren(new Option('Загружаю серверы…', ''));
     try {
-      const result = await api('/api/bots/ivynx/guilds');
+      selectedBotId = document.getElementById('botSelect').value;
+      if (!selectedBotId) throw new Error('Нет доступных ботов.');
+      const result = await api('/api/bots/' + encodeURIComponent(selectedBotId) + '/guilds');
       guildSelect.replaceChildren();
       if (!result.guilds.length) {
         guildSelect.add(new Option('Бот пока не состоит на серверах', ''));
@@ -411,7 +423,11 @@
     }
     configNotice.textContent = 'Загружаю настройки выбранного сервера…';
     try {
-      const result = await api('/api/bots/ivynx/config?guild_id=' + encodeURIComponent(selectedGuildId));
+      if (selectedBotId !== 'ivynx') {
+        configNotice.textContent = 'Для этого бота пока не подключён редактор настроек. Нужен отдельный адаптер его возможностей.';
+        return;
+      }
+      const result = await api('/api/bots/' + encodeURIComponent(selectedBotId) + '/config?guild_id=' + encodeURIComponent(selectedGuildId));
       showBotConfig(result.config);
       configNotice.textContent = 'Настройки сервера «' + guildSelect.selectedOptions[0].textContent + '» загружены. Можно редактировать.';
     } catch (error) {
@@ -444,7 +460,8 @@
         if (payload[key] !== null && !/^[0-9]{15,22}$/.test(payload[key])) throw new Error('ID каналов должен содержать 15–22 цифры.');
       }
       if (!selectedGuildId) throw new Error('Сначала выбери Discord-сервер.');
-      const result = await api('/api/bots/ivynx/config?guild_id=' + encodeURIComponent(selectedGuildId), { method: 'PUT', body: JSON.stringify(payload) });
+      if (selectedBotId !== 'ivynx') throw new Error('Для этого бота пока не подключён редактор настроек.');
+      const result = await api('/api/bots/' + encodeURIComponent(selectedBotId) + '/config?guild_id=' + encodeURIComponent(selectedGuildId), { method: 'PUT', body: JSON.stringify(payload) });
       showBotConfig(result.config);
       configNotice.textContent = result.message || 'Настройки применены.';
       toast('Настройки сохранены и применены ботом.');
@@ -454,6 +471,7 @@
     }
   }
   document.getElementById('loadBotConfig').addEventListener('click', loadBotConfig);
+  document.getElementById('botSelect').addEventListener('change', loadGuilds);
   document.getElementById('loadGuilds').addEventListener('click', loadGuilds);
   guildSelect.addEventListener('change', loadBotConfig);
   document.getElementById('reloadBotConfig').addEventListener('click', loadBotConfig);
