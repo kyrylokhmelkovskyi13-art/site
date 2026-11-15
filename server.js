@@ -433,6 +433,26 @@ async function botControlRequest(bot, method = "GET", body, endpoint = "/control
   return data;
 }
 
+app.get("/api/bots/:id/manifest", requireAuth, async (req, res) => {
+  const bot = getBots().find(item => item.id === req.params.id);
+  if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
+  try {
+    if (!isOwner(req.user)) {
+      const access = await getUserAccess(req.user.discordId, bot.id);
+      if (!access.some(row => row.can_view || row.can_configure)) {
+        return res.status(403).json({ error: "Нет права просматривать настройки этого бота." });
+      }
+    }
+    const result = await botControlRequest(bot, "GET", undefined, "/control/manifest");
+    if (!result.manifest || !Array.isArray(result.manifest.sections)) {
+      return res.status(502).json({ error: "Бот вернул некорректную схему настроек." });
+    }
+    res.json({ ok: true, manifest: result.manifest });
+  } catch (error) {
+    res.status(error.status || 502).json({ error: error.message || "Бот не предоставил схему настроек." });
+  }
+});
+
 app.get("/api/bots/:id/guilds", requireAuth, async (req, res) => {
   const bot = getBots().find(item => item.id === req.params.id);
   if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
