@@ -213,7 +213,8 @@ async function getBots() {
           id: row.id,
           name: row.name,
           renderServiceId: row.render_service_id,
-          controlUrl: row.control_url
+          controlUrl: row.control_url,
+          managed: true
         });
       }
     }
@@ -447,7 +448,7 @@ app.get("/api/bots", requireAuth, async (req, res) => {
     bots = allowed.filter(item => item.access.length).map(item => item.bot);
   }
   if (!RENDER_API_TOKEN) {
-    return res.json({ connected: false, bots: bots.map(({ id, name }) => ({ id, name, hostStatus: "not_configured" })) });
+    return res.json({ connected: false, bots: bots.map(({ id, name, managed }) => ({ id, name, managed: !!managed, hostStatus: "not_configured" })) });
   }
 
   const results = await Promise.all(bots.map(async bot => {
@@ -456,12 +457,13 @@ app.get("/api/bots", requireAuth, async (req, res) => {
       return {
         id: bot.id,
         name: bot.name,
+        managed: !!bot.managed,
         hostStatus: service.suspended ? "suspended" : (service.srvStatus || service.status || "unknown"),
         serviceType: service.type || null,
         updatedAt: service.updatedAt || null
       };
     } catch (error) {
-      return { id: bot.id, name: bot.name, hostStatus: "error", error: error.status ? "Render API HTTP " + error.status : "Render API недоступен" };
+      return { id: bot.id, name: bot.name, managed: !!bot.managed, hostStatus: "error", error: error.status ? "Render API HTTP " + error.status : "Render API недоступен" };
     }
   }));
   res.json({ connected: true, bots: results });
