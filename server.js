@@ -127,7 +127,7 @@ async function supabaseRequest(tablePath, method = "GET", body) {
       "apikey": SUPABASE_SERVICE_ROLE_KEY,
       "Authorization": "Bearer " + SUPABASE_SERVICE_ROLE_KEY,
       "Accept": "application/json",
-      ...(body ? { "Content-Type": "application/json", "Prefer": "return=representation" } : {})
+      ...(body ? { "Content-Type": "application/json", "Prefer": "resolution=merge-duplicates,return=representation" } : {})
     },
     ...(body ? { body: JSON.stringify(body) } : {}),
     signal: AbortSignal.timeout(12000)
@@ -278,6 +278,18 @@ app.get("/auth/discord/callback", async (req, res) => {
       );
       if (!rows.length) return res.status(403).send("У этого Discord-аккаунта пока нет доступа к BotControl. Попроси владельца выдать доступ.");
     }
+    try {
+      await supabaseRequest("botcontrol_users?on_conflict=discord_id", "POST", {
+        discord_id: String(user.id),
+        username: String(user.username || "").slice(0, 100),
+        global_name: String(user.global_name || "").slice(0, 100),
+        avatar: user.avatar || null,
+        last_login_at: new Date().toISOString()
+      });
+    } catch (profileError) {
+      if (!isOwner({ discordId: String(user.id) })) throw profileError;
+      console.warn("Owner profile could not be stored:", profileError.message);
+    }
     setSessionCookie(res, user);
     res.redirect("/");
   } catch (error) {
@@ -297,6 +309,74 @@ app.get("/api/auth/me", (req, res) => {
     authenticated: !!user,
     user: user ? { id: user.discordId, username: user.username, globalName: user.globalName, avatar: user.avatar, isOwner: isOwner(user) } : null
   });
+});
+
+app.get("/api/access", requireAuth, requireOwner, async (_req, res) => {
+  try {
+    const rows = await supabaseRequest("botcontrol_access?select=*&order=created_at.desc&limit=500");
+    res.json({ ok: true, access: rows });
+  } catch (error) {
+    res.status(error.status || 502).json({ error: error.message });
+  }
+});
+
+app.post("/api/access", requireSameOrigin, requireAuth, requireOwner, async (req, res) => {
+  const discordId = String(req.body?.discord_id || "");
+  const botId = String(req.body?.bot_id || "");
+  const guildId = String(req.body?.guild_id || "*");
+  const permissions = req.body?.permissions || {};
+  if (!/^\\d{15,22}$/.test(discordId)) return res.status(400).json({ error: "Укажи корректный Discord ID пользователя." });
+  if (!getBots().some(bot => bot.id === botId)) return res.status(400).json({ error: "Выбранный бот не зарегистрирован в BotControl." });
+  if (guildId !== "*" && !/^\\d{15,22}$/.test(guildId)) return res.status(400).json({ error: "Укажи корректный ID Discord-сервера или *." });
+  for (const key of ["can_view", "can_configure", "can_restart"]) {
+    if (typeof permissions[key] !== "boolean") return res.status(400).json({ error: "Все права должны быть true или false." });
+  }
+  const row = {
+    discord_id: discordId,
+    bot_id: botId,
+    guild_id: guildId,
+    can_view: permissions.can_view || permissions.can_configure,
+    can_configure: permissions.can_configure,
+    can_restart: permissions.can_restart,
+    granted_by: req.user.discordId
+  };
+  try {
+    const saved = await supabaseRequest("botcontrol_access?on_conflict=discord_id,bot_id,guild_id", "POST", row);
+    await writeAudit(req.user, "access_granted_or_updated", botId, guildId === "*" ? null : guildId, { targetDiscordId: discordId, permissions: row });
+    res.json({ ok: true, access: saved[0] || row });
+  } catch (error) {
+    res.status(error.status || 502).json({ error: error.message });
+  }
+});
+
+app.delete("/api/access", requireSameOrigin, requireAuth, requireOwner, async (req, res) => {
+  const discordId = String(req.body?.discord_id || "");
+  const botId = String(req.body?.bot_id || "");
+  const guildId = String(req.body?.guild_id || "");
+  if (!/^\\d{15,22}$/.test(discordId) || !botId || !guildId) {
+    return res.status(400).json({ error: "Для удаления доступа нужны Discord ID, бот и сервер." });
+  }
+  try {
+    await supabaseRequest(
+      "botcontrol_access?discord_id=eq." + encodeURIComponent(discordId) +
+      "&bot_id=eq." + encodeURIComponent(botId) +
+      "&guild_id=eq." + encodeURIComponent(guildId),
+      "DELETE"
+    );
+    await writeAudit(req.user, "access_revoked", botId, guildId === "*" ? null : guildId, { targetDiscordId: discordId });
+    res.json({ ok: true });
+  } catch (error) {
+    res.status(error.status || 502).json({ error: error.message });
+  }
+});
+
+app.get("/api/logs", requireAuth, requireOwner, async (_req, res) => {
+  try {
+    const rows = await supabaseRequest("botcontrol_audit?select=*&order=created_at.desc&limit=100");
+    res.json({ ok: true, logs: rows });
+  } catch (error) {
+    res.status(error.status || 502).json({ error: error.message });
+  }
 });
 
 app.get("/api/bots", requireAuth, async (req, res) => {
