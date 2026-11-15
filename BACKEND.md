@@ -8,6 +8,7 @@ Create a Supabase project. Open **SQL Editor** and run `supabase/schema.sql` fro
 
 The schema creates:
 - `botcontrol_users`: Discord profiles for users who have signed in.
+- `botcontrol_bots`: bots registered through the owner dashboard (existing `BOT_SERVICES` entries remain supported).
 - `botcontrol_access`: permissions scoped to a user, bot, and Discord server. Use `*` as `guild_id` to grant access to every server for one bot.
 - `botcontrol_audit`: owner-visible history of access grants, config updates, and restarts.
 
