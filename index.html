@@ -17,6 +17,8 @@
     .authbox input{width:100%;padding:12px;border:1px solid var(--line);border-radius:9px;background:#0d111c;color:white;margin:8px 0 12px}
     .autherror{min-height:20px;color:#ff8794;font-size:12px;margin-bottom:8px}
     .logout{margin-left:8px}
+    .configgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.configbox{padding:18px}.configbox h3{margin:0 0 12px;font-size:14px}.configbox label{display:block;color:#aeb6ca;font-size:12px;margin:12px 0 5px}.configbox input,.configbox textarea{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:9px;background:#0d111c;color:white;font:inherit}.configbox textarea{min-height:90px;resize:vertical}.configbox .toggleline{display:flex;align-items:center;justify-content:space-between;margin:10px 0}.configactions{display:flex;gap:9px;margin:16px 0}.confighint{color:var(--muted);font-size:11px;margin-top:6px}
+    @media(max-width:600px){.configgrid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -41,6 +43,7 @@
       <button data-page="bots"><span class="ico">◈</span>Мои боты</button>
       <button data-page="logs"><span class="ico">≋</span>Журнал событий</button>
       <button data-page="settings"><span class="ico">⚙</span>Настройки</button>
+      <button data-page="botconfig"><span class="ico">🛠</span>Настройки бота</button>
     </nav>
     <div class="sidebottom"><div class="profile"><div class="avatar">K</div><div><b>Личный аккаунт</b><div class="muted" style="font-size:11px">Локальный предпросмотр</div></div></div></div>
   </aside>
@@ -80,6 +83,37 @@
         <div class="card setting"><div class="settingrow"><div><h3>Тёмная тема</h3><p>Основное оформление BotControl.</p></div><input class="toggle" type="checkbox" checked></div></div>
       </div>
       <div class="notice">Настройки пока сохраняются только в текущем открытом окне. Постоянное хранение появится на серверной стороне.</div>
+    </section>
+    <section class="page" id="botconfig">
+      <header class="top"><div><div class="eyebrow">Живая конфигурация</div><h1>Настройки Kingdom of IvynX</h1><p>Изменения отправляются напрямую в работающий бот.</p></div><button class="btn" id="loadBotConfig">↻ Загрузить</button></header>
+      <div class="notice" id="botConfigNotice">Загрузи текущую конфигурацию бота. Если API ещё не настроен, проверь переменные Render.</div>
+      <div class="configgrid">
+        <div class="card configbox">
+          <h3>Основные настройки</h3>
+          <div class="toggleline"><span>Мониторинг сообщений</span><input class="toggle" id="cfgMonitoring" type="checkbox"></div>
+          <label for="cfgRulesChannel">ID канала правил</label><input id="cfgRulesChannel" inputmode="numeric" placeholder="Оставь пустым, если не задан">
+          <label for="cfgReportsChannel">ID канала жалоб</label><input id="cfgReportsChannel" inputmode="numeric" placeholder="Оставь пустым, если не задан">
+          <label for="cfgSpamLimit">Лимит сообщений для спам-флага (2–20)</label><input id="cfgSpamLimit" type="number" min="2" max="20">
+          <label for="cfgSpamWindow">Окно спама в секундах (1–120)</label><input id="cfgSpamWindow" type="number" min="1" max="120">
+        </div>
+        <div class="card configbox">
+          <h3>Списки Discord ID</h3>
+          <label for="cfgRestricted">Ограниченные каналы (через запятую)</label><textarea id="cfgRestricted" placeholder="123456789012345678, 234567890123456789"></textarea>
+          <label for="cfgExempt">Исключённые роли (через запятую)</label><textarea id="cfgExempt" placeholder="ID ролей"></textarea>
+          <label for="cfgOwners">Отслеживаемые владельцы (через запятую)</label><textarea id="cfgOwners" placeholder="ID пользователей"></textarea>
+        </div>
+        <div class="card configbox">
+          <h3>Запрещённые слова — правило 13</h3>
+          <label for="cfgWords">Слова через запятую</label><textarea id="cfgWords" placeholder="word1, word2, word3"></textarea>
+          <div class="confighint">Пустой список отключает проверку по пользовательским словам. Бот не наказывает пользователей — только отправляет сигналы на проверку.</div>
+        </div>
+        <div class="card configbox">
+          <h3>Ключевые фразы для ручной проверки</h3>
+          <label for="cfgKeywords">JSON-объект по номерам правил</label><textarea id="cfgKeywords" spellcheck="false" placeholder='{"1":["phrase"],"9":["another phrase"]}'></textarea>
+          <div class="confighint">Поддерживаются правила 1, 2, 4, 9, 11, 12, 15 и 16. Каждая фраза — 2–80 символов.</div>
+        </div>
+      </div>
+      <div class="configactions"><button class="btn primary" id="saveBotConfig">Сохранить и применить</button><button class="btn" id="reloadBotConfig">Отменить изменения</button></div>
     </section>
   </main>
 </div>
@@ -229,6 +263,82 @@
   });
 
   document.getElementById('refresh').addEventListener('click', () => loadBots());
+  const configFields = {
+    monitoring: document.getElementById('cfgMonitoring'),
+    rules: document.getElementById('cfgRulesChannel'),
+    reports: document.getElementById('cfgReportsChannel'),
+    spamLimit: document.getElementById('cfgSpamLimit'),
+    spamWindow: document.getElementById('cfgSpamWindow'),
+    restricted: document.getElementById('cfgRestricted'),
+    exempt: document.getElementById('cfgExempt'),
+    owners: document.getElementById('cfgOwners'),
+    words: document.getElementById('cfgWords'),
+    keywords: document.getElementById('cfgKeywords')
+  };
+  const configNotice = document.getElementById('botConfigNotice');
+  const listToText = values => (values || []).join(', ');
+  const textToList = value => value.split(',').map(x => x.trim()).filter(Boolean);
+  function showBotConfig(config) {
+    configFields.monitoring.checked = !!config.monitoring_enabled;
+    configFields.rules.value = config.rules_channel_id || '';
+    configFields.reports.value = config.violations_channel_id || '';
+    configFields.spamLimit.value = config.spam_limit ?? 5;
+    configFields.spamWindow.value = config.spam_window_seconds ?? 8;
+    configFields.restricted.value = listToText(config.restricted_channel_ids);
+    configFields.exempt.value = listToText(config.exempt_role_ids);
+    configFields.owners.value = listToText(config.owner_user_ids);
+    configFields.words.value = listToText(config.forbidden_words);
+    configFields.keywords.value = JSON.stringify(config.review_keywords || {}, null, 2);
+  }
+  async function loadBotConfig() {
+    configNotice.textContent = 'Загружаю настройки бота…';
+    try {
+      const result = await api('/api/bots/ivynx/config');
+      showBotConfig(result.config);
+      configNotice.textContent = 'Настройки загружены с Kingdom of IvynX. Можно редактировать.';
+    } catch (error) {
+      configNotice.textContent = error.message + ' Проверь BOTCONTROL_SHARED_SECRET и controlUrl в BOT_SERVICES.';
+      toast(error.message);
+    }
+  }
+  function parseDiscordIds(value, fieldName) {
+    const values = textToList(value);
+    if (values.some(x => !/^\\d{15,22}$/.test(x))) throw new Error(fieldName + ': каждый ID должен содержать 15–22 цифры.');
+    return values;
+  }
+  async function saveBotConfig() {
+    try {
+      const keywords = JSON.parse(configFields.keywords.value || '{}');
+      if (!keywords || Array.isArray(keywords) || typeof keywords !== 'object') throw new Error('Ключевые фразы должны быть JSON-объектом.');
+      const payload = {
+        monitoring_enabled: configFields.monitoring.checked,
+        rules_channel_id: configFields.rules.value.trim() || null,
+        violations_channel_id: configFields.reports.value.trim() || null,
+        spam_limit: Number(configFields.spamLimit.value),
+        spam_window_seconds: Number(configFields.spamWindow.value),
+        restricted_channel_ids: parseDiscordIds(configFields.restricted.value, 'Ограниченные каналы'),
+        exempt_role_ids: parseDiscordIds(configFields.exempt.value, 'Исключённые роли'),
+        owner_user_ids: parseDiscordIds(configFields.owners.value, 'Владельцы'),
+        forbidden_words: textToList(configFields.words.value),
+        review_keywords: keywords
+      };
+      for (const key of ['rules_channel_id','violations_channel_id']) {
+        if (payload[key] !== null && !/^\\d{15,22}$/.test(payload[key])) throw new Error('ID каналов должен содержать 15–22 цифры.');
+      }
+      const result = await api('/api/bots/ivynx/config', { method: 'PUT', body: JSON.stringify(payload) });
+      showBotConfig(result.config);
+      configNotice.textContent = result.message || 'Настройки применены.';
+      toast('Настройки сохранены и применены ботом.');
+    } catch (error) {
+      configNotice.textContent = error.message;
+      toast(error.message);
+    }
+  }
+  document.getElementById('loadBotConfig').addEventListener('click', loadBotConfig);
+  document.getElementById('reloadBotConfig').addEventListener('click', loadBotConfig);
+  document.getElementById('saveBotConfig').addEventListener('click', saveBotConfig);
+  document.querySelector('[data-page="botconfig"]').addEventListener('click', loadBotConfig);
+
   api('/api/auth/me').then(result => {
     if (result.authenticated) loadBots();
     else showLogin();
