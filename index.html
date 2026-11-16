@@ -246,6 +246,168 @@
     .configbox .toggleline { display:flex; align-items:center; justify-content:space-between; gap:16px; }
     .configbox .toggleline > span { flex:1 1 auto; min-width:0; }
 
+  
+    /* BotControl redesign: clean control-panel layout, restrained colors, clear hierarchy */
+    :root{
+      --bg:#0c0f14;--panel:#141922;--panel2:#1a2230;--line:#293342;
+      --muted:#929eae;--text:#edf1f6;--purple:#718cff;--cyan:#58c9a5;
+      --surface:#10151d;
+    }
+    body{
+      background:#0c0f14;color:var(--text);font-size:14px;letter-spacing:0;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    }
+    .shell{max-width:none;grid-template-columns:248px minmax(0,1fr);min-height:100vh}
+    .side{
+      position:sticky;top:0;height:100vh;padding:25px 16px 18px;
+      background:#10151c;border-right:1px solid #252e3b;backdrop-filter:none;
+      box-shadow:none;
+    }
+    .brand{padding:0 10px 32px;font-size:17px;font-weight:750;letter-spacing:-.35px}
+    .logo{
+      width:36px;height:36px;border-radius:10px;background:#637cf0;
+      box-shadow:none;font-size:18px;
+    }
+    .navlabel{padding:13px 12px 8px;color:#758296;font-size:10px;letter-spacing:1.15px}
+    .nav button{
+      width:100%;padding:10px 12px;margin:2px 0;border:1px solid transparent;
+      border-radius:8px;color:#a8b2c1;font-size:13px;gap:11px;transform:none;
+      transition:background .15s,color .15s,border-color .15s;
+    }
+    .nav button:hover{background:#1a2230;color:#f5f7fa;transform:none}
+    .nav button.active{
+      color:#fff;background:#202b43;border:1px solid #2c3b5b;
+      box-shadow:inset 2px 0 #8298ff;
+    }
+    .nav .ico{width:19px;font-size:15px;color:#aab7d1}
+    .sidebottom{background:#151c26;border:1px solid #293342;border-radius:10px;padding:12px}
+    .avatar{background:#2b3852;color:#dbe5ff}
+    .main{width:100%;max-width:1440px;padding:34px clamp(22px,4vw,56px);margin:0}
+    .top{
+      display:flex;align-items:center;justify-content:space-between;gap:18px;
+      padding:0 0 22px;margin:0 0 25px;border-bottom:1px solid #252e3b;
+    }
+    .eyebrow{color:#8ea4ff;font-size:10px;letter-spacing:1.25px;font-weight:700}
+    .top h1{font-size:27px;line-height:1.2;font-weight:720;letter-spacing:-.65px;margin:7px 0 5px}
+    .top p{font-size:13px;color:#9aa6b6}
+    .topactions{gap:8px}
+    .btn{
+      border:1px solid #344052;background:#1a2230;color:#e8edf5;
+      padding:9px 13px;border-radius:8px;font-size:12px;font-weight:650;
+      box-shadow:none;transition:background .15s,border-color .15s;
+    }
+    .btn:hover{background:#242f40;border-color:#53647d;transform:none}
+    .btn.primary{background:#637cf0;border:1px solid #637cf0;color:white;box-shadow:none}
+    .btn.primary:hover{background:#7890ff;border-color:#7890ff;filter:none}
+    .btn.small{padding:7px 10px}
+    .stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 29px}
+    .stat,.card{
+      background:#141a23;border:1px solid #293342;border-radius:11px;
+      box-shadow:none;
+    }
+    .stat{padding:17px 18px;min-height:108px;transition:border-color .15s}
+    .stat:hover{border-color:#465775;transform:none}
+    .stathead{font-size:11px;color:#a0adbd}
+    .statnum{font-size:27px;font-weight:720;letter-spacing:-.7px;margin-top:10px}
+    .statfoot{font-size:10px;color:#7f8c9e}
+    .sectionhead{display:flex;align-items:center;justify-content:space-between;margin:28px 0 12px}
+    .sectionhead h2{font-size:15px;font-weight:700;letter-spacing:-.15px}
+    .sectionhead span{font-size:11px;color:#8794a6}
+    .bots{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+    .bot{padding:18px;border-radius:11px;transition:border-color .15s}
+    .bot:hover{border-color:#465775;transform:none;box-shadow:none}
+    .botavatar{width:42px;height:42px;border-radius:10px;background:#26334b;border:1px solid #34445f}
+    .botname{font-size:14px;font-weight:700}
+    .botid{font-size:11px;color:#8794a6}
+    .status{font-size:10px;font-weight:700;padding:5px 8px;border:1px solid #285c4d;background:#142e27;color:#75d9b1}
+    .status.off{border-color:#60404a;background:#302027;color:#f19aa5}
+    .botdesc{font-size:12px;line-height:1.65;color:#a3afbf;margin:15px 0}
+    .botmetrics{gap:24px;border-top:1px solid #293342;padding-top:13px}
+    .metric b{font-size:15px}.metric span{font-size:10px;color:#8794a6}
+    .botactions{gap:8px;margin-top:15px;flex-wrap:wrap}
+    .activity{overflow:hidden;border-radius:11px}
+    .activityrow{grid-template-columns:34px minmax(0,1fr) auto;gap:11px;padding:13px 16px;border-color:#293342}
+    .eventicon{width:30px;height:30px;border-radius:8px;background:#202b3c;border:1px solid #2e3d53}
+    .eventtitle{font-size:12px}.eventsub,.time{font-size:11px;color:#8996a8}
+    .toolbar{margin:15px 0;gap:9px}
+    .search{
+      min-width:230px;padding:10px 12px;background:#10161f;border:1px solid #303c4d;
+      color:var(--text);border-radius:8px;font-size:13px;
+    }
+    .search:focus,.configbox input:focus,.configbox textarea:focus,.modal input:focus{
+      outline:none;border-color:#718cff;box-shadow:0 0 0 2px #718cff22;
+    }
+    .settingsgrid,.configgrid{gap:12px}
+    .setting,.configbox{padding:17px;border-radius:11px}
+    .setting h3,.configbox h3{font-size:13px;font-weight:700;margin:0 0 5px}
+    .setting p{font-size:11px;line-height:1.55;color:#929eae}
+    .settingrow{gap:14px}
+    .configbox label{display:block;color:#aab5c4;font-size:11px;font-weight:600;margin:12px 0 6px}
+    .configbox input:not(.toggle),.configbox textarea,.modal input,.authbox input{
+      width:100%;padding:10px 11px;background:#0f151e;border:1px solid #303c4d;
+      border-radius:8px;color:#edf1f6;font:inherit;
+    }
+    .configbox textarea{min-height:90px;resize:vertical}
+    .configbox .toggleline{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      margin:11px 0;padding:10px 0;border-bottom:1px solid #252e3b;
+    }
+    .configbox .toggleline:last-child{border-bottom:0}
+    .configbox .toggleline>span{font-size:12px;color:#c5ceda;flex:1 1 auto;min-width:0}
+    .configbox input.toggle,.configbox .toggleline input.toggle{
+      appearance:none;-webkit-appearance:none;display:block;
+      width:38px;min-width:38px;max-width:38px;height:22px;min-height:22px;
+      padding:0;margin:0;flex:0 0 38px;border:0;border-radius:999px;
+      background:#3a4658;position:relative;cursor:pointer;box-shadow:none;
+    }
+    .configbox input.toggle:checked{background:#718cff}
+    .configbox input.toggle::before{
+      content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;
+      border-radius:50%;background:#fff;transition:left .15s ease;
+    }
+    .configbox input.toggle:checked::before{left:19px}
+    .configactions{display:flex;gap:9px;margin:16px 0}
+    .confighint{font-size:11px;line-height:1.55;color:#8794a6;margin-top:7px}
+    .notice{
+      margin-top:17px;padding:12px 14px;border-radius:9px;
+      background:#211f19;border:1px solid #514631;color:#d9c38d;
+      font-size:11px;line-height:1.6;
+    }
+    .logitem{padding:13px 16px;border-color:#293342}
+    .tag{background:#25324b;color:#b9c9ff}
+    .modal,.authbox{background:#151c26;border:1px solid #344052;border-radius:13px;box-shadow:0 22px 70px #0009}
+    .authwall{background:#080b10ee;backdrop-filter:blur(8px)}
+    .authbox{width:min(410px,100%);padding:28px}
+    .authbox h2{font-size:22px;letter-spacing:-.4px}
+    .authbox p{font-size:12px;line-height:1.6;color:#9aa6b6}
+    .toast{background:#1b2635;border:1px solid #3b4c64;border-radius:9px;box-shadow:0 12px 35px #0008}
+    .page{animation:none}
+    button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+      outline:2px solid #8da2ff;outline-offset:2px;
+    }
+    @media(max-width:850px){
+      .shell{grid-template-columns:1fr}
+      .side{position:relative;height:auto;padding:13px 15px;background:#10151c}
+      .brand{padding:2px 8px 12px}
+      .nav{display:flex;overflow-x:auto;gap:3px}
+      .nav button{white-space:nowrap;width:auto;flex:0 0 auto}
+      .navlabel,.sidebottom{display:none}
+      .main{padding:24px 18px}
+    }
+    @media(max-width:600px){
+      .top{align-items:flex-start;flex-direction:column}
+      .top h1{font-size:24px}
+      .topactions{width:100%;flex-wrap:wrap}
+      .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+      .stat{padding:13px;min-height:98px}
+      .statnum{font-size:24px}
+      .bots,.settingsgrid,.configgrid{grid-template-columns:1fr}
+      .botmetrics{gap:17px}
+      .search{min-width:0;width:100%}
+      .activityrow{grid-template-columns:30px minmax(0,1fr)}
+      .activityrow .time{grid-column:2}
+    }
+
   </style>
 </head>
 <body>
