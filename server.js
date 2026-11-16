@@ -695,7 +695,7 @@ app.put("/api/bots/:id/config", requireSameOrigin, requireAuth, async (req, res)
     await requireAdminOnBotGuild(req.user, bot, guildId);
     const result = await botControlRequest(bot, "PUT", req.body, "/control/config?guild_id=" + encodeURIComponent(guildId));
     await writeAudit(req.user, "bot_config_updated", bot.id, guildId, { changedKeys: Object.keys(req.body || {}) });
-    res.json({ ok: true, guildId, config: result.config, message: "Настройки этого Discord-сервера применены." });
+    res.json({ ok: true, guildId, config: result.config, rules_published: !!result.rules_published, config_saved: true, message: result.rules_published ? "Settings saved and rules published." : "Settings saved and applied." });
   } catch (error) {
     res.status(error.status || 502).json({ error: error.message || "Не удалось отправить настройки боту." });
   }
