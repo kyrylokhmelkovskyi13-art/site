@@ -743,7 +743,7 @@
     <div class="welcome-logo">⌘</div><div class="welcome-kicker">DISCORD BOT CONTROL CENTER</div>
     <h1>All your bots.<br><span>One control panel.</span></h1>
     <p>Connect with Discord, choose a bot and a server, then manage its settings in one clean workspace.</p>
-    <button type="button" class="btn primary welcome-continue" id="welcomeContinue" onclick="document.getElementById(\'welcomeScreen\').classList.add(\'hidden\');document.getElementById(\'authWall\').classList.add(\'show\')">Continue <span>→</span></button>
+    <button type="button" class="btn primary welcome-continue" id="welcomeContinue" >Continue <span>→</span></button>
     <div class="welcome-foot"><span>●</span> Secure Discord sign-in · Server-scoped settings</div>
   </div><div class="welcome-side-note">BOTCONTROL <span>/</span> CONTROL YOUR COMMUNITY</div>
 </div>
@@ -1037,7 +1037,36 @@
     }
   }
 
-  async function chooseBot(bot) {\n    selectedBotId = bot.id;\n    document.querySelector('.shell').classList.add('wizard-mode');\n    showPage('serverPicker');\n    const grid = document.getElementById('serverCards');\n    grid.innerHTML = '<div class="empty">Loading servers…</div>';\n    try {\n      const result = await api('/api/bots/' + encodeURIComponent(bot.id) + '/guilds');\n      grid.replaceChildren();\n      if (!result.guilds.length) { grid.append(Object.assign(document.createElement('div'), {className:'empty',textContent:'No servers found where this bot is installed and you have Administrator permission.'})); return; }\n      result.guilds.forEach(guild => {\n        const card = document.createElement('article'); card.className = 'server-card';\n        const icon = document.createElement('div'); icon.className = 'server-icon'; icon.textContent = (guild.name || 'S').trim().charAt(0).toUpperCase();\n        const info = document.createElement('div'); const name = document.createElement('div'); name.className = 'server-name'; name.textContent = guild.name;\n        const meta = document.createElement('div'); meta.className = 'server-meta'; meta.textContent = 'Discord server'; info.append(name,meta);\n        const arrow = document.createElement('div'); arrow.className = 'server-arrow'; arrow.textContent = '→'; card.append(icon,info,arrow);\n        card.addEventListener('click', async () => {\n          selectedGuildId = guild.id;\n          document.getElementById('botSelect').value = bot.id;\n          guildSelect.replaceChildren(new Option(guild.name, guild.id));\n          document.querySelector('.shell').classList.remove('wizard-mode');\n          showPage('botconfig'); await loadBotConfig();\n        });\n        grid.append(card);\n      });\n    } catch(error) { grid.replaceChildren(Object.assign(document.createElement('div'), {className:'empty',textContent:'Could not load servers: ' + error.message})); }\n  }\n  document.getElementById('backToBots')?.addEventListener('click', () => showPage('bots'));\n\n  function showLogin() { document.querySelector('.shell')?.classList.remove('wizard-mode'); document.getElementById('welcomeScreen')?.classList.remove('hidden'); wall.classList.remove('show'); document.querySelector('.shell').style.display = 'none'; }
+  async function chooseBot(bot) {
+    selectedBotId = bot.id;
+    document.querySelector('.shell').classList.add('wizard-mode');
+    showPage('serverPicker');
+    const grid = document.getElementById('serverCards');
+    grid.innerHTML = '<div class="empty">Loading servers…</div>';
+    try {
+      const result = await api('/api/bots/' + encodeURIComponent(bot.id) + '/guilds');
+      grid.replaceChildren();
+      if (!result.guilds.length) { grid.append(Object.assign(document.createElement('div'), {className:'empty',textContent:'No servers found where this bot is installed and you have Administrator permission.'})); return; }
+      result.guilds.forEach(guild => {
+        const card = document.createElement('article'); card.className = 'server-card';
+        const icon = document.createElement('div'); icon.className = 'server-icon'; icon.textContent = (guild.name || 'S').trim().charAt(0).toUpperCase();
+        const info = document.createElement('div'); const name = document.createElement('div'); name.className = 'server-name'; name.textContent = guild.name;
+        const meta = document.createElement('div'); meta.className = 'server-meta'; meta.textContent = 'Discord server'; info.append(name,meta);
+        const arrow = document.createElement('div'); arrow.className = 'server-arrow'; arrow.textContent = '→'; card.append(icon,info,arrow);
+        card.addEventListener('click', async () => {
+          selectedGuildId = guild.id;
+          document.getElementById('botSelect').value = bot.id;
+          guildSelect.replaceChildren(new Option(guild.name, guild.id));
+          document.querySelector('.shell').classList.remove('wizard-mode');
+          showPage('botconfig'); await loadBotConfig();
+        });
+        grid.append(card);
+      });
+    } catch(error) { grid.replaceChildren(Object.assign(document.createElement('div'), {className:'empty',textContent:'Could not load servers: ' + error.message})); }
+  }
+  document.getElementById('backToBots')?.addEventListener('click', () => showPage('bots'));
+
+  function showLogin() { document.querySelector('.shell')?.classList.remove('wizard-mode'); document.getElementById('welcomeScreen')?.classList.remove('hidden'); wall.classList.remove('show'); document.querySelector('.shell').style.display = 'none'; }
   function hideLogin() { wall.classList.remove('show'); document.getElementById('welcomeScreen')?.classList.add('hidden'); document.querySelector('.shell').style.display = 'grid'; }
   document.getElementById('welcomeContinue')?.addEventListener('click', () => { document.getElementById('welcomeScreen').classList.add('hidden'); wall.classList.add('show'); });
 
