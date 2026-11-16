@@ -19,6 +19,100 @@
     .logout{margin-left:8px}
     .configgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.configbox{padding:18px}.configbox h3{margin:0 0 12px;font-size:14px}.configbox label{display:block;color:#aeb6ca;font-size:12px;margin:12px 0 5px}.configbox input,.configbox textarea{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:9px;background:#0d111c;color:white;font:inherit}.configbox textarea{min-height:90px;resize:vertical}.configbox .toggleline{display:flex;align-items:center;justify-content:space-between;margin:10px 0}.configactions{display:flex;gap:9px;margin:16px 0}.confighint{color:var(--muted);font-size:11px;margin-top:6px}
     @media(max-width:600px){.configgrid{grid-template-columns:1fr}}
+  
+    /* BotControl visual refresh */
+    :root{
+      color-scheme:dark;--bg:#090b12;--panel:#101521;--panel2:#151d2c;--line:#273247;
+      --muted:#93a0b7;--text:#f3f6fc;--purple:#9275ff;--cyan:#5ee0c1;
+      --red:#ff7188;--yellow:#f4c96c;--surface:#0d121d;
+    }
+    body{
+      background:radial-gradient(900px 520px at 85% -10%,rgba(105,78,205,.19),transparent 62%),
+      radial-gradient(700px 420px at 5% 100%,rgba(44,134,150,.08),transparent 65%),var(--bg);
+      color:var(--text);font-size:14px;letter-spacing:.01em;
+    }
+    .shell{grid-template-columns:264px minmax(0,1fr);max-width:1800px;margin:auto}
+    .side{position:sticky;top:0;height:100vh;padding:28px 18px 20px;background:rgba(10,13,21,.88);
+      border-right:1px solid rgba(143,158,190,.13);backdrop-filter:blur(18px)}
+    .brand{padding:2px 10px 38px;font-size:18px;letter-spacing:-.4px}
+    .logo{width:39px;height:39px;border-radius:13px;background:linear-gradient(145deg,#a58cff,#6548d8);
+      box-shadow:0 8px 28px #7656e955;font-size:20px}
+    .navlabel{padding:12px 13px 9px;color:#697891;font-size:10px;letter-spacing:1.8px}
+    .nav button{padding:12px 13px;margin:3px 0;border:1px solid transparent;border-radius:11px;
+      color:#9ca9bf;font-size:13px;transition:background .18s,border-color .18s,color .18s,transform .18s}
+    .nav button:hover{background:#171e2c;color:#fff;transform:translateX(2px)}
+    .nav button.active{background:linear-gradient(100deg,rgba(135,105,255,.2),rgba(135,105,255,.06));
+      border-color:rgba(151,124,255,.22);color:#fff;box-shadow:inset 3px 0 #987bff}
+    .nav .ico{width:20px;font-size:17px;opacity:.9}
+    .sidebottom{background:rgba(21,29,43,.75);border-color:#28344a;border-radius:14px;padding:13px}
+    .avatar{width:35px;height:35px;background:#30274d;color:#d5caff}
+    .main{padding:42px clamp(24px,4.5vw,68px);max-width:1510px}
+    .top{margin-bottom:34px;align-items:center}
+    .eyebrow{font-size:10px;letter-spacing:2px;color:#a995ff}
+    .top h1{font-size:32px;line-height:1.15;letter-spacing:-1.2px;margin:8px 0 8px}
+    .top p{font-size:13px;color:#9aa7bd}
+    .btn{border:1px solid #2a354b;background:#151d2b;color:#e8edf8;padding:10px 15px;border-radius:10px;
+      transition:all .18s;font-size:12px}
+    .btn:hover{border-color:#8068dc;background:#20283a;transform:translateY(-1px)}
+    .btn.primary{background:linear-gradient(135deg,#9275ff,#6749d8);box-shadow:0 8px 22px #7656e933;color:white}
+    .btn.primary:hover{filter:brightness(1.1);box-shadow:0 10px 28px #7656e955}
+    .stats{gap:15px;margin-bottom:32px}
+    .stat,.card{background:linear-gradient(145deg,rgba(20,27,41,.96),rgba(14,19,30,.98));
+      border:1px solid rgba(132,151,184,.17);border-radius:16px;box-shadow:0 8px 30px #00000012}
+    .stat{padding:20px 21px;min-height:118px;transition:border-color .2s,transform .2s}
+    .stat:hover,.bot:hover,.setting:hover{border-color:rgba(151,124,255,.35);transform:translateY(-2px)}
+    .stathead{font-size:11px;letter-spacing:.03em;color:#9ba8bd}
+    .statnum{font-size:30px;margin-top:12px;letter-spacing:-1.2px}
+    .statfoot{font-size:11px;color:#77869f}
+    .sectionhead{margin:34px 0 15px}
+    .sectionhead h2{font-size:16px;letter-spacing:-.25px}
+    .sectionhead span{font-size:11px;color:#78869d}
+    .bots{gap:16px}
+    .bot{padding:21px;transition:transform .2s,border-color .2s}
+    .botavatar{width:47px;height:47px;border:1px solid #3b4260;background:linear-gradient(145deg,#292c4c,#1c2638)}
+    .botname{font-size:15px;letter-spacing:-.2px}
+    .botid{font-size:11px;color:#8290a8}
+    .status{font-size:10px;font-weight:700;letter-spacing:.03em;padding:6px 10px;border:1px solid #276052;background:#102c2a;color:#74e4c9}
+    .status.off{border-color:#633342;background:#321b27;color:#ff91a0}
+    .botdesc{font-size:12px;line-height:1.65;color:#a0acc0;margin:19px 0}
+    .botmetrics{gap:28px;border-color:#273247;padding-top:15px}
+    .metric b{font-size:16px}.metric span{font-size:10px;color:#7f8da4}
+    .botactions{margin-top:17px;flex-wrap:wrap}
+    .notice{background:rgba(36,31,23,.65);border:1px solid #59492c;color:#e5ca91;padding:14px 16px;border-radius:12px;line-height:1.6}
+    .toolbar{margin:18px 0}.search{background:#101725;border-color:#2b374d;border-radius:10px;padding:11px 13px;color:#f2f5fc}
+    .search:focus,.modal input:focus,.configbox input:focus,.configbox textarea:focus{outline:none;border-color:#9275ff;box-shadow:0 0 0 3px #9275ff20}
+    .activityrow,.logitem{padding:15px 18px;border-color:#273247}
+    .eventicon{background:#202941;border:1px solid #303e5a}
+    .eventtitle{font-size:12px}.eventsub,.time{color:#8290a8}
+    .settingsgrid,.configgrid{gap:16px}
+    .setting,.configbox{padding:21px}
+    .setting h3,.configbox h3{font-size:14px;letter-spacing:-.15px}
+    .setting p{line-height:1.6}
+    .configbox label{color:#aebbd0;font-size:11px;font-weight:600;letter-spacing:.02em}
+    .configbox input,.configbox textarea,.modal input{background:#0b111c;border-color:#2b374d;border-radius:10px;padding:11px 12px}
+    .configbox textarea{line-height:1.55}
+    .toggle{width:39px;height:23px;background:#39445b}
+    .toggle:before{width:17px;height:17px;top:3px;left:3px}
+    .toggle:checked:before{left:19px}
+    .configactions{margin:19px 0;gap:10px}
+    .confighint{line-height:1.55;color:#7f8da4}
+    .modal{background:#131b29;border-color:#34415a;border-radius:18px}
+    .authwall{background:rgba(5,8,15,.88)}
+    .authbox{background:linear-gradient(145deg,#182033,#101622);border-color:#35415a;border-radius:20px;padding:30px}
+    .authbox h2{font-size:23px;letter-spacing:-.6px}
+    .authbox p{line-height:1.65;color:#9aa8bf}
+    .toast{background:#182235;border-color:#3a4964;border-radius:12px;box-shadow:0 12px 40px #0008}
+    button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #a18aff;outline-offset:3px}
+    @media(max-width:850px){
+      .shell{grid-template-columns:1fr}.side{position:relative;height:auto;padding:14px 16px;background:#0c111b}
+      .brand{padding:2px 8px 13px}.main{padding:25px 18px}
+    }
+    @media(max-width:600px){
+      .top h1{font-size:27px}.topactions{flex-wrap:wrap}.stats{gap:10px}
+      .stat{padding:15px;min-height:105px}.bots,.settingsgrid,.configgrid{grid-template-columns:1fr}
+      .botmetrics{gap:20px}.botactions .btn{flex:1}
+    }
+
   </style>
 </head>
 <body>
@@ -60,14 +154,14 @@
       </div>
       <div class="notice">ⓘ Preview information may be shown until a bot API is connected. Bot tokens are never requested here.</div>
       <div class="sectionhead"><h2>Recent Activity</h2><span>Demo data</span></div>
-      <div class="card activity"><div class="activityrow"><div class="eventicon">🔒</div><div><div class="eventtitle">Dashboard created</div><div class="eventsub">Interface is ready for the next integration step</div></div><span class="time">Сейчас</span></div><div class="activityrow"><div class="eventicon">🤖</div><div><div class="eventtitle">Kingdom of IvynX added</div><div class="eventsub">Waiting for secure connection setup</div></div><span class="time">Сейчас</span></div></div>
+      <div class="card activity"><div class="activityrow"><div class="eventicon">🔒</div><div><div class="eventtitle">Dashboard created</div><div class="eventsub">Interface is ready for the next integration step</div></div><span class="time">Just now</span></div><div class="activityrow"><div class="eventicon">🤖</div><div><div class="eventtitle">Kingdom of IvynX added</div><div class="eventsub">Waiting for secure connection setup</div></div><span class="time">Just now</span></div></div>
     </section>
     <section class="page" id="bots">
       <header class="top"><div><div class="eyebrow">MANAGEMENT</div><h1>My Bots</h1><p>Register existing Discord bots hosted on Render.</p></div></header>
       <div class="card configbox" id="botRegistryForm" hidden>
         <h3>Connect an existing Render service</h3>
         <label for="newBotId">Internal bot ID</label><input id="newBotId" placeholder="e.g. moderation-bot">
-        <label for="newBotName">Display name</label><input id="newBotName" placeholder="Display name бота">
+        <label for="newBotName">Display name</label><input id="newBotName" placeholder="Bot display name">
         <label for="newBotRenderId">Render Service ID</label><input id="newBotRenderId" placeholder="srv-...">
         <label for="newBotControlUrl">Public control API URL</label><input id="newBotControlUrl" placeholder="https://my-bot.onrender.com">
         <div class="confighint">The bot must be deployed on Render and support the protected /control/manifest, /control/guilds, and /control/config routes.</div>
@@ -87,7 +181,7 @@
         <h3>Grant or update access</h3>
         <label for="accessDiscordId">User Discord ID</label><input id="accessDiscordId" inputmode="numeric" placeholder="e.g. 123456789012345678">
         <label for="accessBotId">Bot ID from BOT_SERVICES</label><input id="accessBotId" value="ivynx" placeholder="ivynx">
-        <label for="accessGuildId">Discord server (* = all bot servers)</label><input id="accessGuildId" value="*" placeholder="* или ID сервера">
+        <label for="accessGuildId">Discord server (* = all bot servers)</label><input id="accessGuildId" value="*" placeholder="* or server ID">
         <div class="settingsgrid">
           <label class="settingrow"><span>View settings</span><input class="toggle" id="accessView" type="checkbox" checked></label>
           <label class="settingrow"><span>Edit settings</span><input class="toggle" id="accessConfigure" type="checkbox"></label>
@@ -95,15 +189,15 @@
         </div>
         <div class="configactions"><button class="btn primary" id="grantAccess">Save Access</button></div>
       </div>
-      <div class="sectionhead"><h2>Granted Permissions</h2><span>MANAGEMENT доступом</span></div>
+      <div class="sectionhead"><h2>Granted Permissions</h2><span>ACCESS MANAGEMENT</span></div>
       <div class="card" id="accessList"><div class="empty">Loading…</div></div>
     </section>
     <section class="page" id="settings">
       <header class="top"><div><div class="eyebrow">CONFIGURATION</div><h1>Settings</h1><p>Dashboard preferences.</p></div></header>
       <div class="settingsgrid">
         <div class="card setting"><div class="settingrow"><div><h3>Error notifications</h3><p>Show alerts when bots fail.</p></div><input class="toggle" type="checkbox" checked></div></div>
-        <div class="card setting"><div class="settingrow"><div><h3>Подтвержyesть перезапуск</h3><p>Ask for confirmation before taking action.</p></div><input class="toggle" type="checkbox" checked></div></div>
-        <div class="card setting"><div class="settingrow"><div><h3>Auto-refresh status</h3><p>Обновлять yesнные после подключения backend.</p></div><input class="toggle" type="checkbox"></div></div>
+        <div class="card setting"><div class="settingrow"><div><h3>Confirm before restart</h3><p>Ask for confirmation before taking action.</p></div><input class="toggle" type="checkbox" checked></div></div>
+        <div class="card setting"><div class="settingrow"><div><h3>Auto-refresh status</h3><p>Refresh data after the backend is connected.</p></div><input class="toggle" type="checkbox"></div></div>
         <div class="card setting"><div class="settingrow"><div><h3>Dark theme</h3><p>BotControl appearance.</p></div><input class="toggle" type="checkbox" checked></div></div>
       </div>
       <div class="notice">These preferences currently apply only to this browser session. Persistent storage may be added later.</div>
@@ -112,10 +206,10 @@
       <header class="top"><div><div class="eyebrow">LIVE CONFIGURATION</div><h1>Bot Settings</h1><p>Choose a bot, then a Discord server. Each server has its own settings.</p></div><button class="btn" id="loadBotConfig">↻ Load</button></header>
       <div class="configgrid">
         <div class="card setting"><div class="eyebrow">STEP 1</div><h3>Choose a bot</h3><p>Which Discord bot do you want to configure?</p><select class="search" id="botSelect"><option value="">Loading bots…</option></select></div>
-        <div class="card setting"><div class="eyebrow">STEP 2</div><h3>Choose a server</h3><p>Only servers where you have Administrator permission and the selected bot is installed are shown.</p><select class="search" id="botGuildSelect"><option value="">Choose a bot first</option></select><button class="btn" id="loadGuilds" style="margin-top:10px">↻ Refresh серверы</button></div>
+        <div class="card setting"><div class="eyebrow">STEP 2</div><h3>Choose a server</h3><p>Only servers where you have Administrator permission and the selected bot is installed are shown.</p><select class="search" id="botGuildSelect"><option value="">Choose a bot first</option></select><button class="btn" id="loadGuilds" style="margin-top:10px">↻ Refresh servers</button></div>
       </div>
       <div class="notice" id="botConfigNotice" role="status" aria-live="polite">Step 1: Choose a bot. Then choose a server to view its settings.</div>
-      <div class="configgrid" id="configEditor"><div class="empty">Choose a bot и Discord-сервер, чтобы увидеть доступные настройки.</div></div>
+      <div class="configgrid" id="configEditor"><div class="empty">Choose a bot and a Discord server to view available settings.</div></div>
       <div class="configactions"><button class="btn primary" id="saveBotConfig">Save & Apply</button><button class="btn" id="reloadBotConfig">Discard Changes</button></div>
     </section>
   </main>
@@ -196,7 +290,7 @@
         head.append(identity, badge);
         const desc = document.createElement('div');
         desc.className = 'botdesc';
-        desc.textContent = bot.error || 'Статус сервиса получен из Render API. Это не подтвержyesет подключение Discord Gateway.';
+        desc.textContent = bot.error || 'Service status was returned by the Render API. This does not confirm a Discord Gateway connection.';
         const metrics = document.createElement('div');
         metrics.className = 'botmetrics';
         metrics.innerHTML = '<div class="metric"><b>—</b><span>Discord servers</span></div><div class="metric"><b>—</b><span>Latency</span></div><div class="metric"><b>—</b><span>Uptime</span></div>';
@@ -208,7 +302,7 @@
         restart.hidden = !bot.canRestart;
         restart.disabled = !result.connected || bot.hostStatus === 'not_configured';
         restart.addEventListener('click', async () => {
-          if (!confirm('Restart сервис «' + bot.name + '” on Render?')) return;
+          if (!confirm('Restart service "' + bot.name + '" on Render?')) return;
           restart.disabled = true;
           try {
             const response = await api('/api/bots/' + encodeURIComponent(bot.id) + '/restart', {
@@ -236,11 +330,11 @@
           remove.className = 'btn small';
           remove.textContent = 'Remove from dashboard';
           remove.addEventListener('click', async () => {
-            if (!confirm('Remove “' + bot.name + '» из BotControl? Сам сервис Render не будет уyesлён.')) return;
+            if (!confirm('Remove "' + bot.name + '" from BotControl? The Render service itself will not be deleted.')) return;
             try {
               await api('/api/bots/' + encodeURIComponent(bot.id), { method: 'DELETE', body: '{}' });
               await loadBots();
-              toast('Бот уyesлён из панели.');
+              toast('Bot removed from the dashboard.');
             } catch (error) { toast(error.message); }
           });
           actions.append(remove);
@@ -306,7 +400,7 @@
         remove.className = 'btn small';
         remove.textContent = 'Revoke';
         remove.addEventListener('click', async () => {
-          if (!confirm('Revoke это разрешение?')) return;
+          if (!confirm('Revoke this permission?')) return;
           try {
             await api('/api/access', { method: 'DELETE', body: JSON.stringify({
               discord_id: row.discord_id, bot_id: row.bot_id, guild_id: row.guild_id
@@ -365,7 +459,7 @@
       const result = await api('/api/logs');
       list.replaceChildren();
       if (!result.logs.length) {
-        list.append(Object.assign(document.createElement('div'), { className: 'empty', textContent: 'Событий пока no.' }));
+        list.append(Object.assign(document.createElement('div'), { className: 'empty', textContent: 'No events yet.' }));
         return;
       }
       result.logs.forEach(log => {
@@ -504,7 +598,7 @@
       await loadBotConfig();
     } catch (error) {
       guildSelect.replaceChildren(new Option('Bot API unavailable', ''));
-      configNotice.textContent = 'Не уyesлось загрузить список серверов.\n\n' + error.message;
+      configNotice.textContent = 'Could not load the server list.\n\n' + error.message;
       toast(error.message);
     }
   }
@@ -521,22 +615,22 @@
         api('/api/bots/' + encodeURIComponent(selectedBotId) + '/config?guild_id=' + encodeURIComponent(selectedGuildId))
       ]);
       renderBotConfig(configResult.config, manifestResult.manifest);
-      configNotice.textContent = 'Settings сервера «' + guildSelect.selectedOptions[0].textContent + '” loaded using bot schema “' + (manifestResult.manifest.name || selectedBotId) + '».';
+      configNotice.textContent = 'Settings for server "' + guildSelect.selectedOptions[0].textContent + '" loaded using bot schema "' + (manifestResult.manifest.name || selectedBotId) + '».';
     } catch (error) {
-      configNotice.textContent = 'Не уyesлось загрузить настройки.\n\n' + error.message;
+      configNotice.textContent = 'Could not load settings.\n\n' + error.message;
       toast(error.message);
     }
   }
   async function saveBotConfig() {
     try {
-      if (!selectedGuildId || !selectedBotId) throw new Error('Choose a bot first и Discord-сервер.');
+      if (!selectedGuildId || !selectedBotId) throw new Error('Choose a bot and a Discord server.');
       const payload = collectBotConfig();
       const result = await api('/api/bots/' + encodeURIComponent(selectedBotId) + '/config?guild_id=' + encodeURIComponent(selectedGuildId), { method: 'PUT', body: JSON.stringify(payload) });
       renderBotConfig(result.config, currentManifest);
-      configNotice.textContent = result.message || 'Settings применены.';
-      toast('Settings сохранены и применены ботом.');
+      configNotice.textContent = result.message || 'Settings applied.';
+      toast('Settings saved and applied by the bot.');
     } catch (error) {
-      configNotice.textContent = 'Не уyesлось сохранить настройки.\n\n' + error.message;
+      configNotice.textContent = 'Could not save settings.\n\n' + error.message;
       toast(error.message);
     }
   }
