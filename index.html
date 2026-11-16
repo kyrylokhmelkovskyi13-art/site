@@ -923,7 +923,7 @@
       <div class="notice">These preferences currently apply only to this browser session. Persistent storage may be added later.</div>
     </section>
     <section class="page" id="botconfig">
-      <header class="top editor-top"><div><div class="eyebrow">BOT CONFIGURATION</div><h1>Bot Settings</h1><p>Manage how your bot works on the selected Discord server.</p></div><div class="topactions"><button class="btn" id="loadBotConfig">↻ Reload</button><button class="btn primary" id="saveBotConfig">Save Changes</button></div></header>
+      <header class="top editor-top"><div><div class="eyebrow">BOT CONFIGURATION</div><h1>Bot Settings</h1><p>Manage how your bot works on the selected Discord server.</p></div><div class="topactions"><button class="btn" id="loadBotConfig">↻ Reload</button><button class="btn primary" id="saveBotConfig" hidden>Save &amp; Apply</button></div></header>
       <div class="editor-context">
         <div class="editor-picker"><label for="botSelect">BOT</label><select class="search" id="botSelect"><option value="">Loading bots…</option></select></div>
         <div class="editor-picker"><label for="botGuildSelect">DISCORD SERVER</label><select class="search" id="botGuildSelect"><option value="">Choose a bot first</option></select></div>
@@ -1433,20 +1433,26 @@
         api('/api/bots/' + encodeURIComponent(selectedBotId) + '/config?guild_id=' + encodeURIComponent(selectedGuildId))
       ]);
       await renderBotConfig(configResult.config, manifestResult.manifest);
+      setConfigDirty(false);
       configNotice.textContent = 'Settings for server "' + guildSelect.selectedOptions[0].textContent + '" loaded using bot schema "' + (manifestResult.manifest.name || selectedBotId) + '».';
     } catch (error) {
       configNotice.textContent = 'Could not load settings.\n\n' + error.message;
       toast(error.message);
     }
   }
+  function setConfigDirty(dirty) { document.getElementById('saveBotConfig').hidden = !dirty; }
+  configEditor.addEventListener('input', () => setConfigDirty(true));
+  configEditor.addEventListener('change', () => setConfigDirty(true));
   async function saveBotConfig() {
     try {
       if (!selectedGuildId || !selectedBotId) throw new Error('Choose a bot and a Discord server.');
       const payload = collectBotConfig();
+      payload._publish_rules = true;
       const result = await api('/api/bots/' + encodeURIComponent(selectedBotId) + '/config?guild_id=' + encodeURIComponent(selectedGuildId), { method: 'PUT', body: JSON.stringify(payload) });
       await renderBotConfig(result.config, currentManifest);
-      configNotice.textContent = result.message || 'Settings applied.';
-      toast('Settings saved and applied by the bot.');
+      setConfigDirty(false);
+      configNotice.textContent = 'Settings saved. Rules published to the selected rules channel. Message monitoring uses the saved configuration.';
+      toast('Saved & applied. Rules published.');
     } catch (error) {
       configNotice.textContent = 'Could not save settings.\n\n' + error.message;
       toast(error.message);
