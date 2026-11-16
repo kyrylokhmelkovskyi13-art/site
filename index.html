@@ -440,6 +440,80 @@
     @media(max-width:1050px){.editor-layout{grid-template-columns:1fr}.editor-preview{position:static}.editor-preview{max-width:none}}
     @media(max-width:650px){.editor-context{align-items:stretch;flex-direction:column}.editor-picker{min-width:0}.editor-context>.btn{width:100%}}
 
+
+    /* BotControl UI polish v2 — presentation only */
+    :root{
+      --bg:#111218;--panel:#171923;--panel2:#1d202c;--line:#2a2e3b;
+      --muted:#9299aa;--text:#f4f5f8;--purple:#3b82f6;--cyan:#55c9a5;
+      --surface:#151720;--red:#f07886;--yellow:#eab64f;
+    }
+    body{background:#111218;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    .shell{grid-template-columns:252px minmax(0,1fr);max-width:1800px}
+    .side{background:#15161e;border-right:1px solid #292c37;padding:25px 16px 18px}
+    .brand{font-size:18px;font-weight:800;letter-spacing:-.5px;padding:2px 10px 34px}
+    .logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(145deg,#4f8cff,#2563eb);box-shadow:0 7px 22px #2563eb33}
+    .navlabel,.navgroup-label{color:#727b8d;font-size:10px;letter-spacing:1.35px;font-weight:750}
+    .nav button{padding:11px 12px;border:1px solid transparent;border-radius:9px;color:#a4aaba;font-size:13px;transition:background .16s,border-color .16s,color .16s}
+    .nav button:hover{background:#20232e;color:#fff;transform:none}
+    .nav button.active{background:#202b43;border-color:#2c3d5d;color:#fff;box-shadow:inset 3px 0 #3b82f6}
+    .nav .ico{color:#9eabc2}
+    .sidebottom{background:#1a1c26;border-color:#2b2e3a;border-radius:11px}
+    .avatar{background:#253a60;color:#dce8ff}
+    .main{max-width:1500px;padding:36px clamp(22px,4vw,58px)}
+    .top{padding-bottom:22px;margin-bottom:25px;border-bottom:1px solid #292c37}
+    .eyebrow{color:#75a4ff;font-size:10px;letter-spacing:1.45px}
+    .top h1{font-size:29px;letter-spacing:-.85px;font-weight:760}
+    .top p{color:#9ba2b2;font-size:13px}
+    .btn{background:#20232e;border:1px solid #343846;border-radius:8px;color:#e8eaf0;padding:9px 14px;font-size:12px;transition:background .15s,border-color .15s}
+    .btn:hover{background:#292e3b;border-color:#52617b;transform:none}
+    .btn.primary{background:#2563eb;border-color:#2563eb;box-shadow:0 5px 16px #2563eb2b}
+    .btn.primary:hover{background:#3475f5;border-color:#3475f5}
+    .stat,.card{background:#191b25;border:1px solid #2b2e3a;border-radius:12px;box-shadow:none}
+    .stat{padding:18px;min-height:112px}
+    .stat:hover,.bot:hover,.setting:hover{transform:none;border-color:#43516c}
+    .stathead{color:#a4aaba}
+    .statnum{font-size:29px;letter-spacing:-.8px}
+    .statfoot,.sectionhead span{color:#81899a}
+    .sectionhead{margin:29px 0 13px}
+    .sectionhead h2{font-size:15px;font-weight:720}
+    .bots{gap:14px}
+    .bot{padding:19px;border-radius:12px;transition:border-color .15s}
+    .botavatar{background:#26334a;border:1px solid #35445f;border-radius:11px}
+    .botname{font-size:14px}
+    .botdesc{color:#a7adbb;line-height:1.65}
+    .botmetrics{border-color:#2b2e3a}
+    .activity{border-radius:12px}
+    .activityrow,.logitem{border-color:#2b2e3a}
+    .eventicon{background:#222c40;border:1px solid #303d56}
+    .eventsub,.time{color:#858d9e}
+    .toolbar{gap:10px}
+    .search{background:#141720;border:1px solid #343846;border-radius:8px}
+    .search:focus,.configbox input:focus,.configbox textarea:focus,.modal input:focus{border-color:#6091ff;box-shadow:0 0 0 3px #3b82f622}
+    .setting,.configbox{background:#191b25;border:1px solid #2b2e3a;border-radius:12px;padding:18px}
+    .setting h3,.configbox h3{font-size:14px}
+    .setting p,.confighint{color:#9299aa;line-height:1.6}
+    .configbox label{color:#b1b7c5}
+    .configbox input:not(.toggle),.configbox textarea,.modal input,.authbox input{background:#13151e;border:1px solid #343846;border-radius:8px}
+    .configbox .toggleline{border-bottom-color:#2b2e3a}
+    .configbox input.toggle:checked{background:#2563eb}
+    .editor-context{background:#191b25;border-color:#2b2e3a;border-radius:11px;padding:13px}
+    .editor-tabs{border-color:#2b2e3a}
+    .editor-tab{border-radius:7px 7px 0 0}
+    .editor-tab:hover{background:#20232e}
+    .editor-tab.active{color:#8bb1ff;border-bottom-color:#3b82f6}
+    .editor-layout{grid-template-columns:minmax(0,1fr) 270px;gap:16px}
+    .editor-preview{background:#191b25;border:1px solid #2b2e3a;border-radius:12px;padding:16px}
+    .preview-card{background:#202431;border-color:#343b4b;border-radius:10px}
+    .preview-help{background:#151923;border-color:#303646;border-radius:9px}
+    .notice{border-radius:10px;line-height:1.6}
+    .modal,.authbox{background:#191c27;border:1px solid #343846;border-radius:14px}
+    .toast{background:#202634;border-color:#3a465d;border-radius:10px}
+    .page{animation:none}
+    button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #75a4ff;outline-offset:2px}
+    @media(max-width:1050px){.editor-layout{grid-template-columns:minmax(0,1fr)}.editor-preview{position:static}}
+    @media(max-width:850px){.side{background:#15161e}.main{padding:24px 18px}.brand{padding-bottom:14px}}
+    @media(max-width:600px){.top h1{font-size:25px}.stat{padding:14px}.statnum{font-size:24px}.editor-context{align-items:stretch;flex-direction:column}.editor-picker{min-width:0}.editor-context>.btn{width:100%}.editor-tabs{max-width:100%}}
+
   </style>
 </head>
 <body>
