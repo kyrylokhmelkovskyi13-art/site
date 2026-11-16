@@ -734,6 +734,89 @@
     .server-meta{font-size:11px;color:var(--muted);margin-top:5px}
     .server-arrow{margin-left:auto;color:#a995ff;font-size:22px}
     @media(max-width:600px){.shell.wizard-mode>.main{padding:30px 16px}.server-grid{grid-template-columns:1fr}}
+  
+    /* Bot settings workspace — refined layout */
+    #botconfig{max-width:1500px}
+    #botconfig .editor-top{align-items:flex-end;gap:24px;padding:4px 0 26px;margin-bottom:24px}
+    #botconfig .editor-top h1{font-size:34px;letter-spacing:-1.4px}
+    #botconfig .editor-context{
+      display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;
+      padding:18px;background:linear-gradient(135deg,rgba(24,31,49,.94),rgba(14,20,32,.96));
+      border:1px solid rgba(151,166,198,.17);border-radius:17px;margin:0 0 18px;
+      box-shadow:0 12px 35px rgba(0,0,0,.14)
+    }
+    #botconfig .editor-picker{display:flex;flex-direction:column;gap:7px;flex:1;min-width:210px}
+    #botconfig .editor-picker label{font-size:10px;font-weight:800;letter-spacing:1.5px;color:#8998b2}
+    #botconfig .editor-picker .search{width:100%;min-width:0;height:44px;background:#0b111d}
+    #botconfig #loadGuilds{height:44px}
+    #botconfig .editor-tabs{
+      display:flex;gap:7px;overflow-x:auto;padding:7px;margin:0 0 18px;
+      background:rgba(13,18,30,.82);border:1px solid rgba(151,166,198,.13);
+      border-radius:14px;scrollbar-width:thin
+    }
+    #botconfig .editor-tab{
+      flex:none;border:1px solid transparent;background:transparent;color:#91a0b8;
+      padding:10px 16px;border-radius:10px;font:600 12px/1.2 inherit;cursor:pointer;transition:.18s
+    }
+    #botconfig .editor-tab:hover{background:rgba(255,255,255,.045);color:#fff}
+    #botconfig .editor-tab.active{
+      color:#fff;background:linear-gradient(135deg,rgba(147,119,255,.24),rgba(103,75,216,.12));
+      border-color:rgba(160,137,255,.27);box-shadow:0 5px 18px rgba(93,69,180,.13)
+    }
+    #botconfig #botConfigNotice{margin:0 0 20px;padding:13px 16px;border-radius:12px}
+    #botconfig .editor-layout{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:20px;align-items:start}
+    #botconfig .editor-main{min-width:0}
+    #botconfig .editor-panel-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 15px}
+    #botconfig .editor-panel-head h2{font-size:18px;letter-spacing:-.45px;margin:0 0 4px}
+    #botconfig .editor-panel-head p{font-size:12px;color:#8998b2;margin:0}
+    #botconfig .configgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    #botconfig .configbox{
+      min-width:0;padding:19px;border-radius:15px;
+      background:linear-gradient(145deg,rgba(20,28,44,.98),rgba(13,19,31,.98));
+      border:1px solid rgba(151,166,198,.16);box-shadow:0 9px 26px rgba(0,0,0,.12)
+    }
+    #botconfig .configbox h3{
+      display:flex;align-items:center;gap:9px;font-size:13px;font-weight:800;
+      letter-spacing:.1px;margin:0 0 16px;padding-bottom:13px;border-bottom:1px solid rgba(151,166,198,.13)
+    }
+    #botconfig .configbox h3:before{content:"";width:7px;height:7px;border-radius:3px;background:#a48aff;box-shadow:0 0 12px #9878ff88}
+    #botconfig .configbox label{display:block;margin:13px 0 7px;color:#aab7cc;font-size:11px;font-weight:700;letter-spacing:.03em}
+    #botconfig .configbox input:not(.toggle),#botconfig .configbox textarea,#botconfig .configbox select{
+      width:100%;min-width:0;background:#0a101b;color:#eef2fb;border:1px solid #2a354a;
+      border-radius:10px;padding:11px 12px;font:13px/1.45 inherit;transition:border-color .18s,box-shadow .18s
+    }
+    #botconfig .configbox input:not(.toggle):focus,#botconfig .configbox textarea:focus,#botconfig .configbox select:focus{
+      outline:none;border-color:#9a80ff;box-shadow:0 0 0 3px rgba(154,128,255,.13)
+    }
+    #botconfig .configbox textarea{min-height:112px;resize:vertical}
+    #botconfig .configbox .toggleline{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      margin:8px 0;padding:12px 13px;border:1px solid rgba(151,166,198,.13);
+      background:rgba(9,15,26,.58);border-radius:11px
+    }
+    #botconfig .configbox .toggleline span{font-size:12px;font-weight:650;color:#dce4f3}
+    #botconfig .configbox .toggleline .toggle{margin-left:auto}
+    #botconfig .channel-picker[multiple]{min-height:130px;padding:8px}
+    #botconfig .channel-picker option{padding:7px;border-radius:5px}
+    #botconfig .channel-hint,#botconfig .confighint{font-size:11px;line-height:1.55;color:#8190a9;margin-top:8px}
+    #botconfig .configactions{margin:16px 0 0}
+    #botconfig .editor-preview{
+      position:sticky;top:22px;padding:17px;border:1px solid rgba(151,166,198,.16);
+      border-radius:16px;background:linear-gradient(155deg,rgba(20,27,42,.96),rgba(12,17,28,.98))
+    }
+    #botconfig .preview-head{display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:800;letter-spacing:1.5px;color:#9ba9c0;margin-bottom:15px}
+    #botconfig .preview-live{color:#66d9bd;letter-spacing:.5px}
+    #botconfig .preview-card{padding:18px;border:1px solid rgba(151,166,198,.14);border-radius:13px;background:#0b111c;text-align:center}
+    #botconfig .preview-avatar{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;margin:0 auto 10px;background:#242544;font-size:23px}
+    #botconfig .preview-name{font-size:14px;font-weight:800}
+    #botconfig .preview-muted{font-size:10px;color:#8795ad;margin-top:3px}
+    #botconfig .preview-rule{height:1px;background:rgba(151,166,198,.15);margin:15px 0}
+    #botconfig .preview-card p,#botconfig .preview-help p{font-size:11px;line-height:1.6;color:#8998b2;margin:0}
+    #botconfig .preview-help{margin-top:13px;padding:13px;border-radius:11px;background:rgba(145,118,255,.07);border:1px solid rgba(145,118,255,.15)}
+    #botconfig .preview-help b{display:block;font-size:11px;margin-bottom:5px;color:#c8bcff}
+    @media(max-width:1050px){#botconfig .editor-layout{grid-template-columns:minmax(0,1fr)}#botconfig .editor-preview{position:static;display:grid;grid-template-columns:1fr 1fr;gap:12px}#botconfig .preview-head{grid-column:1/-1;margin:0}}
+    @media(max-width:700px){#botconfig .configgrid{grid-template-columns:1fr}#botconfig .editor-preview{display:block}#botconfig .preview-head{margin-bottom:12px}#botconfig .editor-top{align-items:flex-start;flex-direction:column}#botconfig .editor-top .topactions{width:100%}#botconfig .editor-top .topactions button{flex:1}#botconfig .editor-picker{min-width:100%}#botconfig #loadGuilds{width:100%}}
+
   </style>
 </head>
 <body>
@@ -840,7 +923,7 @@
       <div class="notice">These preferences currently apply only to this browser session. Persistent storage may be added later.</div>
     </section>
     <section class="page" id="botconfig">
-      <header class="top editor-top"><div><div class="eyebrow">TICKETY-STYLE EDITOR</div><h1>Panel Editor</h1><p>Configure the selected bot and Discord server. Settings are saved to that server only.</p></div><div class="topactions"><button class="btn" id="loadBotConfig">↻ Reload</button><button class="btn primary" id="saveBotConfig">Save Changes</button></div></header>
+      <header class="top editor-top"><div><div class="eyebrow">BOT CONFIGURATION</div><h1>Bot Settings</h1><p>Manage how your bot works on the selected Discord server.</p></div><div class="topactions"><button class="btn" id="loadBotConfig">↻ Reload</button><button class="btn primary" id="saveBotConfig">Save Changes</button></div></header>
       <div class="editor-context">
         <div class="editor-picker"><label for="botSelect">BOT</label><select class="search" id="botSelect"><option value="">Loading bots…</option></select></div>
         <div class="editor-picker"><label for="botGuildSelect">DISCORD SERVER</label><select class="search" id="botGuildSelect"><option value="">Choose a bot first</option></select></div>
@@ -854,11 +937,11 @@
         <button class="editor-tab" data-editor-tab="logging">Logging</button>
         <button class="editor-tab" data-editor-tab="advanced">Advanced</button>
       </nav>
-      <div class="notice" id="botConfigNotice" role="status" aria-live="polite">Choose a bot and a Discord server to load its settings.</div>
+      <div class="notice" id="botConfigNotice" role="status" aria-live="polite">Select a bot and a Discord server to get started.</div>
       <div class="editor-layout">
         <div class="editor-main">
           <div class="editor-panel-head"><div><h2 id="editorSectionTitle">General</h2><p id="editorSectionDescription">Main settings for the selected bot and server.</p></div></div>
-          <div class="configgrid" id="configEditor"><div class="empty">Choose a bot and a Discord server to view available settings.</div></div>
+          <div class="configgrid" id="configEditor"><div class="empty">Your bot settings will appear here once a server is selected.</div></div>
           <div class="editor-placeholder" id="editorPlaceholder" hidden><b>This section is not connected yet</b><p>Only settings provided by the bot's configuration API can be edited here. We will add the remaining editor sections after the base layout is approved.</p></div>
           <div class="configactions"><button class="btn" id="reloadBotConfig">Discard Changes</button></div>
         </div>
@@ -1201,7 +1284,7 @@
       const channelResult = await api('/api/bots/' + encodeURIComponent(selectedBotId) + '/channels?guild_id=' + encodeURIComponent(selectedGuildId));
       availableChannels = channelResult.channels || [];
     } catch (error) {
-      configNotice.textContent = 'Не удалось загрузить список каналов: ' + error.message;
+      configNotice.textContent = 'Could not load channel list: ' + error.message;
     }
     (manifest.sections || []).forEach(section => {
       const card = document.createElement('div');
@@ -1239,13 +1322,13 @@
           const selected = control.multiple
             ? (Array.isArray(currentConfig[field.key]) ? currentConfig[field.key].map(String) : [])
             : [String(currentConfig[field.key] ?? '')];
-          if (!control.multiple) control.add(new Option('— Не выбран —', ''));
+          if (!control.multiple) control.add(new Option('— Not selected —', ''));
           availableChannels.forEach(channel => {
             const option = new Option('# ' + channel.name + (channel.category ? ' · ' + channel.category : ''), channel.id);
             option.selected = selected.includes(String(channel.id));
             control.add(option);
           });
-          if (!availableChannels.length) control.add(new Option('Нет доступных текстовых каналов', ''));
+          if (!availableChannels.length) control.add(new Option('No text channels available', ''));
         } else if (type === 'number' || type === 'discord_id' || type === 'text') {
           control = document.createElement('input');
           control.type = type === 'number' ? 'number' : 'text';
@@ -1272,7 +1355,7 @@
         if (type === 'channel_id_list') {
           const hint = document.createElement('div');
           hint.className = 'channel-hint';
-          hint.textContent = 'Выбери несколько каналов; удерживай Ctrl или Cmd для множественного выбора.';
+          hint.textContent = 'Select multiple channels. Hold Ctrl or Cmd while clicking to choose more than one.';
           card.append(hint);
         }
         if (field.help) {
