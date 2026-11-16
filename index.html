@@ -110,8 +110,11 @@
     </section>
     <section class="page" id="botconfig">
       <header class="top"><div><div class="eyebrow">Живая конфигурация</div><h1>Настройки бота</h1><p>Выбери бота, затем Discord-сервер. Настройки каждого сервера хранятся отдельно.</p></div><button class="btn" id="loadBotConfig">↻ Загрузить</button></header>
-      <div class="toolbar"><label for="botSelect" class="muted">Бот:</label><select class="search" id="botSelect"><option value="">Загружаю ботов…</option></select><label for="botGuildSelect" class="muted">Discord-сервер:</label><select class="search" id="botGuildSelect"><option value="">Загружаю серверы бота…</option></select><button class="btn" id="loadGuilds">Обновить список</button></div>
-      <div class="notice" id="botConfigNotice">Выбери сервер, чтобы загрузить его настройки.</div>
+      <div class="configgrid">
+        <div class="card setting"><div class="eyebrow">ШАГ 1</div><h3>Выбери бота</h3><p>Какого Discord-бота нужно настроить?</p><select class="search" id="botSelect"><option value="">Загружаю ботов…</option></select></div>
+        <div class="card setting"><div class="eyebrow">ШАГ 2</div><h3>Выбери сервер</h3><p>Показываются серверы, где ты администратор и где установлен выбранный бот.</p><select class="search" id="botGuildSelect"><option value="">Сначала выбери бота</option></select><button class="btn" id="loadGuilds" style="margin-top:10px">↻ Обновить серверы</button></div>
+      </div>
+      <div class="notice" id="botConfigNotice" role="status" aria-live="polite">Шаг 1: выбери бота. Затем выбери сервер, чтобы открыть его настройки.</div>
       <div class="configgrid" id="configEditor"><div class="empty">Выбери бота и Discord-сервер, чтобы увидеть доступные настройки.</div></div>
       <div class="configactions"><button class="btn primary" id="saveBotConfig">Сохранить и применить</button><button class="btn" id="reloadBotConfig">Отменить изменения</button></div>
     </section>
@@ -500,8 +503,8 @@
       selectedGuildId = guildSelect.value;
       await loadBotConfig();
     } catch (error) {
-      guildSelect.replaceChildren(new Option('Не удалось получить серверы', ''));
-      configNotice.textContent = error.message;
+      guildSelect.replaceChildren(new Option('API бота не отвечает', ''));
+      configNotice.textContent = 'Не удалось загрузить список серверов.\\n\\n' + error.message;
       toast(error.message);
     }
   }
@@ -520,7 +523,7 @@
       renderBotConfig(configResult.config, manifestResult.manifest);
       configNotice.textContent = 'Настройки сервера «' + guildSelect.selectedOptions[0].textContent + '» загружены по схеме бота «' + (manifestResult.manifest.name || selectedBotId) + '».';
     } catch (error) {
-      configNotice.textContent = error.message + ' Проверь, что обновлённая версия IvynX запущена на Render.';
+      configNotice.textContent = 'Не удалось загрузить настройки.\\n\\n' + error.message;
       toast(error.message);
     }
   }
@@ -533,7 +536,7 @@
       configNotice.textContent = result.message || 'Настройки применены.';
       toast('Настройки сохранены и применены ботом.');
     } catch (error) {
-      configNotice.textContent = error.message;
+      configNotice.textContent = 'Не удалось сохранить настройки.\\n\\n' + error.message;
       toast(error.message);
     }
   }
