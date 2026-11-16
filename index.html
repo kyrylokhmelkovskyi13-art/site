@@ -70,7 +70,7 @@
         <label for="newBotName">Display name</label><input id="newBotName" placeholder="Display name бота">
         <label for="newBotRenderId">Render Service ID</label><input id="newBotRenderId" placeholder="srv-...">
         <label for="newBotControlUrl">Public control API URL</label><input id="newBotControlUrl" placeholder="https://my-bot.onrender.com">
-        <div class="confighint">Сначала бот должен быть развёрнут на Render и поддерживать защищённые маршруты /control/manifest, /control/guilds и /control/config.</div>
+        <div class="confighint">The bot must be deployed on Render and support the protected /control/manifest, /control/guilds, and /control/config routes.</div>
         <div class="configactions"><button class="btn primary" id="registerBot">Add Bot</button></div>
       </div>
       <div class="bots" id="botCards2"></div>
@@ -260,8 +260,8 @@
       foot.textContent = 'Статус хостинга Render';
       document.querySelector('#overview .notice').textContent =
         result.connected
-          ? 'Подключено к Render API. Показан статус хостинга, а не подтверждение соединения бота с Discord.'
-          : 'Render API ещё не настроен. Добавь RENDER_API_TOKEN и BOT_SERVICES в секретные переменные сервера.';
+          ? 'Connected to the Render API. This shows hosting status, not the bot’s Discord connection status.'
+          : 'Render API is not configured. Add RENDER_API_TOKEN and BOT_SERVICES to the service environment variables.';
     } catch (error) {
       if (error.message.includes('войти через Discord')) showLogin();
       else toast(error.message);
@@ -298,9 +298,9 @@
         const detail = document.createElement('div');
         detail.className = 'muted';
         detail.textContent = 'Server: ' + (row.guild_id === '*' ? 'all' : row.guild_id) +
-          ' · Просмотр: ' + (row.can_view ? 'yes' : 'no') +
-          ' · Изменение: ' + (row.can_configure ? 'yes' : 'no') +
-          ' · Перезапуск: ' + (row.can_restart ? 'yes' : 'no');
+          ' · View: ' + (row.can_view ? 'yes' : 'no') +
+          ' · Edit: ' + (row.can_configure ? 'yes' : 'no') +
+          ' · Restart: ' + (row.can_restart ? 'yes' : 'no');
         info.append(title, detail);
         const remove = document.createElement('button');
         remove.className = 'btn small';
