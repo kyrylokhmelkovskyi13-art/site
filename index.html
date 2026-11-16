@@ -1051,7 +1051,8 @@
         identity.className = 'botidentity';
         const avatar = document.createElement('div');
         avatar.className = 'botavatar';
-        avatar.textContent = bot.id === 'ivynx' ? '👑' : '🤖';
+        if (bot.iconUrl) { const image=document.createElement('img'); image.src=bot.iconUrl; image.alt=''; image.onerror=()=>{avatar.textContent=bot.id==='ivynx'?'👑':'🤖';}; avatar.append(image); }
+        else avatar.textContent = bot.id === 'ivynx' ? '👑' : '🤖';
         const nameWrap = document.createElement('div');
         const name = document.createElement('div');
         name.className = 'botname';
@@ -1156,7 +1157,9 @@
       if (!result.guilds.length) { grid.append(Object.assign(document.createElement('div'), {className:'empty',textContent:'No servers found where this bot is installed and you have Administrator permission.'})); return; }
       result.guilds.forEach(guild => {
         const card = document.createElement('article'); card.className = 'server-card';
-        const icon = document.createElement('div'); icon.className = 'server-icon'; icon.textContent = (guild.name || 'S').trim().charAt(0).toUpperCase();
+        const icon = document.createElement('div'); icon.className = 'server-icon';
+        if (guild.icon) { const image=document.createElement('img'); image.src=guild.icon; image.alt=''; image.onerror=()=>{icon.textContent=(guild.name||'S').trim().charAt(0).toUpperCase();}; icon.append(image); }
+        else icon.textContent = (guild.name || 'S').trim().charAt(0).toUpperCase();
         const info = document.createElement('div'); const name = document.createElement('div'); name.className = 'server-name'; name.textContent = guild.name;
         const meta = document.createElement('div'); meta.className = 'server-meta'; meta.textContent = 'Discord server'; info.append(name,meta);
         const arrow = document.createElement('div'); arrow.className = 'server-arrow'; arrow.textContent = '→'; card.append(icon,info,arrow);
