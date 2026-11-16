@@ -662,7 +662,7 @@ app.get("/api/bots/:id/channels", requireAuth, async (req, res) => {
   const bot = (await getBots()).find(item => item.id === req.params.id);
   const guildId = typeof req.query.guild_id === "string" ? req.query.guild_id : "";
   if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
-  if (!/^\\d{15,22}$/.test(guildId)) return res.status(400).json({ error: "Выбери Discord-сервер." });
+  if (!/^\d{15,22}$/.test(guildId)) return res.status(400).json({ error: "Выбери Discord-сервер." });
   try {
     await requireAdminOnBotGuild(req.user, bot, guildId);
     const result = await botControlRequest(bot, "GET", undefined, "/control/channels?guild_id=" + encodeURIComponent(guildId));
