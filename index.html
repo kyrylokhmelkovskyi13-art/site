@@ -504,7 +504,7 @@
       await loadBotConfig();
     } catch (error) {
       guildSelect.replaceChildren(new Option('API бота не отвечает', ''));
-      configNotice.textContent = 'Не удалось загрузить список серверов.\\n\\n' + error.message;
+      configNotice.textContent = 'Не удалось загрузить список серверов.\n\n' + error.message;
       toast(error.message);
     }
   }
@@ -523,7 +523,7 @@
       renderBotConfig(configResult.config, manifestResult.manifest);
       configNotice.textContent = 'Настройки сервера «' + guildSelect.selectedOptions[0].textContent + '» загружены по схеме бота «' + (manifestResult.manifest.name || selectedBotId) + '».';
     } catch (error) {
-      configNotice.textContent = 'Не удалось загрузить настройки.\\n\\n' + error.message;
+      configNotice.textContent = 'Не удалось загрузить настройки.\n\n' + error.message;
       toast(error.message);
     }
   }
@@ -536,7 +536,7 @@
       configNotice.textContent = result.message || 'Настройки применены.';
       toast('Настройки сохранены и применены ботом.');
     } catch (error) {
-      configNotice.textContent = 'Не удалось сохранить настройки.\\n\\n' + error.message;
+      configNotice.textContent = 'Не удалось сохранить настройки.\n\n' + error.message;
       toast(error.message);
     }
   }
