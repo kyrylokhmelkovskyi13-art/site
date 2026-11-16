@@ -47,6 +47,31 @@ function signValue(value) {
   return crypto.createHmac("sha256", SESSION_SECRET).update(value).digest("hex");
 }
 
+function encryptSessionSecret(value) {
+  const key = crypto.createHash("sha256").update(SESSION_SECRET).digest();
+  const iv = crypto.randomBytes(12);
+  const cipher = crypto.createCipheriv("aes-256-gcm", key, iv);
+  const encrypted = Buffer.concat([cipher.update(String(value), "utf8"), cipher.final()]);
+  return [iv, cipher.getAuthTag(), encrypted].map(part => part.toString("base64url")).join(".");
+}
+
+function decryptSessionSecret(value) {
+  if (!value || !SESSION_SECRET) return null;
+  try {
+    const [ivPart, tagPart, encryptedPart] = String(value).split(".");
+    if (!ivPart || !tagPart || !encryptedPart) return null;
+    const key = crypto.createHash("sha256").update(SESSION_SECRET).digest();
+    const decipher = crypto.createDecipheriv("aes-256-gcm", key, Buffer.from(ivPart, "base64url"));
+    decipher.setAuthTag(Buffer.from(tagPart, "base64url"));
+    return Buffer.concat([
+      decipher.update(Buffer.from(encryptedPart, "base64url")),
+      decipher.final()
+    ]).toString("utf8");
+  } catch {
+    return null;
+  }
+}
+
 function createSignedToken(data) {
   const payload = Buffer.from(JSON.stringify(data)).toString("base64url");
   return payload + "." + signValue(payload);
@@ -81,12 +106,13 @@ function setCookie(res, name, value, maxAge, sameSite = "Lax") {
   res.append("Set-Cookie", parts.join("; "));
 }
 
-function setSessionCookie(res, user) {
+function setSessionCookie(res, user, oauthAccessToken) {
   const token = createSignedToken({
     discordId: String(user.id),
     username: String(user.username || "Discord user").slice(0, 100),
     globalName: String(user.global_name || "").slice(0, 100),
     avatar: user.avatar ? String(user.avatar) : null,
+    discordAccessToken: encryptSessionSecret(oauthAccessToken),
     exp: Math.floor(Date.now() / 1000) + SESSION_TTL_SECONDS
   });
   setCookie(res, COOKIE_NAME, token, SESSION_TTL_SECONDS, "Lax");
@@ -253,7 +279,7 @@ app.get("/auth/discord", (req, res) => {
     client_id: DISCORD_CLIENT_ID,
     redirect_uri: DISCORD_REDIRECT_URI,
     response_type: "code",
-    scope: "identify",
+    scope: "identify guilds",
     state
   });
   res.redirect("https://discord.com/oauth2/authorize?" + params.toString());
@@ -292,12 +318,6 @@ app.get("/auth/discord/callback", async (req, res) => {
     const user = await userResponse.json().catch(() => ({}));
     if (!userResponse.ok || !user.id) return res.status(502).send("Discord не вернул профиль пользователя.");
 
-    if (!isOwner({ discordId: String(user.id) })) {
-      const rows = await supabaseRequest(
-        "botcontrol_access?discord_id=eq." + encodeURIComponent(String(user.id)) + "&select=discord_id&limit=1"
-      );
-      if (!rows.length) return res.status(403).send("У этого Discord-аккаунта пока нет доступа к BotControl. Попроси владельца выдать доступ.");
-    }
     try {
       await supabaseRequest("botcontrol_users?on_conflict=discord_id", "POST", {
         discord_id: String(user.id),
@@ -310,7 +330,7 @@ app.get("/auth/discord/callback", async (req, res) => {
       if (!isOwner({ discordId: String(user.id) })) throw profileError;
       console.warn("Owner profile could not be stored:", profileError.message);
     }
-    setSessionCookie(res, user);
+    setSessionCookie(res, user, tokenData.access_token);
     res.redirect("/");
   } catch (error) {
     console.error("Discord OAuth error:", error.message);
@@ -446,13 +466,19 @@ app.get("/api/logs", requireAuth, requireOwner, async (_req, res) => {
 app.get("/api/bots", requireAuth, async (req, res) => {
   let bots = await getBots();
   if (!isOwner(req.user)) {
-    const allowed = await Promise.all(bots.map(async bot => ({
-      bot, access: await getUserAccess(req.user.discordId, bot.id)
-    })));
-    bots = allowed.filter(item => item.access.length).map(item => item.bot);
+    const checks = await Promise.all(bots.map(async bot => {
+      try {
+        const guilds = await authorizedGuildsForBot(req.user, bot);
+        return guilds.length ? bot : null;
+      } catch (error) {
+        console.warn("Guild access check failed for", bot.id, error.message);
+        return null;
+      }
+    }));
+    bots = checks.filter(Boolean);
   }
   if (!RENDER_API_TOKEN) {
-    return res.json({ connected: false, bots: bots.map(({ id, name, managed }) => ({ id, name, managed: !!managed, hostStatus: "not_configured" })) });
+    return res.json({ connected: false, bots: bots.map(({ id, name, managed }) => ({ id, name, managed: !!managed, canRestart: isOwner(req.user), hostStatus: "not_configured" })) });
   }
 
   const results = await Promise.all(bots.map(async bot => {
@@ -462,16 +488,62 @@ app.get("/api/bots", requireAuth, async (req, res) => {
         id: bot.id,
         name: bot.name,
         managed: !!bot.managed,
+        canRestart: isOwner(req.user),
         hostStatus: service.suspended ? "suspended" : (service.srvStatus || service.status || "unknown"),
         serviceType: service.type || null,
         updatedAt: service.updatedAt || null
       };
     } catch (error) {
-      return { id: bot.id, name: bot.name, managed: !!bot.managed, hostStatus: "error", error: error.status ? "Render API HTTP " + error.status : "Render API недоступен" };
+      return { id: bot.id, name: bot.name, managed: !!bot.managed, canRestart: isOwner(req.user), hostStatus: "error", error: error.status ? "Render API HTTP " + error.status : "Render API недоступен" };
     }
   }));
   res.json({ connected: true, bots: results });
 });
+
+async function discordGuildsForUser(user) {
+  const accessToken = decryptSessionSecret(user.discordAccessToken);
+  if (!accessToken) {
+    const error = new Error("Сессия Discord устарела. Выйди из BotControl и войди через Discord снова.");
+    error.status = 401;
+    throw error;
+  }
+  const response = await fetch("https://discord.com/api/users/@me/guilds", {
+    headers: { "Authorization": "Bearer " + accessToken, "Accept": "application/json" },
+    signal: AbortSignal.timeout(12000)
+  });
+  const data = await response.json().catch(() => []);
+  if (!response.ok || !Array.isArray(data)) {
+    const error = new Error(response.status === 401
+      ? "Discord-сессия истекла. Войди через Discord ещё раз."
+      : "Не удалось получить список Discord-серверов.");
+    error.status = response.status || 502;
+    throw error;
+  }
+  return data.filter(guild => {
+    if (guild.owner === true) return true;
+    try { return (BigInt(String(guild.permissions || "0")) & 8n) === 8n; }
+    catch { return false; }
+  }).map(guild => ({ id: String(guild.id), name: String(guild.name || "Discord server") }));
+}
+
+async function authorizedGuildsForBot(user, bot) {
+  const [adminGuilds, botResult] = await Promise.all([
+    discordGuildsForUser(user),
+    botControlRequest(bot, "GET", undefined, "/control/guilds")
+  ]);
+  const botGuildIds = new Set((Array.isArray(botResult.guilds) ? botResult.guilds : [])
+    .map(guild => String(guild.id)));
+  return adminGuilds.filter(guild => botGuildIds.has(guild.id));
+}
+
+async function requireAdminOnBotGuild(user, bot, guildId) {
+  const guilds = await authorizedGuildsForBot(user, bot);
+  if (!guilds.some(guild => guild.id === String(guildId))) {
+    const error = new Error("Нет доступа: нужен Administrator на Discord-сервере, где установлен этот бот.");
+    error.status = 403;
+    throw error;
+  }
+}
 
 async function botControlRequest(bot, method = "GET", body, endpoint = "/control/config") {
   if (!BOTCONTROL_SHARED_SECRET) {
@@ -502,11 +574,8 @@ app.get("/api/bots/:id/manifest", requireAuth, async (req, res) => {
   const bot = (await getBots()).find(item => item.id === req.params.id);
   if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
   try {
-    if (!isOwner(req.user)) {
-      const access = await getUserAccess(req.user.discordId, bot.id);
-      if (!access.some(row => row.can_view || row.can_configure)) {
-        return res.status(403).json({ error: "Нет права просматривать настройки этого бота." });
-      }
+    if (!(await authorizedGuildsForBot(req.user, bot)).length) {
+      return res.status(403).json({ error: "На сервере с этим ботом нужен Administrator." });
     }
     const result = await botControlRequest(bot, "GET", undefined, "/control/manifest");
     if (!result.manifest || !Array.isArray(result.manifest.sections)) {
@@ -522,21 +591,10 @@ app.get("/api/bots/:id/guilds", requireAuth, async (req, res) => {
   const bot = (await getBots()).find(item => item.id === req.params.id);
   if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
   try {
-    if (!isOwner(req.user) && !(await getUserAccess(req.user.discordId, bot.id)).length) {
-      return res.status(403).json({ error: "Нет доступа к этому боту." });
-    }
-    const result = await botControlRequest(bot, "GET", undefined, "/control/guilds");
-    let guilds = Array.isArray(result.guilds) ? result.guilds : [];
-    if (!isOwner(req.user)) {
-      const access = await getUserAccess(req.user.discordId, bot.id);
-      const visibleAccess = access.filter(row => row.can_view || row.can_configure);
-      const allGuilds = visibleAccess.some(row => row.guild_id === "*");
-      const permitted = new Set(visibleAccess.map(row => String(row.guild_id)));
-      if (!allGuilds) guilds = guilds.filter(guild => permitted.has(String(guild.id)));
-    }
+    const guilds = await authorizedGuildsForBot(req.user, bot);
     res.json({ ok: true, guilds });
   } catch (error) {
-    res.status(error.status || 502).json({ error: error.message || "Не удалось получить Discord-серверы бота." });
+    res.status(error.status || 502).json({ error: error.message || "Не удалось проверить права Discord или получить серверы бота." });
   }
 });
 
@@ -546,7 +604,7 @@ app.get("/api/bots/:id/config", requireAuth, async (req, res) => {
   if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
   if (!/^\d{15,22}$/.test(guildId)) return res.status(400).json({ error: "Выбери Discord-сервер." });
   try {
-    if (!(await hasBotPermission(req.user, bot.id, guildId, "can_view"))) return res.status(403).json({ error: "Нет права просматривать настройки этого сервера." });
+    await requireAdminOnBotGuild(req.user, bot, guildId);
     const result = await botControlRequest(bot, "GET", undefined, "/control/config?guild_id=" + encodeURIComponent(guildId));
     res.json({ ok: true, guildId, config: result.config });
   } catch (error) {
@@ -560,7 +618,7 @@ app.put("/api/bots/:id/config", requireSameOrigin, requireAuth, async (req, res)
   if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
   if (!/^\d{15,22}$/.test(guildId)) return res.status(400).json({ error: "Выбери Discord-сервер." });
   try {
-    if (!(await hasBotPermission(req.user, bot.id, guildId, "can_configure"))) return res.status(403).json({ error: "Нет права изменять настройки этого сервера." });
+    await requireAdminOnBotGuild(req.user, bot, guildId);
     const result = await botControlRequest(bot, "PUT", req.body, "/control/config?guild_id=" + encodeURIComponent(guildId));
     await writeAudit(req.user, "bot_config_updated", bot.id, guildId, { changedKeys: Object.keys(req.body || {}) });
     res.json({ ok: true, guildId, config: result.config, message: "Настройки этого Discord-сервера применены." });
@@ -569,14 +627,10 @@ app.put("/api/bots/:id/config", requireSameOrigin, requireAuth, async (req, res)
   }
 });
 
-app.post("/api/bots/:id/restart", requireSameOrigin, requireAuth, async (req, res) => {
+app.post("/api/bots/:id/restart", requireSameOrigin, requireAuth, requireOwner, async (req, res) => {
   if (!RENDER_API_TOKEN) return res.status(503).json({ error: "Render API ещё не настроен." });
   const bot = (await getBots()).find(item => item.id === req.params.id);
   if (!bot) return res.status(404).json({ error: "Бот не найден в конфигурации сервера." });
-  if (!isOwner(req.user) && !(await hasBotPermission(req.user, bot.id, "*", "can_restart"))) {
-    return res.status(403).json({ error: "Нет права перезапускать этого бота." });
-  }
-
   try {
     await renderRequest("/services/" + encodeURIComponent(bot.renderServiceId) + "/restart", "POST");
     await writeAudit(req.user, "bot_restarted", bot.id, null, {});
