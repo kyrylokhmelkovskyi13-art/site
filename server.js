@@ -18,6 +18,10 @@ const COOKIE_NAME = "botcontrol_session";
 const OAUTH_STATE_COOKIE = "botcontrol_oauth_state";
 const SESSION_TTL_SECONDS = 60 * 60 * 12;
 
+// Avoid duplicate concurrent Discord guild-list requests and respect Discord rate limits.
+const discordGuildRequests = new Map();
+const discordGuildCooldowns = new Map();
+
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
 app.use(express.json({ limit: "20kb" }));
@@ -502,41 +506,75 @@ app.get("/api/bots", requireAuth, async (req, res) => {
 });
 
 async function discordGuildsForUser(user) {
+  const userId = String(user.discordId || "");
   const accessToken = decryptSessionSecret(user.discordAccessToken);
   if (!accessToken) {
     const error = new Error("Сессия Discord устарела. Выйди из BotControl и войди через Discord снова.");
     error.status = 401;
     throw error;
   }
-  const response = await fetch("https://discord.com/api/users/@me/guilds", {
-    headers: { "Authorization": "Bearer " + accessToken, "Accept": "application/json" },
-    signal: AbortSignal.timeout(12000)
-  });
-  const data = await response.json().catch(() => null);
-  if (!response.ok) {
-    const discordMessage = typeof data?.message === "string" ? data.message : "";
-    let message;
-    if (response.status === 401) {
-      message = "Discord отклонил OAuth-токен (HTTP 401). Выйди из BotControl и войди через Discord снова.";
-    } else if (response.status === 403) {
-      message = "Discord запретил чтение списка серверов (HTTP 403). Проверь, что OAuth-приложение запрашивает scope guilds и ты подтвердил доступ. Ответ Discord: " + (discordMessage || "Forbidden");
-    } else {
-      message = "Discord API не смог получить список серверов (HTTP " + response.status + "). Ответ: " + (discordMessage || "без подробностей");
+
+  const cooldownUntil = discordGuildCooldowns.get(userId) || 0;
+  if (cooldownUntil > Date.now()) {
+    const waitSeconds = Math.max(1, Math.ceil((cooldownUntil - Date.now()) / 1000));
+    const error = new Error("Discord временно ограничил запросы (HTTP 429). Подожди примерно " + waitSeconds + " сек. и попробуй снова. Не нажимай обновление несколько раз подряд.");
+    error.status = 429;
+    throw error;
+  }
+
+  const existingRequest = discordGuildRequests.get(userId);
+  if (existingRequest) return existingRequest;
+
+  const request = (async () => {
+    const response = await fetch("https://discord.com/api/users/@me/guilds", {
+      headers: { "Authorization": "Bearer " + accessToken, "Accept": "application/json" },
+      signal: AbortSignal.timeout(12000)
+    });
+    const data = await response.json().catch(() => null);
+
+    if (response.status === 429) {
+      const retryAfter = Number(data?.retry_after || response.headers.get("retry-after") || 30);
+      const cooldownMs = Math.max(1000, Math.ceil(retryAfter * 1000));
+      discordGuildCooldowns.set(userId, Date.now() + cooldownMs);
+      const waitSeconds = Math.ceil(cooldownMs / 1000);
+      const error = new Error("Discord временно ограничил запросы (HTTP 429). Повтори попытку примерно через " + waitSeconds + " сек. Не обновляй страницу многократно.");
+      error.status = 429;
+      throw error;
     }
-    const error = new Error(message);
-    error.status = response.status || 502;
-    throw error;
+
+    if (!response.ok) {
+      const discordMessage = typeof data?.message === "string" ? data.message : "";
+      let message;
+      if (response.status === 401) {
+        message = "Discord отклонил OAuth-токен (HTTP 401). Выйди из BotControl и войди через Discord снова.";
+      } else if (response.status === 403) {
+        message = "Discord запретил чтение списка серверов (HTTP 403). Проверь, что OAuth-приложение запрашивает scope guilds и ты подтвердил доступ. Ответ Discord: " + (discordMessage || "Forbidden");
+      } else {
+        message = "Discord API не смог получить список серверов (HTTP " + response.status + "). Ответ: " + (discordMessage || "без подробностей");
+      }
+      const error = new Error(message);
+      error.status = response.status || 502;
+      throw error;
+    }
+    if (!Array.isArray(data)) {
+      const error = new Error("Discord API вернул неожиданный ответ вместо списка серверов.");
+      error.status = 502;
+      throw error;
+    }
+    discordGuildCooldowns.delete(userId);
+    return data.filter(guild => {
+      if (guild.owner === true) return true;
+      try { return (BigInt(String(guild.permissions || "0")) & 8n) === 8n; }
+      catch { return false; }
+    }).map(guild => ({ id: String(guild.id), name: String(guild.name || "Discord server") }));
+  })();
+
+  discordGuildRequests.set(userId, request);
+  try {
+    return await request;
+  } finally {
+    if (discordGuildRequests.get(userId) === request) discordGuildRequests.delete(userId);
   }
-  if (!Array.isArray(data)) {
-    const error = new Error("Discord API вернул неожиданный ответ вместо списка серверов.");
-    error.status = 502;
-    throw error;
-  }
-  return data.filter(guild => {
-    if (guild.owner === true) return true;
-    try { return (BigInt(String(guild.permissions || "0")) & 8n) === 8n; }
-    catch { return false; }
-  }).map(guild => ({ id: String(guild.id), name: String(guild.name || "Discord server") }));
 }
 
 async function authorizedGuildsForBot(user, bot) {
