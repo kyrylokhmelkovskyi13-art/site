@@ -113,6 +113,101 @@
       .botmetrics{gap:20px}.botactions .btn{flex:1}
     }
 
+
+    /* Dashboard appearance pass — visual only; keep existing API and behavior intact */
+    :root{
+      --bg:#080a11;--panel:#101522;--panel2:#151d2c;--line:rgba(151,166,198,.16);
+      --muted:#8e9bb2;--text:#f3f5fb;--purple:#9b82ff;--cyan:#62dfc4;
+      --surface:#0d1320;
+    }
+    body{
+      background:
+        radial-gradient(ellipse 650px 440px at 92% 0%,rgba(113,83,224,.17),transparent 70%),
+        radial-gradient(ellipse 520px 380px at 30% 100%,rgba(45,150,151,.07),transparent 72%),
+        #080a11;
+    }
+    .shell{max-width:1920px;grid-template-columns:272px minmax(0,1fr)}
+    .side{
+      background:rgba(9,12,20,.9);border-right:1px solid rgba(151,166,198,.13);
+      box-shadow:12px 0 50px rgba(0,0,0,.12);padding:30px 19px 22px;
+    }
+    .brand{font-size:19px;font-weight:800;letter-spacing:-.7px;padding-bottom:42px}
+    .logo{
+      width:41px;height:41px;border-radius:14px;
+      background:linear-gradient(145deg,#b09aff,#6c4be2);
+      box-shadow:0 9px 30px rgba(133,99,255,.32);font-size:21px;
+    }
+    .navlabel{font-size:9px;letter-spacing:2px;color:#68758e;padding:13px 13px 10px}
+    .nav button{
+      position:relative;padding:12px 13px;margin:3px 0;border-radius:12px;
+      color:#9ba8be;font-size:13px;transition:background .18s,border-color .18s,transform .18s;
+    }
+    .nav button:hover{background:rgba(255,255,255,.045);transform:translateX(2px)}
+    .nav button.active{
+      color:#fff;background:linear-gradient(100deg,rgba(144,115,255,.2),rgba(144,115,255,.055));
+      border:1px solid rgba(157,130,255,.2);box-shadow:inset 3px 0 #a48bff;
+    }
+    .nav .ico{font-size:17px;color:#b6a5ff}
+    .sidebottom{background:rgba(19,26,40,.82);border:1px solid var(--line);border-radius:15px}
+    .main{max-width:1580px;padding:40px clamp(22px,4vw,64px)}
+    .top{padding-bottom:23px;border-bottom:1px solid rgba(151,166,198,.11);margin-bottom:27px}
+    .eyebrow{font-size:10px;letter-spacing:2.2px;color:#ad9aff}
+    .top h1{font-size:31px;font-weight:760;letter-spacing:-1.25px;margin:7px 0}
+    .top p{font-size:13px;color:#98a5bb}
+    .btn{border:1px solid rgba(151,166,198,.2);background:#151d2b;border-radius:11px;padding:10px 15px}
+    .btn.primary{background:linear-gradient(135deg,#9a7cff,#6949dc);box-shadow:0 8px 24px rgba(116,83,226,.22)}
+    .stats{gap:15px;margin-bottom:30px}
+    .stat,.card{
+      background:linear-gradient(145deg,rgba(20,27,42,.96),rgba(13,18,29,.98));
+      border:1px solid rgba(151,166,198,.15);border-radius:17px;
+      box-shadow:0 12px 34px rgba(0,0,0,.13);
+    }
+    .stat{padding:20px 21px;min-height:120px}
+    .stathead{font-size:11px;color:#9ba9c0}
+    .statnum{font-size:31px;letter-spacing:-1.2px;margin-top:12px}
+    .statfoot{font-size:10px;color:#7887a0}
+    .sectionhead{margin:32px 0 15px}
+    .sectionhead h2{font-size:16px;letter-spacing:-.35px}
+    .sectionhead span{font-size:11px;color:#7f8da5}
+    .bots{gap:16px}
+    .bot{border-radius:17px;padding:21px;transition:transform .2s,border-color .2s,box-shadow .2s}
+    .bot:hover,.setting:hover{transform:translateY(-2px);border-color:rgba(160,135,255,.38);box-shadow:0 16px 38px rgba(0,0,0,.2)}
+    .botavatar{border:1px solid rgba(170,157,255,.22);border-radius:14px}
+    .botname{font-size:15px;font-weight:750}
+    .botdesc{line-height:1.7;color:#a1aec2}
+    .status{font-weight:700;letter-spacing:.2px}
+    .botmetrics{border-top-color:rgba(151,166,198,.14)}
+    .activity{border-radius:16px}
+    .activityrow{padding:16px 19px;border-color:rgba(151,166,198,.12)}
+    .eventicon{border:1px solid rgba(151,166,198,.12);border-radius:10px}
+    .toolbar{gap:12px}
+    .search,.configbox input,.configbox textarea,.modal input,.authbox input{
+      background:#0b111d;border:1px solid rgba(151,166,198,.2);border-radius:11px;
+    }
+    .search:focus,.configbox input:focus,.configbox textarea:focus,.modal input:focus{
+      outline:none;border-color:#9b82ff;box-shadow:0 0 0 3px rgba(155,130,255,.14)
+    }
+    .settingsgrid,.configgrid{gap:16px}
+    .setting,.configbox{border-radius:16px;padding:21px}
+    .setting h3,.configbox h3{font-size:14px;font-weight:750}
+    .setting p,.confighint{line-height:1.65}
+    .toggle{accent-color:#9b82ff}
+    .notice{border-radius:13px;line-height:1.65}
+    .modal,.authbox{border-radius:20px;box-shadow:0 30px 100px rgba(0,0,0,.55)}
+    .toast{border-radius:13px;box-shadow:0 14px 45px rgba(0,0,0,.35)}
+    .page{animation:pageIn .22s ease both}
+    @keyframes pageIn{from{opacity:.65;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:850px){
+      .side{position:relative;height:auto;padding:14px 16px}
+      .brand{padding:2px 8px 14px}
+      .main{padding:25px 18px}
+    }
+    @media(max-width:600px){
+      .top h1{font-size:27px}.stats{gap:10px}
+      .stat{padding:15px;min-height:108px}
+      .bots,.settingsgrid,.configgrid{grid-template-columns:1fr}
+    }
+
   </style>
 </head>
 <body>
