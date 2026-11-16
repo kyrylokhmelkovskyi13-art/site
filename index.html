@@ -208,6 +208,44 @@
       .bots,.settingsgrid,.configgrid{grid-template-columns:1fr}
     }
 
+  
+    /* Fix boolean setting switches: generic config inputs must not stretch them. */
+    .configbox input.toggle,
+    .configbox .toggleline input.toggle {
+      appearance:none;
+      -webkit-appearance:none;
+      display:block;
+      width:39px;
+      min-width:39px;
+      max-width:39px;
+      height:23px;
+      min-height:23px;
+      padding:0;
+      margin:0;
+      flex:0 0 39px;
+      border:0;
+      border-radius:999px;
+      background:#39445b;
+      position:relative;
+      cursor:pointer;
+      box-shadow:none;
+    }
+    .configbox input.toggle:checked { background:#9275ff; }
+    .configbox input.toggle::before {
+      content:"";
+      position:absolute;
+      width:17px;
+      height:17px;
+      left:3px;
+      top:3px;
+      border-radius:50%;
+      background:#fff;
+      transition:transform .15s ease;
+    }
+    .configbox input.toggle:checked::before { left:19px; }
+    .configbox .toggleline { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .configbox .toggleline > span { flex:1 1 auto; min-width:0; }
+
   </style>
 </head>
 <body>
