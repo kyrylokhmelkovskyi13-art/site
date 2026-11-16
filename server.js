@@ -512,12 +512,24 @@ async function discordGuildsForUser(user) {
     headers: { "Authorization": "Bearer " + accessToken, "Accept": "application/json" },
     signal: AbortSignal.timeout(12000)
   });
-  const data = await response.json().catch(() => []);
-  if (!response.ok || !Array.isArray(data)) {
-    const error = new Error(response.status === 401
-      ? "Discord-сессия истекла. Войди через Discord ещё раз."
-      : "Не удалось получить список Discord-серверов.");
+  const data = await response.json().catch(() => null);
+  if (!response.ok) {
+    const discordMessage = typeof data?.message === "string" ? data.message : "";
+    let message;
+    if (response.status === 401) {
+      message = "Discord отклонил OAuth-токен (HTTP 401). Выйди из BotControl и войди через Discord снова.";
+    } else if (response.status === 403) {
+      message = "Discord запретил чтение списка серверов (HTTP 403). Проверь, что OAuth-приложение запрашивает scope guilds и ты подтвердил доступ. Ответ Discord: " + (discordMessage || "Forbidden");
+    } else {
+      message = "Discord API не смог получить список серверов (HTTP " + response.status + "). Ответ: " + (discordMessage || "без подробностей");
+    }
+    const error = new Error(message);
     error.status = response.status || 502;
+    throw error;
+  }
+  if (!Array.isArray(data)) {
+    const error = new Error("Discord API вернул неожиданный ответ вместо списка серверов.");
+    error.status = 502;
     throw error;
   }
   return data.filter(guild => {
