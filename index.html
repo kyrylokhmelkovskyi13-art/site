@@ -1004,7 +1004,7 @@
   }
 
   function showLogin() { document.getElementById('welcomeScreen')?.classList.remove('hidden'); wall.classList.remove('show'); document.querySelector('.shell').style.display = 'none'; }
-  function hideLogin() { wall.classList.remove('show'); document.getElementById('welcomeScreen')?.classList.add('hidden'); document.querySelector('.shell').style.display = ''; }
+  function hideLogin() { wall.classList.remove('show'); document.getElementById('welcomeScreen')?.classList.add('hidden'); document.querySelector('.shell').style.display = 'grid'; }
   document.getElementById('welcomeContinue')?.addEventListener('click', () => { document.getElementById('welcomeScreen').classList.add('hidden'); wall.classList.add('show'); });
 
   document.getElementById('logout').addEventListener('click', async () => {
