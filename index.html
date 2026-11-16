@@ -408,6 +408,38 @@
       .activityrow .time{grid-column:2}
     }
 
+  
+    /* Tickety-inspired editor structure */
+    .navgroup-label{padding:19px 12px 7px;color:#718096;font-size:9px;font-weight:750;letter-spacing:1.35px}
+    .editor-top{margin-bottom:18px}
+    .editor-context{display:flex;align-items:end;gap:12px;padding:14px 15px;background:#141a23;border:1px solid #293342;border-radius:10px;margin-bottom:17px}
+    .editor-picker{display:flex;flex-direction:column;gap:6px;min-width:210px}
+    .editor-picker label{font-size:9px;font-weight:750;letter-spacing:1.1px;color:#8492a6}
+    .editor-picker .search{width:100%;min-width:0}
+    .editor-tabs{display:flex;gap:5px;overflow-x:auto;border-bottom:1px solid #293342;margin-bottom:18px}
+    .editor-tab{flex:0 0 auto;padding:12px 16px;background:transparent;border:0;border-bottom:2px solid transparent;color:#9aa7b8;font-size:12px;font-weight:650}
+    .editor-tab:hover{color:#fff;background:#171f2b}
+    .editor-tab.active{color:#fff;border-bottom-color:#718cff}
+    .editor-layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:17px;align-items:start}
+    .editor-main{min-width:0}
+    .editor-panel-head{display:flex;justify-content:space-between;align-items:center;margin:4px 0 14px}
+    .editor-panel-head h2{font-size:16px;margin:0 0 4px}
+    .editor-panel-head p{font-size:11px;color:#929eae;margin:0}
+    .editor-preview{position:sticky;top:22px;background:#141a23;border:1px solid #293342;border-radius:11px;padding:14px}
+    .preview-head{display:flex;justify-content:space-between;font-size:9px;font-weight:750;letter-spacing:1px;color:#8d9aae;margin-bottom:13px}
+    .preview-live{color:#66cda5}
+    .preview-card{background:#202a39;border:1px solid #35445a;border-radius:9px;padding:14px}
+    .preview-avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#354766;margin-bottom:10px}
+    .preview-name{font-size:12px;font-weight:750}.preview-muted{font-size:10px;color:#8f9daf;margin-top:2px}
+    .preview-rule{height:1px;background:#39475a;margin:12px 0}
+    .preview-card p,.preview-help p{font-size:10px;line-height:1.6;color:#a4afbe;margin:0}
+    .preview-help{margin-top:14px;padding:12px;border-radius:8px;background:#10161f;border:1px solid #293342}
+    .preview-help b{display:block;font-size:11px;margin-bottom:5px}
+    .editor-placeholder{padding:24px;background:#141a23;border:1px dashed #3a4658;border-radius:10px;color:#dbe2ec}
+    .editor-placeholder p{font-size:12px;color:#929eae;line-height:1.6;margin-bottom:0}
+    @media(max-width:1050px){.editor-layout{grid-template-columns:1fr}.editor-preview{position:static}.editor-preview{max-width:none}}
+    @media(max-width:650px){.editor-context{align-items:stretch;flex-direction:column}.editor-picker{min-width:0}.editor-context>.btn{width:100%}}
+
   </style>
 </head>
 <body>
@@ -425,12 +457,14 @@
     <div class="brand"><div class="logo">⌘</div><span>BotControl</span></div>
     <div class="navlabel">WORKSPACE</div>
     <nav class="nav">
-      <button class="active" data-page="overview"><span class="ico">▦</span>Overview</button>
+      <button class="active" data-page="overview"><span class="ico">⌂</span>Overview</button>
+      <div class="navgroup-label">TICKETS</div>
+      <button data-page="botconfig"><span class="ico">▤</span>Panel Editor</button>
+      <button data-page="settings"><span class="ico">⚙</span>Configuration</button>
+      <div class="navgroup-label">BOT MANAGEMENT</div>
       <button data-page="bots"><span class="ico">◈</span>My Bots</button>
       <button data-page="logs" id="navLogs"><span class="ico">≋</span>Activity Log</button>
       <button data-page="access" id="navAccess"><span class="ico">♙</span>Access</button>
-      <button data-page="settings"><span class="ico">⚙</span>Settings</button>
-      <button data-page="botconfig"><span class="ico">🛠</span>Bot Settings</button>
     </nav>
     <div class="sidebottom"><div class="profile"><div class="avatar">K</div><div><b>Personal Account</b><div class="muted" style="font-size:11px">Dashboard</div></div></div></div>
   </aside>
@@ -498,14 +532,34 @@
       <div class="notice">These preferences currently apply only to this browser session. Persistent storage may be added later.</div>
     </section>
     <section class="page" id="botconfig">
-      <header class="top"><div><div class="eyebrow">LIVE CONFIGURATION</div><h1>Bot Settings</h1><p>Choose a bot, then a Discord server. Each server has its own settings.</p></div><button class="btn" id="loadBotConfig">↻ Load</button></header>
-      <div class="configgrid">
-        <div class="card setting"><div class="eyebrow">STEP 1</div><h3>Choose a bot</h3><p>Which Discord bot do you want to configure?</p><select class="search" id="botSelect"><option value="">Loading bots…</option></select></div>
-        <div class="card setting"><div class="eyebrow">STEP 2</div><h3>Choose a server</h3><p>Only servers where you have Administrator permission and the selected bot is installed are shown.</p><select class="search" id="botGuildSelect"><option value="">Choose a bot first</option></select><button class="btn" id="loadGuilds" style="margin-top:10px">↻ Refresh servers</button></div>
+      <header class="top editor-top"><div><div class="eyebrow">TICKETY-STYLE EDITOR</div><h1>Panel Editor</h1><p>Configure the selected bot and Discord server. Settings are saved to that server only.</p></div><div class="topactions"><button class="btn" id="loadBotConfig">↻ Reload</button><button class="btn primary" id="saveBotConfig">Save Changes</button></div></header>
+      <div class="editor-context">
+        <div class="editor-picker"><label for="botSelect">BOT</label><select class="search" id="botSelect"><option value="">Loading bots…</option></select></div>
+        <div class="editor-picker"><label for="botGuildSelect">DISCORD SERVER</label><select class="search" id="botGuildSelect"><option value="">Choose a bot first</option></select></div>
+        <button class="btn" id="loadGuilds">↻ Refresh servers</button>
       </div>
-      <div class="notice" id="botConfigNotice" role="status" aria-live="polite">Step 1: Choose a bot. Then choose a server to view its settings.</div>
-      <div class="configgrid" id="configEditor"><div class="empty">Choose a bot and a Discord server to view available settings.</div></div>
-      <div class="configactions"><button class="btn primary" id="saveBotConfig">Save & Apply</button><button class="btn" id="reloadBotConfig">Discard Changes</button></div>
+      <nav class="editor-tabs" aria-label="Editor sections">
+        <button class="editor-tab active" data-editor-tab="general">General</button>
+        <button class="editor-tab" data-editor-tab="embed">Embed</button>
+        <button class="editor-tab" data-editor-tab="messages">Messages</button>
+        <button class="editor-tab" data-editor-tab="forms">Forms</button>
+        <button class="editor-tab" data-editor-tab="logging">Logging</button>
+        <button class="editor-tab" data-editor-tab="advanced">Advanced</button>
+      </nav>
+      <div class="notice" id="botConfigNotice" role="status" aria-live="polite">Choose a bot and a Discord server to load its settings.</div>
+      <div class="editor-layout">
+        <div class="editor-main">
+          <div class="editor-panel-head"><div><h2 id="editorSectionTitle">General</h2><p id="editorSectionDescription">Main settings for the selected bot and server.</p></div></div>
+          <div class="configgrid" id="configEditor"><div class="empty">Choose a bot and a Discord server to view available settings.</div></div>
+          <div class="editor-placeholder" id="editorPlaceholder" hidden><b>This section is not connected yet</b><p>Only settings provided by the bot's configuration API can be edited here. We will add the remaining editor sections after the base layout is approved.</p></div>
+          <div class="configactions"><button class="btn" id="reloadBotConfig">Discard Changes</button></div>
+        </div>
+        <aside class="editor-preview">
+          <div class="preview-head"><span>PREVIEW</span><span class="preview-live">● CONFIG</span></div>
+          <div class="preview-card"><div class="preview-avatar">🤖</div><div class="preview-name">BotControl</div><div class="preview-muted">Configuration preview</div><div class="preview-rule"></div><p>Changes made in the editor apply to the selected Discord server after you press Save Changes.</p></div>
+          <div class="preview-help"><b>Server-scoped settings</b><p>Each Discord server keeps its own configuration. Choose another server above to edit its settings.</p></div>
+        </aside>
+      </div>
     </section>
   </main>
 </div>
@@ -517,6 +571,19 @@
   $$('.nav button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
   $('#refresh').addEventListener('click',()=>toast('Backend ещё не подключён — обновлять реальные статусы пока неоткуyes.'));
   $('#logSearch').addEventListener('input',e=>{$$('#logList .logitem').forEach(x=>x.style.display=x.textContent.toLowerCase().includes(e.target.value.toLowerCase())?'flex':'none')});
+
+  // Editor tabs are a visual shell for the staged Tickety-style rebuild.
+  document.querySelectorAll('[data-editor-tab]').forEach(tab => tab.addEventListener('click', () => {
+    document.querySelectorAll('[data-editor-tab]').forEach(item => item.classList.toggle('active', item === tab));
+    const general = tab.dataset.editorTab === 'general';
+    document.getElementById('configEditor').hidden = !general;
+    document.getElementById('editorPlaceholder').hidden = general;
+    document.getElementById('editorSectionTitle').textContent = tab.textContent;
+    document.getElementById('editorSectionDescription').textContent = general
+      ? 'Main settings provided by the selected bot.'
+      : 'This editor section is reserved for the next implementation stage.';
+  }));
+
 </script>
 
 <script>
