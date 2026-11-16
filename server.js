@@ -538,7 +538,7 @@ app.get("/api/bots", requireAuth, async (req, res) => {
     bots = checks.filter(Boolean);
   }
   if (!RENDER_API_TOKEN) {
-    return res.json({ connected: false, bots: bots.map(({ id, name, managed }) => ({ id, name, managed: !!managed, canRestart: isOwner(req.user), hostStatus: "not_configured" })) });
+    return res.json({ connected: false, bots: bots.map(({ id, name, managed, iconUrl, icon_url }) => ({ id, name, iconUrl: iconUrl || icon_url || null, managed: !!managed, canRestart: isOwner(req.user), hostStatus: "not_configured" })) });
   }
 
   const results = await Promise.all(bots.map(async bot => {
@@ -554,7 +554,7 @@ app.get("/api/bots", requireAuth, async (req, res) => {
         updatedAt: service.updatedAt || null
       };
     } catch (error) {
-      return { id: bot.id, name: bot.name, managed: !!bot.managed, canRestart: isOwner(req.user), hostStatus: "error", error: error.status ? "Render API HTTP " + error.status : "Render API недоступен" };
+      return { id: bot.id, name: bot.name, iconUrl: bot.iconUrl || bot.icon_url || null, managed: !!bot.managed, canRestart: isOwner(req.user), hostStatus: "error", error: error.status ? "Render API HTTP " + error.status : "Render API недоступен" };
     }
   }));
   res.json({ connected: true, bots: results });
