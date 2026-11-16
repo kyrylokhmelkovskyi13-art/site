@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,97 +26,97 @@
 <div class="authwall" id="authWall">
   <div class="authbox">
     <div class="brand" style="padding:0 0 18px"><div class="logo">⌘</div><span>BotControl</span></div>
-    <h2>Вход через Discord</h2>
-    <p>Авторизуйся Discord-аккаунтом. Доступ к ботам выдаёт владелец панели.</p>
-    <a class="btn primary" style="display:block;text-align:center;text-decoration:none;width:100%" href="/auth/discord">Продолжить с Discord</a>
+    <h2>Sign in with Discord</h2>
+    <p>Sign in with your Discord account to manage bots on servers where you have Administrator permissions.</p>
+    <a class="btn primary" style="display:block;text-align:center;text-decoration:none;width:100%" href="/auth/discord">Continue with Discord</a>
   </div>
 </div>
 <div class="shell">
   <aside class="side">
     <div class="brand"><div class="logo">⌘</div><span>BotControl</span></div>
-    <div class="navlabel">Рабочее пространство</div>
+    <div class="navlabel">WORKSPACE</div>
     <nav class="nav">
-      <button class="active" data-page="overview"><span class="ico">▦</span>Обзор</button>
-      <button data-page="bots"><span class="ico">◈</span>Мои боты</button>
-      <button data-page="logs" id="navLogs"><span class="ico">≋</span>Журнал событий</button>
-      <button data-page="access" id="navAccess"><span class="ico">♙</span>Доступы</button>
-      <button data-page="settings"><span class="ico">⚙</span>Настройки</button>
-      <button data-page="botconfig"><span class="ico">🛠</span>Настройки бота</button>
+      <button class="active" data-page="overview"><span class="ico">▦</span>Overview</button>
+      <button data-page="bots"><span class="ico">◈</span>My Bots</button>
+      <button data-page="logs" id="navLogs"><span class="ico">≋</span>Activity Log</button>
+      <button data-page="access" id="navAccess"><span class="ico">♙</span>Access</button>
+      <button data-page="settings"><span class="ico">⚙</span>Settings</button>
+      <button data-page="botconfig"><span class="ico">🛠</span>Bot Settings</button>
     </nav>
-    <div class="sidebottom"><div class="profile"><div class="avatar">K</div><div><b>Личный аккаунт</b><div class="muted" style="font-size:11px">Локальный предпросмотр</div></div></div></div>
+    <div class="sidebottom"><div class="profile"><div class="avatar">K</div><div><b>Personal Account</b><div class="muted" style="font-size:11px">Dashboard</div></div></div></div>
   </aside>
   <main class="main">
     <section class="page active" id="overview">
-      <header class="top"><div><div class="eyebrow">Панель управления</div><h1>С возвращением 👋</h1><p>Всё состояние Discord-ботов в одном месте.</p></div><div class="topactions"><button class="btn" id="refresh">↻ Обновить</button><button class="btn logout" id="logout">Выйти</button> </div></header>
+      <header class="top"><div><div class="eyebrow">DASHBOARD</div><h1>Welcome back 👋</h1><p>Manage your Discord bots from one place.</p></div><div class="topactions"><button class="btn" id="refresh">↻ Refresh</button><button class="btn logout" id="logout">Sign out</button> </div></header>
       <div class="stats">
-        <div class="stat"><div class="stathead">Всего ботов <span>◈</span></div><div class="statnum" id="totalBots">1</div><div class="statfoot">В этом пространстве</div></div>
-        <div class="stat"><div class="stathead">В сети <span style="color:var(--cyan)">●</span></div><div class="statnum" id="onlineBots">—</div><div class="statfoot">Нет подключения к API</div></div>
-        <div class="stat"><div class="stathead">Ошибки <span style="color:var(--red)">!</span></div><div class="statnum">—</div><div class="statfoot">Ожидают интеграции</div></div>
-        <div class="stat"><div class="stathead">Аптайм <span>◷</span></div><div class="statnum">—</div><div class="statfoot">Будет доступен после подключения</div></div>
+        <div class="stat"><div class="stathead">Total Bots <span>◈</span></div><div class="statnum" id="totalBots">1</div><div class="statfoot">In this workspace</div></div>
+        <div class="stat"><div class="stathead">Online <span style="color:var(--cyan)">●</span></div><div class="statnum" id="onlineBots">—</div><div class="statfoot">No API connection</div></div>
+        <div class="stat"><div class="stathead">Errors <span style="color:var(--red)">!</span></div><div class="statnum">—</div><div class="statfoot">Awaiting integration</div></div>
+        <div class="stat"><div class="stathead">Uptime <span>◷</span></div><div class="statnum">—</div><div class="statfoot">Available after connection</div></div>
       </div>
-      <div class="sectionhead"><h2>Твои Discord-боты</h2><span>Первое подключение</span></div>
+      <div class="sectionhead"><h2>Your Discord Bots</h2><span>Connected services</span></div>
       <div class="bots" id="botCards">
-        <article class="card bot"><div class="bothead"><div class="botidentity"><div class="botavatar">👑</div><div><div class="botname">Kingdom of IvynX</div><div class="botid">Python · Disnake · Render</div></div></div><span class="status off">Не подключён</span></div><div class="botdesc">Бот модерации и проверки сообщений. Подключение к панели ещё не настроено.</div><div class="botmetrics"><div class="metric"><b>—</b><span>Серверов</span></div><div class="metric"><b>—</b><span>Задержка</span></div><div class="metric"><b>—</b><span>Последний запуск</span></div></div><div class="botactions"><button class="btn small primary" data-action="connect">Настроить подключение</button><button class="btn small" data-action="details">Подробнее</button></div></article>
+        <article class="card bot"><div class="bothead"><div class="botidentity"><div class="botavatar">👑</div><div><div class="botname">Kingdom of IvynX</div><div class="botid">Python · Disnake · Render</div></div></div><span class="status off">Not connected</span></div><div class="botdesc">Moderation and message review bot. Dashboard connection is not configured yet.</div><div class="botmetrics"><div class="metric"><b>—</b><span>Servers</span></div><div class="metric"><b>—</b><span>Latency</span></div><div class="metric"><b>—</b><span>Last started</span></div></div><div class="botactions"><button class="btn small primary" data-action="connect">Configure connection</button><button class="btn small" data-action="details">Details</button></div></article>
       </div>
-      <div class="notice">ⓘ Сейчас это интерфейс-предпросмотр. Статус, логи и управление станут реальными после подключения защищённого backend API. Никакие токены ботов здесь не запрашиваются.</div>
-      <div class="sectionhead"><h2>Последние события</h2><span>Демо-данные</span></div>
-      <div class="card activity"><div class="activityrow"><div class="eventicon">🔒</div><div><div class="eventtitle">Панель создана</div><div class="eventsub">Интерфейс готов к следующему этапу интеграции</div></div><span class="time">Сейчас</span></div><div class="activityrow"><div class="eventicon">🤖</div><div><div class="eventtitle">Kingdom of IvynX добавлен в список</div><div class="eventsub">Ожидает настройки безопасного подключения</div></div><span class="time">Сейчас</span></div></div>
+      <div class="notice">ⓘ Preview information may be shown until a bot API is connected. Bot tokens are never requested here.</div>
+      <div class="sectionhead"><h2>Recent Activity</h2><span>Demo data</span></div>
+      <div class="card activity"><div class="activityrow"><div class="eventicon">🔒</div><div><div class="eventtitle">Dashboard created</div><div class="eventsub">Interface is ready for the next integration step</div></div><span class="time">Сейчас</span></div><div class="activityrow"><div class="eventicon">🤖</div><div><div class="eventtitle">Kingdom of IvynX added</div><div class="eventsub">Waiting for secure connection setup</div></div><span class="time">Сейчас</span></div></div>
     </section>
     <section class="page" id="bots">
-      <header class="top"><div><div class="eyebrow">Управление</div><h1>Мои боты</h1><p>Регистрируй уже размещённые Discord-боты в панели.</p></div></header>
+      <header class="top"><div><div class="eyebrow">MANAGEMENT</div><h1>My Bots</h1><p>Register existing Discord bots hosted on Render.</p></div></header>
       <div class="card configbox" id="botRegistryForm" hidden>
-        <h3>Подключить существующий Render-сервис</h3>
-        <label for="newBotId">Внутренний ID бота</label><input id="newBotId" placeholder="например, moderation-bot">
-        <label for="newBotName">Название</label><input id="newBotName" placeholder="Название бота">
+        <h3>Connect an existing Render service</h3>
+        <label for="newBotId">Internal bot ID</label><input id="newBotId" placeholder="e.g. moderation-bot">
+        <label for="newBotName">Display name</label><input id="newBotName" placeholder="Display name бота">
         <label for="newBotRenderId">Render Service ID</label><input id="newBotRenderId" placeholder="srv-...">
-        <label for="newBotControlUrl">Публичный URL control API</label><input id="newBotControlUrl" placeholder="https://my-bot.onrender.com">
+        <label for="newBotControlUrl">Public control API URL</label><input id="newBotControlUrl" placeholder="https://my-bot.onrender.com">
         <div class="confighint">Сначала бот должен быть развёрнут на Render и поддерживать защищённые маршруты /control/manifest, /control/guilds и /control/config.</div>
-        <div class="configactions"><button class="btn primary" id="registerBot">Добавить бота</button></div>
+        <div class="configactions"><button class="btn primary" id="registerBot">Add Bot</button></div>
       </div>
       <div class="bots" id="botCards2"></div>
-      <div class="notice">Токены Discord и Render API-ключи сюда не вводятся. Они остаются в секретных переменных Render.</div>
+      <div class="notice">Do not enter Discord tokens or Render API keys here. Keep them in Render environment secrets.</div>
     </section>
     <section class="page" id="logs">
-      <header class="top"><div><div class="eyebrow">Мониторинг</div><h1>Журнал событий</h1><p>Запуски, ошибки и действия ботов.</p></div></header>
-      <div class="toolbar"><input class="search" id="logSearch" placeholder="Поиск по событиям…"></div>
-      <div class="card" id="logList"><div class="logitem"><span>🔒</span><div><b>Интерфейс BotControl инициализирован</b><div class="muted">Демо-событие · Реальные логи появятся после подключения API</div></div><span class="tag">INFO</span></div></div>
+      <header class="top"><div><div class="eyebrow">MONITORING</div><h1>Activity Log</h1><p>Bot deployments, errors, and actions.</p></div></header>
+      <div class="toolbar"><input class="search" id="logSearch" placeholder="Search activity…"></div>
+      <div class="card" id="logList"><div class="logitem"><span>🔒</span><div><b>BotControl initialized</b><div class="muted">Demo event · Live logs appear when the API is connected</div></div><span class="tag">INFO</span></div></div>
     </section>
     <section class="page" id="access">
-      <header class="top"><div><div class="eyebrow">Владелец</div><h1>Доступ пользователей</h1><p>Выдавай доступ только к нужному боту и Discord-серверу.</p></div><button class="btn" id="reloadAccess">↻ Обновить</button></header>
+      <header class="top"><div><div class="eyebrow">OWNER</div><h1>User Access</h1><p>Manage access to specific bots and Discord servers.</p></div><button class="btn" id="reloadAccess">↻ Refresh</button></header>
       <div class="card configbox">
-        <h3>Выдать или обновить доступ</h3>
-        <label for="accessDiscordId">Discord ID пользователя</label><input id="accessDiscordId" inputmode="numeric" placeholder="Например, 123456789012345678">
-        <label for="accessBotId">ID бота из BOT_SERVICES</label><input id="accessBotId" value="ivynx" placeholder="ivynx">
-        <label for="accessGuildId">Discord-сервер (* — все серверы этого бота)</label><input id="accessGuildId" value="*" placeholder="* или ID сервера">
+        <h3>Grant or update access</h3>
+        <label for="accessDiscordId">User Discord ID</label><input id="accessDiscordId" inputmode="numeric" placeholder="e.g. 123456789012345678">
+        <label for="accessBotId">Bot ID from BOT_SERVICES</label><input id="accessBotId" value="ivynx" placeholder="ivynx">
+        <label for="accessGuildId">Discord server (* = all bot servers)</label><input id="accessGuildId" value="*" placeholder="* или ID сервера">
         <div class="settingsgrid">
-          <label class="settingrow"><span>Просмотр настроек</span><input class="toggle" id="accessView" type="checkbox" checked></label>
-          <label class="settingrow"><span>Изменение настроек</span><input class="toggle" id="accessConfigure" type="checkbox"></label>
-          <label class="settingrow"><span>Перезапуск бота</span><input class="toggle" id="accessRestart" type="checkbox"></label>
+          <label class="settingrow"><span>View settings</span><input class="toggle" id="accessView" type="checkbox" checked></label>
+          <label class="settingrow"><span>Edit settings</span><input class="toggle" id="accessConfigure" type="checkbox"></label>
+          <label class="settingrow"><span>Restart bot</span><input class="toggle" id="accessRestart" type="checkbox"></label>
         </div>
-        <div class="configactions"><button class="btn primary" id="grantAccess">Сохранить доступ</button></div>
+        <div class="configactions"><button class="btn primary" id="grantAccess">Save Access</button></div>
       </div>
-      <div class="sectionhead"><h2>Выданные разрешения</h2><span>Управление доступом</span></div>
-      <div class="card" id="accessList"><div class="empty">Загрузка…</div></div>
+      <div class="sectionhead"><h2>Granted Permissions</h2><span>MANAGEMENT доступом</span></div>
+      <div class="card" id="accessList"><div class="empty">Loading…</div></div>
     </section>
     <section class="page" id="settings">
-      <header class="top"><div><div class="eyebrow">Конфигурация</div><h1>Настройки</h1><p>Параметры будущей панели управления.</p></div></header>
+      <header class="top"><div><div class="eyebrow">CONFIGURATION</div><h1>Settings</h1><p>Dashboard preferences.</p></div></header>
       <div class="settingsgrid">
-        <div class="card setting"><div class="settingrow"><div><h3>Уведомления об ошибках</h3><p>Показывать оповещения о сбоях ботов.</p></div><input class="toggle" type="checkbox" checked></div></div>
-        <div class="card setting"><div class="settingrow"><div><h3>Подтверждать перезапуск</h3><p>Запрашивать подтверждение перед действием.</p></div><input class="toggle" type="checkbox" checked></div></div>
-        <div class="card setting"><div class="settingrow"><div><h3>Автообновление статуса</h3><p>Обновлять данные после подключения backend.</p></div><input class="toggle" type="checkbox"></div></div>
-        <div class="card setting"><div class="settingrow"><div><h3>Тёмная тема</h3><p>Основное оформление BotControl.</p></div><input class="toggle" type="checkbox" checked></div></div>
+        <div class="card setting"><div class="settingrow"><div><h3>Error notifications</h3><p>Show alerts when bots fail.</p></div><input class="toggle" type="checkbox" checked></div></div>
+        <div class="card setting"><div class="settingrow"><div><h3>Подтвержyesть перезапуск</h3><p>Ask for confirmation before taking action.</p></div><input class="toggle" type="checkbox" checked></div></div>
+        <div class="card setting"><div class="settingrow"><div><h3>Auto-refresh status</h3><p>Обновлять yesнные после подключения backend.</p></div><input class="toggle" type="checkbox"></div></div>
+        <div class="card setting"><div class="settingrow"><div><h3>Dark theme</h3><p>BotControl appearance.</p></div><input class="toggle" type="checkbox" checked></div></div>
       </div>
-      <div class="notice">Настройки пока сохраняются только в текущем открытом окне. Постоянное хранение появится на серверной стороне.</div>
+      <div class="notice">These preferences currently apply only to this browser session. Persistent storage may be added later.</div>
     </section>
     <section class="page" id="botconfig">
-      <header class="top"><div><div class="eyebrow">Живая конфигурация</div><h1>Настройки бота</h1><p>Выбери бота, затем Discord-сервер. Настройки каждого сервера хранятся отдельно.</p></div><button class="btn" id="loadBotConfig">↻ Загрузить</button></header>
+      <header class="top"><div><div class="eyebrow">LIVE CONFIGURATION</div><h1>Bot Settings</h1><p>Choose a bot, then a Discord server. Each server has its own settings.</p></div><button class="btn" id="loadBotConfig">↻ Load</button></header>
       <div class="configgrid">
-        <div class="card setting"><div class="eyebrow">ШАГ 1</div><h3>Выбери бота</h3><p>Какого Discord-бота нужно настроить?</p><select class="search" id="botSelect"><option value="">Загружаю ботов…</option></select></div>
-        <div class="card setting"><div class="eyebrow">ШАГ 2</div><h3>Выбери сервер</h3><p>Показываются серверы, где ты администратор и где установлен выбранный бот.</p><select class="search" id="botGuildSelect"><option value="">Сначала выбери бота</option></select><button class="btn" id="loadGuilds" style="margin-top:10px">↻ Обновить серверы</button></div>
+        <div class="card setting"><div class="eyebrow">STEP 1</div><h3>Choose a bot</h3><p>Which Discord bot do you want to configure?</p><select class="search" id="botSelect"><option value="">Loading bots…</option></select></div>
+        <div class="card setting"><div class="eyebrow">STEP 2</div><h3>Choose a server</h3><p>Only servers where you have Administrator permission and the selected bot is installed are shown.</p><select class="search" id="botGuildSelect"><option value="">Choose a bot first</option></select><button class="btn" id="loadGuilds" style="margin-top:10px">↻ Refresh серверы</button></div>
       </div>
-      <div class="notice" id="botConfigNotice" role="status" aria-live="polite">Шаг 1: выбери бота. Затем выбери сервер, чтобы открыть его настройки.</div>
-      <div class="configgrid" id="configEditor"><div class="empty">Выбери бота и Discord-сервер, чтобы увидеть доступные настройки.</div></div>
-      <div class="configactions"><button class="btn primary" id="saveBotConfig">Сохранить и применить</button><button class="btn" id="reloadBotConfig">Отменить изменения</button></div>
+      <div class="notice" id="botConfigNotice" role="status" aria-live="polite">Step 1: Choose a bot. Then choose a server to view its settings.</div>
+      <div class="configgrid" id="configEditor"><div class="empty">Choose a bot и Discord-сервер, чтобы увидеть доступные настройки.</div></div>
+      <div class="configactions"><button class="btn primary" id="saveBotConfig">Save & Apply</button><button class="btn" id="reloadBotConfig">Discard Changes</button></div>
     </section>
   </main>
 </div>
@@ -126,7 +126,7 @@
   function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2600)}
   function showPage(id){$$('.page').forEach(p=>p.classList.toggle('active',p.id===id));$$('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id))}
   $$('.nav button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
-  $('#refresh').addEventListener('click',()=>toast('Backend ещё не подключён — обновлять реальные статусы пока неоткуда.'));
+  $('#refresh').addEventListener('click',()=>toast('Backend ещё не подключён — обновлять реальные статусы пока неоткуyes.'));
   $('#logSearch').addEventListener('input',e=>{$$('#logList .logitem').forEach(x=>x.style.display=x.textContent.toLowerCase().includes(e.target.value.toLowerCase())?'flex':'none')});
 </script>
 
@@ -143,18 +143,18 @@
       headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }
     });
     const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.error || 'Ошибка API: ' + response.status);
+    if (!response.ok) throw new Error(data.error || 'API error: ' + response.status);
     return data;
   }
 
   function statusLabel(status) {
     const map = {
-      live: ['Работает на хостинге', true],
-      suspended: ['Приостановлен', false],
-      not_configured: ['Render не настроен', false],
-      error: ['Ошибка подключения', false]
+      live: ['Hosting online', true],
+      suspended: ['Suspended', false],
+      not_configured: ['Render not configured', false],
+      error: ['Connection error', false]
     };
-    return map[status] || ['Статус: ' + (status || 'неизвестен'), false];
+    return map[status] || ['Status: ' + (status || 'unknown'), false];
   }
 
   async function loadBots() {
@@ -196,19 +196,19 @@
         head.append(identity, badge);
         const desc = document.createElement('div');
         desc.className = 'botdesc';
-        desc.textContent = bot.error || 'Статус сервиса получен из Render API. Это не подтверждает подключение Discord Gateway.';
+        desc.textContent = bot.error || 'Статус сервиса получен из Render API. Это не подтвержyesет подключение Discord Gateway.';
         const metrics = document.createElement('div');
         metrics.className = 'botmetrics';
-        metrics.innerHTML = '<div class="metric"><b>—</b><span>Discord-серверов</span></div><div class="metric"><b>—</b><span>Задержка</span></div><div class="metric"><b>—</b><span>Аптайм</span></div>';
+        metrics.innerHTML = '<div class="metric"><b>—</b><span>Discord servers</span></div><div class="metric"><b>—</b><span>Latency</span></div><div class="metric"><b>—</b><span>Uptime</span></div>';
         const actions = document.createElement('div');
         actions.className = 'botactions';
         const restart = document.createElement('button');
         restart.className = 'btn small primary';
-        restart.textContent = 'Перезапустить';
+        restart.textContent = 'Restart';
         restart.hidden = !bot.canRestart;
         restart.disabled = !result.connected || bot.hostStatus === 'not_configured';
         restart.addEventListener('click', async () => {
-          if (!confirm('Перезапустить сервис «' + bot.name + '» на Render?')) return;
+          if (!confirm('Restart сервис «' + bot.name + '” on Render?')) return;
           restart.disabled = true;
           try {
             const response = await api('/api/bots/' + encodeURIComponent(bot.id) + '/restart', {
@@ -223,7 +223,7 @@
         });
         const configure = document.createElement('button');
         configure.className = 'btn small';
-        configure.textContent = 'Настройки';
+        configure.textContent = 'Settings';
         configure.addEventListener('click', () => {
           showPage('botconfig');
           botSelect.value = bot.id;
@@ -234,13 +234,13 @@
         if (bot.managed) {
           const remove = document.createElement('button');
           remove.className = 'btn small';
-          remove.textContent = 'Убрать из панели';
+          remove.textContent = 'Remove from dashboard';
           remove.addEventListener('click', async () => {
-            if (!confirm('Убрать «' + bot.name + '» из BotControl? Сам сервис Render не будет удалён.')) return;
+            if (!confirm('Remove “' + bot.name + '» из BotControl? Сам сервис Render не будет уyesлён.')) return;
             try {
               await api('/api/bots/' + encodeURIComponent(bot.id), { method: 'DELETE', body: '{}' });
               await loadBots();
-              toast('Бот удалён из панели.');
+              toast('Бот уyesлён из панели.');
             } catch (error) { toast(error.message); }
           });
           actions.append(remove);
@@ -280,12 +280,12 @@
 
   async function loadAccess() {
     const list = document.getElementById('accessList');
-    list.replaceChildren(Object.assign(document.createElement('div'), { className: 'empty', textContent: 'Загрузка…' }));
+    list.replaceChildren(Object.assign(document.createElement('div'), { className: 'empty', textContent: 'Loading…' }));
     try {
       const result = await api('/api/access');
       list.replaceChildren();
       if (!result.access.length) {
-        list.append(Object.assign(document.createElement('div'), { className: 'empty', textContent: 'Пока никому не выдан доступ.' }));
+        list.append(Object.assign(document.createElement('div'), { className: 'empty', textContent: 'No access has been granted yet.' }));
         return;
       }
       result.access.forEach(row => {
@@ -297,16 +297,16 @@
         title.textContent = row.discord_id + ' · ' + row.bot_id;
         const detail = document.createElement('div');
         detail.className = 'muted';
-        detail.textContent = 'Сервер: ' + (row.guild_id === '*' ? 'все' : row.guild_id) +
-          ' · Просмотр: ' + (row.can_view ? 'да' : 'нет') +
-          ' · Изменение: ' + (row.can_configure ? 'да' : 'нет') +
-          ' · Перезапуск: ' + (row.can_restart ? 'да' : 'нет');
+        detail.textContent = 'Server: ' + (row.guild_id === '*' ? 'all' : row.guild_id) +
+          ' · Просмотр: ' + (row.can_view ? 'yes' : 'no') +
+          ' · Изменение: ' + (row.can_configure ? 'yes' : 'no') +
+          ' · Перезапуск: ' + (row.can_restart ? 'yes' : 'no');
         info.append(title, detail);
         const remove = document.createElement('button');
         remove.className = 'btn small';
-        remove.textContent = 'Отозвать';
+        remove.textContent = 'Revoke';
         remove.addEventListener('click', async () => {
-          if (!confirm('Отозвать это разрешение?')) return;
+          if (!confirm('Revoke это разрешение?')) return;
           try {
             await api('/api/access', { method: 'DELETE', body: JSON.stringify({
               discord_id: row.discord_id, bot_id: row.bot_id, guild_id: row.guild_id
@@ -335,7 +335,7 @@
           can_restart: document.getElementById('accessRestart').checked
         }
       })});
-      toast('Доступ сохранён.');
+      toast('Access saved.');
       await loadAccess();
     } catch (error) { toast(error.message); }
   });
@@ -352,7 +352,7 @@
       document.getElementById('newBotName').value = '';
       document.getElementById('newBotRenderId').value = '';
       document.getElementById('newBotControlUrl').value = '';
-      toast('Бот добавлен в BotControl.');
+      toast('Bot added to BotControl.');
       await loadBots();
     } catch (error) { toast(error.message); }
   });
@@ -365,7 +365,7 @@
       const result = await api('/api/logs');
       list.replaceChildren();
       if (!result.logs.length) {
-        list.append(Object.assign(document.createElement('div'), { className: 'empty', textContent: 'Событий пока нет.' }));
+        list.append(Object.assign(document.createElement('div'), { className: 'empty', textContent: 'Событий пока no.' }));
         return;
       }
       result.logs.forEach(log => {
@@ -377,7 +377,7 @@
         title.textContent = log.action + (log.bot_id ? ' · ' + log.bot_id : '');
         const sub = document.createElement('div');
         sub.className = 'muted';
-        sub.textContent = (log.actor_username || log.actor_discord_id) + ' · ' + (log.guild_id || 'без сервера') + ' · ' + new Date(log.created_at).toLocaleString();
+        sub.textContent = (log.actor_username || log.actor_discord_id) + ' · ' + (log.guild_id || 'no server') + ' · ' + new Date(log.created_at).toLocaleString();
         body.append(title, sub);
         item.append(body);
         list.append(item);
@@ -401,7 +401,7 @@
       const card = document.createElement('div');
       card.className = 'card configbox';
       const heading = document.createElement('h3');
-      heading.textContent = section.title || section.id || 'Настройки';
+      heading.textContent = section.title || section.id || 'Settings';
       card.append(heading);
       (section.fields || []).forEach(field => {
         const id = 'cfg-' + field.key;
@@ -460,7 +460,7 @@
   }
 
   function collectBotConfig() {
-    if (!currentManifest) throw new Error('Схема настроек этого бота не загружена.');
+    if (!currentManifest) throw new Error('The bot settings schema has not been loaded.');
     const payload = {};
     configEditor.querySelectorAll('[data-config-key]').forEach(control => {
       const key = control.dataset.configKey;
@@ -468,34 +468,34 @@
       if (type === 'boolean') payload[key] = control.checked;
       else if (type === 'number') {
         const value = Number(control.value);
-        if (!Number.isFinite(value)) throw new Error('Поле «' + key + '» должно быть числом.');
+        if (!Number.isFinite(value)) throw new Error('Field “' + key + '” must be a number.');
         payload[key] = value;
       } else if (type === 'discord_id') {
         const value = control.value.trim();
-        if (value && !/^[0-9]{15,22}$/.test(value)) throw new Error('Поле «' + key + '»: нужен Discord ID из 15–22 цифр.');
+        if (value && !/^[0-9]{15,22}$/.test(value)) throw new Error('Field “' + key + '”: enter a Discord ID containing 15–22 digits.');
         payload[key] = value || null;
       } else if (type === 'id_list') {
         const values = control.value.split(',').map(value => value.trim()).filter(Boolean);
-        if (values.some(value => !/^[0-9]{15,22}$/.test(value))) throw new Error('Поле «' + key + '»: каждый ID должен содержать 15–22 цифры.');
+        if (values.some(value => !/^[0-9]{15,22}$/.test(value))) throw new Error('Field “' + key + '”: each ID must contain 15–22 digits.');
         payload[key] = values;
       } else if (type === 'string_list') {
         payload[key] = control.value.split(',').map(value => value.trim()).filter(Boolean);
       } else if (type === 'json') {
         try { payload[key] = JSON.parse(control.value || '{}'); }
-        catch { throw new Error('Поле «' + key + '» должно содержать корректный JSON.'); }
+        catch { throw new Error('Field “' + key + '” must contain valid JSON.'); }
       } else payload[key] = control.value;
     });
     return payload;
   }
   async function loadGuilds() {
-    guildSelect.replaceChildren(new Option('Загружаю серверы…', ''));
+    guildSelect.replaceChildren(new Option('Loading servers…', ''));
     try {
       selectedBotId = document.getElementById('botSelect').value;
-      if (!selectedBotId) throw new Error('Нет доступных ботов.');
+      if (!selectedBotId) throw new Error('No available bots.');
       const result = await api('/api/bots/' + encodeURIComponent(selectedBotId) + '/guilds');
       guildSelect.replaceChildren();
       if (!result.guilds.length) {
-        guildSelect.add(new Option('Нет доступных серверов с Administrator', ''));
+        guildSelect.add(new Option('No servers available with Administrator permission', ''));
         selectedGuildId = '';
         return;
       }
@@ -503,40 +503,40 @@
       selectedGuildId = guildSelect.value;
       await loadBotConfig();
     } catch (error) {
-      guildSelect.replaceChildren(new Option('API бота не отвечает', ''));
-      configNotice.textContent = 'Не удалось загрузить список серверов.\n\n' + error.message;
+      guildSelect.replaceChildren(new Option('Bot API unavailable', ''));
+      configNotice.textContent = 'Не уyesлось загрузить список серверов.\n\n' + error.message;
       toast(error.message);
     }
   }
   async function loadBotConfig() {
     selectedGuildId = guildSelect.value;
     if (!selectedGuildId) {
-      configNotice.textContent = 'Сначала выбери Discord-сервер, на котором состоит бот.';
+      configNotice.textContent = 'Choose a Discord server where the bot is installed first.';
       return;
     }
-    configNotice.textContent = 'Загружаю настройки выбранного сервера…';
+    configNotice.textContent = 'Loading settings for the selected server…';
     try {
       const [manifestResult, configResult] = await Promise.all([
         api('/api/bots/' + encodeURIComponent(selectedBotId) + '/manifest'),
         api('/api/bots/' + encodeURIComponent(selectedBotId) + '/config?guild_id=' + encodeURIComponent(selectedGuildId))
       ]);
       renderBotConfig(configResult.config, manifestResult.manifest);
-      configNotice.textContent = 'Настройки сервера «' + guildSelect.selectedOptions[0].textContent + '» загружены по схеме бота «' + (manifestResult.manifest.name || selectedBotId) + '».';
+      configNotice.textContent = 'Settings сервера «' + guildSelect.selectedOptions[0].textContent + '” loaded using bot schema “' + (manifestResult.manifest.name || selectedBotId) + '».';
     } catch (error) {
-      configNotice.textContent = 'Не удалось загрузить настройки.\n\n' + error.message;
+      configNotice.textContent = 'Не уyesлось загрузить настройки.\n\n' + error.message;
       toast(error.message);
     }
   }
   async function saveBotConfig() {
     try {
-      if (!selectedGuildId || !selectedBotId) throw new Error('Сначала выбери бота и Discord-сервер.');
+      if (!selectedGuildId || !selectedBotId) throw new Error('Choose a bot first и Discord-сервер.');
       const payload = collectBotConfig();
       const result = await api('/api/bots/' + encodeURIComponent(selectedBotId) + '/config?guild_id=' + encodeURIComponent(selectedGuildId), { method: 'PUT', body: JSON.stringify(payload) });
       renderBotConfig(result.config, currentManifest);
-      configNotice.textContent = result.message || 'Настройки применены.';
-      toast('Настройки сохранены и применены ботом.');
+      configNotice.textContent = result.message || 'Settings применены.';
+      toast('Settings сохранены и применены ботом.');
     } catch (error) {
-      configNotice.textContent = 'Не удалось сохранить настройки.\n\n' + error.message;
+      configNotice.textContent = 'Не уyesлось сохранить настройки.\n\n' + error.message;
       toast(error.message);
     }
   }
@@ -558,7 +558,7 @@
       const profileName = document.querySelector('.sidebottom .profile b');
       const profileMeta = document.querySelector('.sidebottom .profile .muted');
       if (profileName) profileName.textContent = result.user?.globalName || result.user?.username || 'Discord user';
-      if (profileMeta) profileMeta.textContent = owner ? 'Владелец BotControl' : 'Администратор Discord';
+      if (profileMeta) profileMeta.textContent = owner ? 'OWNER BotControl' : 'Discord Administrator';
       loadBots();
       // Access is automatic: Discord Administrator permission + bot membership.
     } else showLogin();
