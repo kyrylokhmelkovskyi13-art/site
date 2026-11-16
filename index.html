@@ -818,7 +818,7 @@
     @media(max-width:1050px){#botconfig .editor-layout{grid-template-columns:minmax(0,1fr)}#botconfig .editor-preview{position:static;display:grid;grid-template-columns:1fr 1fr;gap:12px}#botconfig .preview-head{grid-column:1/-1;margin:0}}
     @media(max-width:700px){#botconfig .configgrid{grid-template-columns:1fr}#botconfig .editor-preview{display:block}#botconfig .preview-head{margin-bottom:12px}#botconfig .editor-top{align-items:flex-start;flex-direction:column}#botconfig .editor-top .topactions{width:100%}#botconfig .editor-top .topactions button{flex:1}#botconfig .editor-picker{min-width:100%}#botconfig #loadGuilds{width:100%}}
 
-  </style>
+    .application-form{max-width:900px}.application-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px}.application-grid label{display:block;margin:13px 0 7px;color:#aebbd0;font-size:11px;font-weight:700}.application-grid input,.application-grid textarea{width:100%;padding:11px 12px;background:#12151e;border:1px solid #343b4c;border-radius:9px;color:#f4f6fb;font:13px inherit}.application-grid textarea{min-height:105px;resize:vertical}.application-wide{grid-column:1/-1}.application-row{display:flex;align-items:center;gap:13px;padding:15px 18px;border-bottom:1px solid #2b3040}.application-row:last-child{border-bottom:0}.application-avatar{width:46px;height:46px;object-fit:cover;border-radius:13px}.application-info{min-width:0;flex:1}.application-info b{display:block}.application-meta{font-size:11px;color:#929bad;overflow-wrap:anywhere}.application-actions{display:flex;gap:7px;flex-wrap:wrap}.application-status{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#9dc0ff}.server-icon img{width:58px;height:58px;object-fit:cover;border-radius:18px}@media(max-width:650px){.application-grid{grid-template-columns:1fr}.application-wide{grid-column:auto}.application-row{align-items:flex-start;flex-wrap:wrap}.application-actions{width:100%}}\n  </style>
 </head>
 <body>
 <div class="welcome-screen" id="welcomeScreen">
@@ -852,6 +852,7 @@
       <button data-page="bots"><span class="ico">◈</span>My Bots</button>
       <button data-page="logs" id="navLogs"><span class="ico">≋</span>Activity Log</button>
       <button data-page="access" id="navAccess"><span class="ico">♙</span>Access</button>
+      <button data-page="applications"><span class="ico">✉</span>Bot Applications</button>
     </nav>
     <div class="sidebottom"><div class="profile"><div class="avatar">K</div><div><b>Personal Account</b><div class="muted" style="font-size:11px">Dashboard</div></div></div></div>
   </aside>
@@ -912,6 +913,28 @@
       </div>
       <div class="sectionhead"><h2>Granted Permissions</h2><span>ACCESS MANAGEMENT</span></div>
       <div class="card" id="accessList"><div class="empty">Loading…</div></div>
+    </section>
+    <section class="page" id="applications">
+      <header class="top"><div><div class="eyebrow">COMMUNITY</div><h1>Bot Applications</h1><p>Submit a bot for review or track your application status.</p></div></header>
+      <div class="card configbox application-form">
+        <h3>Apply for Bot Listing</h3>
+        <div class="application-grid">
+          <div><label for="appBotName">Bot name</label><input id="appBotName" maxlength="80" placeholder="My Discord Bot"></div>
+          <div><label for="appBotId">Bot Discord ID</label><input id="appBotId" inputmode="numeric" maxlength="22" placeholder="123456789012345678"></div>
+          <div><label for="appInvite">Bot invite URL</label><input id="appInvite" type="url" placeholder="https://discord.com/oauth2/authorize?..."></div>
+          <div><label for="appAvatar">Bot icon URL (optional)</label><input id="appAvatar" type="url" placeholder="https://..."></div>
+          <div><label for="appSupport">Support server URL (optional)</label><input id="appSupport" type="url" placeholder="https://discord.gg/..."></div>
+          <div class="application-wide"><label for="appDescription">Description</label><textarea id="appDescription" maxlength="1000" placeholder="What does your bot do?"></textarea></div>
+        </div>
+        <div class="configactions"><button class="btn primary" id="submitBotApplication">Submit Application</button></div>
+        <div class="confighint">Applications are reviewed by the BotControl owner. Never submit bot tokens or private credentials.</div>
+      </div>
+      <div class="sectionhead"><h2>My Applications</h2><span>YOUR SUBMISSIONS</span></div>
+      <div class="card" id="myApplications"><div class="empty">Loading applications…</div></div>
+      <div id="reviewApplicationsWrap" hidden>
+        <div class="sectionhead"><h2>Review Applications</h2><span>OWNER ONLY</span></div>
+        <div class="card" id="allApplications"><div class="empty">Loading…</div></div>
+      </div>
     </section>
     <section class="page" id="settings">
       <header class="top"><div><div class="eyebrow">CONFIGURATION</div><h1>Settings</h1><p>Dashboard preferences.</p></div></header>
@@ -1268,6 +1291,43 @@
     } catch (error) { toast(error.message); }
   }
   document.querySelector('[data-page="logs"]').addEventListener('click', loadAuditLogs);
+  function applicationRow(item, ownerView = false) {
+    const row=document.createElement('div'); row.className='application-row';
+    const avatar=document.createElement('img'); avatar.className='application-avatar'; avatar.alt=''; avatar.src=item.avatar_url || 'https://cdn.discordapp.com/embed/avatars/0.png';
+    const info=document.createElement('div'); info.className='application-info';
+    const title=document.createElement('b'); title.textContent=item.bot_name;
+    const meta=document.createElement('div'); meta.className='application-meta'; meta.textContent='By '+(item.applicant_username||item.applicant_discord_id)+' · Bot ID: '+item.bot_discord_id;
+    const status=document.createElement('div'); status.className='application-status'; status.textContent=item.status;
+    const desc=document.createElement('div'); desc.className='application-meta'; desc.textContent=item.description;
+    info.append(title,meta,status,desc);
+    const actions=document.createElement('div'); actions.className='application-actions';
+    const invite=document.createElement('a'); invite.className='btn small'; invite.textContent='Invite'; invite.href=item.invite_url; invite.target='_blank'; invite.rel='noopener noreferrer'; actions.append(invite);
+    if(item.support_url){const support=document.createElement('a');support.className='btn small';support.textContent='Support';support.href=item.support_url;support.target='_blank';support.rel='noopener noreferrer';actions.append(support);}
+    if(ownerView && item.status==='pending'){
+      for(const pair of [['approved','Approve'],['rejected','Reject']]){
+        const button=document.createElement('button');button.className='btn small'+(pair[0]==='approved'?' primary':'');button.textContent=pair[1];
+        button.addEventListener('click',async()=>{button.disabled=true;try{await api('/api/bot-applications/'+encodeURIComponent(item.id),{method:'PATCH',body:JSON.stringify({status:pair[0]})});await loadApplications();toast('Application '+pair[0]+'.');}catch(error){button.disabled=false;toast(error.message);}});
+        actions.append(button);
+      }
+    }
+    row.append(avatar,info,actions);return row;
+  }
+  async function loadApplications(){
+    const mine=document.getElementById('myApplications'),all=document.getElementById('allApplications');
+    try{
+      const own=await api('/api/bot-applications/mine');mine.replaceChildren();
+      if(!own.applications.length)mine.append(Object.assign(document.createElement('div'),{className:'empty',textContent:'You have not submitted any applications yet.'}));
+      else own.applications.forEach(item=>mine.append(applicationRow(item)));
+      try{const review=await api('/api/bot-applications');document.getElementById('reviewApplicationsWrap').hidden=false;all.replaceChildren();if(!review.applications.length)all.append(Object.assign(document.createElement('div'),{className:'empty',textContent:'No applications to review.'}));else review.applications.forEach(item=>all.append(applicationRow(item,true)));}catch{document.getElementById('reviewApplicationsWrap').hidden=true;}
+    }catch(error){mine.replaceChildren(Object.assign(document.createElement('div'),{className:'empty',textContent:error.message}));}
+  }
+  document.getElementById('submitBotApplication').addEventListener('click',async()=>{
+    const button=document.getElementById('submitBotApplication');button.disabled=true;
+    const payload={bot_name:document.getElementById('appBotName').value.trim(),bot_discord_id:document.getElementById('appBotId').value.trim(),invite_url:document.getElementById('appInvite').value.trim(),avatar_url:document.getElementById('appAvatar').value.trim(),support_url:document.getElementById('appSupport').value.trim(),description:document.getElementById('appDescription').value.trim()};
+    try{await api('/api/bot-applications',{method:'POST',body:JSON.stringify(payload)});['appBotName','appBotId','appInvite','appAvatar','appSupport','appDescription'].forEach(id=>document.getElementById(id).value='');toast('Application submitted for review.');await loadApplications();}catch(error){toast(error.message);}finally{button.disabled=false;}
+  });
+  document.querySelector('[data-page="applications"]').addEventListener('click',loadApplications);
+
   const configNotice = document.getElementById('botConfigNotice');
   const guildSelect = document.getElementById('botGuildSelect');
   const configEditor = document.getElementById('configEditor');
