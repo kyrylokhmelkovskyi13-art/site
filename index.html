@@ -710,6 +710,30 @@
     #authWall{z-index:40}
     @media(max-width:600px){.welcome-card{padding:44px 23px;border-radius:22px}.welcome-card h1{letter-spacing:-1.8px}.welcome-side-note{left:0;right:0;text-align:center}}
 
+
+    /* Guided bot -> server -> settings flow */
+    .shell.wizard-mode{grid-template-columns:minmax(0,1fr)}
+    .shell.wizard-mode>.side{display:none}
+    .shell.wizard-mode>.main{max-width:1180px;padding-top:7vh}
+    #bots .top .eyebrow,#serverPicker .top .eyebrow{color:#a995ff}
+    #bots .bots{grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+    #bots .bot{cursor:pointer;min-height:170px;transition:transform .2s,border-color .2s,box-shadow .2s}
+    #bots .bot:hover{transform:translateY(-4px);border-color:#9275ff88;box-shadow:0 18px 50px #0006}
+    #bots .botactions,#bots .botmetrics,#bots .botdesc,#bots>.notice{display:none}
+    #bots .bothead{align-items:center}
+    #bots .botavatar{width:58px;height:58px;font-size:27px}
+    #bots .botname{font-size:18px}
+    #bots .botid{margin-top:6px}
+    #bots .bot:after{content:'Select bot  →';display:block;margin-top:24px;padding-top:13px;border-top:1px solid var(--line);color:#a995ff;font-weight:700;font-size:12px}
+    .picker-back{margin:-12px 0 22px}
+    .server-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+    .server-card{position:relative;overflow:hidden;min-height:145px;padding:20px;border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,#1a2031,#101521);cursor:pointer;display:flex;align-items:center;gap:15px;transition:.2s}
+    .server-card:hover{transform:translateY(-3px);border-color:#9275ff;box-shadow:0 18px 45px #0005}
+    .server-icon{width:58px;height:58px;flex:none;border-radius:18px;background:linear-gradient(145deg,#51418d,#242b43);display:grid;place-items:center;font-size:23px;font-weight:800}
+    .server-name{font-size:15px;font-weight:750;overflow-wrap:anywhere}
+    .server-meta{font-size:11px;color:var(--muted);margin-top:5px}
+    .server-arrow{margin-left:auto;color:#a995ff;font-size:22px}
+    @media(max-width:600px){.shell.wizard-mode>.main{padding:30px 16px}.server-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -777,6 +801,11 @@
       </div>
       <div class="bots" id="botCards2"></div>
       <div class="notice">Do not enter Discord tokens or Render API keys here. Keep them in Render environment secrets.</div>
+    </section>
+    <section class="page" id="serverPicker">
+      <header class="top"><div><div class="eyebrow">STEP 2 OF 2</div><h1>Choose a server</h1><p>Select the Discord server where you want to configure this bot.</p></div></header>
+      <div class="picker-back"><button class="btn" id="backToBots">← Back to bots</button></div>
+      <div class="server-grid" id="serverCards"><div class="empty">Loading your servers…</div></div>
     </section>
     <section class="page" id="logs">
       <header class="top"><div><div class="eyebrow">MONITORING</div><h1>Activity Log</h1><p>Bot deployments, errors, and actions.</p></div></header>
@@ -983,6 +1012,11 @@
         article.append(head, desc, metrics, actions);
         cards.append(article);
         const copy = article.cloneNode(true);
+        copy.querySelector('.botactions')?.remove();
+        copy.querySelector('.botmetrics')?.remove();
+        copy.querySelector('.botdesc')?.remove();
+        copy.addEventListener('click', () => chooseBot(bot));
+
         const copyButtons = copy.querySelectorAll('button');
         copyButtons[0]?.addEventListener('click', () => restart.click());
         copyButtons[1]?.addEventListener('click', () => configure.click());
@@ -1003,7 +1037,7 @@
     }
   }
 
-  function showLogin() { document.getElementById('welcomeScreen')?.classList.remove('hidden'); wall.classList.remove('show'); document.querySelector('.shell').style.display = 'none'; }
+  async function chooseBot(bot) {\n    selectedBotId = bot.id;\n    document.querySelector('.shell').classList.add('wizard-mode');\n    showPage('serverPicker');\n    const grid = document.getElementById('serverCards');\n    grid.innerHTML = '<div class="empty">Loading servers…</div>';\n    try {\n      const result = await api('/api/bots/' + encodeURIComponent(bot.id) + '/guilds');\n      grid.replaceChildren();\n      if (!result.guilds.length) { grid.append(Object.assign(document.createElement('div'), {className:'empty',textContent:'No servers found where this bot is installed and you have Administrator permission.'})); return; }\n      result.guilds.forEach(guild => {\n        const card = document.createElement('article'); card.className = 'server-card';\n        const icon = document.createElement('div'); icon.className = 'server-icon'; icon.textContent = (guild.name || 'S').trim().charAt(0).toUpperCase();\n        const info = document.createElement('div'); const name = document.createElement('div'); name.className = 'server-name'; name.textContent = guild.name;\n        const meta = document.createElement('div'); meta.className = 'server-meta'; meta.textContent = 'Discord server'; info.append(name,meta);\n        const arrow = document.createElement('div'); arrow.className = 'server-arrow'; arrow.textContent = '→'; card.append(icon,info,arrow);\n        card.addEventListener('click', async () => {\n          selectedGuildId = guild.id;\n          document.getElementById('botSelect').value = bot.id;\n          guildSelect.replaceChildren(new Option(guild.name, guild.id));\n          document.querySelector('.shell').classList.remove('wizard-mode');\n          showPage('botconfig'); await loadBotConfig();\n        });\n        grid.append(card);\n      });\n    } catch(error) { grid.replaceChildren(Object.assign(document.createElement('div'), {className:'empty',textContent:'Could not load servers: ' + error.message})); }\n  }\n  document.getElementById('backToBots')?.addEventListener('click', () => showPage('bots'));\n\n  function showLogin() { document.querySelector('.shell')?.classList.remove('wizard-mode'); document.getElementById('welcomeScreen')?.classList.remove('hidden'); wall.classList.remove('show'); document.querySelector('.shell').style.display = 'none'; }
   function hideLogin() { wall.classList.remove('show'); document.getElementById('welcomeScreen')?.classList.add('hidden'); document.querySelector('.shell').style.display = 'grid'; }
   document.getElementById('welcomeContinue')?.addEventListener('click', () => { document.getElementById('welcomeScreen').classList.add('hidden'); wall.classList.add('show'); });
 
@@ -1325,6 +1359,7 @@
       const profileMeta = document.querySelector('.sidebottom .profile .muted');
       if (profileName) profileName.textContent = result.user?.globalName || result.user?.username || 'Discord user';
       if (profileMeta) profileMeta.textContent = owner ? 'OWNER BotControl' : 'Discord Administrator';
+      document.querySelector('.shell').classList.add('wizard-mode');
       showPage('bots');
       loadBots();
       // Access is automatic: Discord Administrator permission + bot membership.
