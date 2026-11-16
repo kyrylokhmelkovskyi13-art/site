@@ -327,8 +327,7 @@ app.get("/auth/discord/callback", async (req, res) => {
         last_login_at: new Date().toISOString()
       });
     } catch (profileError) {
-      if (!isOwner({ discordId: String(user.id) })) throw profileError;
-      console.warn("Owner profile could not be stored:", profileError.message);
+      console.warn("Discord profile could not be stored:", profileError.message);
     }
     setSessionCookie(res, user, tokenData.access_token);
     res.redirect("/");
