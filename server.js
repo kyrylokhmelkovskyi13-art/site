@@ -344,9 +344,11 @@ app.post("/api/auth/logout", requireSameOrigin, (_req, res) => {
 
 app.get("/api/auth/me", (req, res) => {
   const user = readSession(req);
+  const sessionReady = !!user && !!user.discordAccessToken;
+  if (user && !sessionReady) clearCookie(res, COOKIE_NAME);
   res.json({
-    authenticated: !!user,
-    user: user ? { id: user.discordId, username: user.username, globalName: user.globalName, avatar: user.avatar, isOwner: isOwner(user) } : null
+    authenticated: sessionReady,
+    user: sessionReady ? { id: user.discordId, username: user.username, globalName: user.globalName, avatar: user.avatar, isOwner: isOwner(user) } : null
   });
 });
 
