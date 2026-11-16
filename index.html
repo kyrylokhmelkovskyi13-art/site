@@ -693,10 +693,36 @@
       .search{min-width:0;width:100%}
     }
 
+    .shell{display:none}
+    .welcome-screen{position:fixed;inset:0;z-index:30;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at 50% 10%,rgba(91,70,190,.28),transparent 48%),#080a11;padding:28px}
+    .welcome-screen.hidden{display:none}
+    .welcome-glow{position:absolute;width:620px;height:620px;border-radius:50%;border:1px solid rgba(154,130,255,.08);box-shadow:0 0 0 70px rgba(154,130,255,.018),0 0 0 140px rgba(154,130,255,.012);pointer-events:none}
+    .welcome-card{position:relative;width:min(650px,100%);text-align:center;padding:62px 48px;border:1px solid rgba(157,142,220,.2);border-radius:28px;background:linear-gradient(145deg,rgba(23,27,45,.92),rgba(12,16,28,.94));box-shadow:0 35px 120px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.045);backdrop-filter:blur(22px)}
+    .welcome-logo{width:76px;height:76px;margin:0 auto 25px;border-radius:24px;display:grid;place-items:center;font-size:39px;color:white;background:linear-gradient(145deg,#a995ff,#6547d8);box-shadow:0 15px 45px rgba(123,92,240,.38)}
+    .welcome-kicker{font-size:10px;font-weight:800;letter-spacing:2.8px;color:#a995ff}
+    .welcome-card h1{font-size:clamp(38px,6vw,60px);line-height:1.04;letter-spacing:-2.8px;margin:18px 0}
+    .welcome-card h1 span{background:linear-gradient(90deg,#c0b2ff,#7d9bff);background-clip:text;color:transparent}
+    .welcome-card p{max-width:440px;margin:0 auto;color:#9ba8bf;font-size:15px;line-height:1.8}
+    .welcome-continue{margin-top:32px;min-width:210px;padding:14px 22px;font-size:14px;border-radius:13px}
+    .welcome-continue span{margin-left:15px;font-size:18px}
+    .welcome-foot{margin-top:28px;color:#75839c;font-size:11px}.welcome-foot span{color:#5ee0c1;margin-right:7px}
+    .welcome-side-note{position:absolute;bottom:28px;left:32px;font-size:9px;letter-spacing:2px;color:#63708a}.welcome-side-note span{color:#a995ff;margin:0 8px}
+    #authWall{z-index:40}
+    @media(max-width:600px){.welcome-card{padding:44px 23px;border-radius:22px}.welcome-card h1{letter-spacing:-1.8px}.welcome-side-note{left:0;right:0;text-align:center}}
+
   </style>
 </head>
 <body>
-
+<div class="welcome-screen" id="welcomeScreen">
+  <div class="welcome-glow"></div>
+  <div class="welcome-card">
+    <div class="welcome-logo">⌘</div><div class="welcome-kicker">DISCORD BOT CONTROL CENTER</div>
+    <h1>All your bots.<br><span>One control panel.</span></h1>
+    <p>Connect with Discord, choose a bot and a server, then manage its settings in one clean workspace.</p>
+    <button class="btn primary welcome-continue" id="welcomeContinue">Continue <span>→</span></button>
+    <div class="welcome-foot"><span>●</span> Secure Discord sign-in · Server-scoped settings</div>
+  </div><div class="welcome-side-note">BOTCONTROL <span>/</span> CONTROL YOUR COMMUNITY</div>
+</div>
 <div class="authwall" id="authWall">
   <div class="authbox">
     <div class="brand" style="padding:0 0 18px"><div class="logo">⌘</div><span>BotControl</span></div>
@@ -977,8 +1003,9 @@
     }
   }
 
-  function showLogin() { wall.classList.add('show'); }
-  function hideLogin() { wall.classList.remove('show'); }
+  function showLogin() { document.getElementById('welcomeScreen')?.classList.remove('hidden'); wall.classList.remove('show'); document.querySelector('.shell').style.display = 'none'; }
+  function hideLogin() { wall.classList.remove('show'); document.getElementById('welcomeScreen')?.classList.add('hidden'); document.querySelector('.shell').style.display = ''; }
+  document.getElementById('welcomeContinue')?.addEventListener('click', () => { document.getElementById('welcomeScreen').classList.add('hidden'); wall.classList.add('show'); });
 
   document.getElementById('logout').addEventListener('click', async () => {
     try { await api('/api/auth/logout', { method: 'POST', body: '{}' }); } catch {}
@@ -1298,6 +1325,7 @@
       const profileMeta = document.querySelector('.sidebottom .profile .muted');
       if (profileName) profileName.textContent = result.user?.globalName || result.user?.username || 'Discord user';
       if (profileMeta) profileMeta.textContent = owner ? 'OWNER BotControl' : 'Discord Administrator';
+      showPage('bots');
       loadBots();
       // Access is automatic: Discord Administrator permission + bot membership.
     } else showLogin();
