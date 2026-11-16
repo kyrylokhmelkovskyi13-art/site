@@ -514,6 +514,181 @@
     @media(max-width:850px){.side{background:#15161e}.main{padding:24px 18px}.brand{padding-bottom:14px}}
     @media(max-width:600px){.top h1{font-size:25px}.stat{padding:14px}.statnum{font-size:24px}.editor-context{align-items:stretch;flex-direction:column}.editor-picker{min-width:0}.editor-context>.btn{width:100%}.editor-tabs{max-width:100%}}
 
+
+    /* Premium dashboard refinement — CSS only, existing controls and handlers unchanged */
+    :root{
+      --bg:#101117;--panel:#171923;--panel2:#1c202c;--line:#2b3040;
+      --muted:#929bad;--text:#f4f6fb;--purple:#4388ff;--cyan:#53d6ae;
+      --surface:#141722;--red:#f07886;--yellow:#eab64f;
+    }
+    body{
+      background:
+        radial-gradient(ellipse at 76% -12%,rgba(50,105,210,.12),transparent 34%),
+        radial-gradient(ellipse at 12% 45%,rgba(91,66,180,.06),transparent 30%),
+        #101117;
+      color:var(--text);
+    }
+    .shell{grid-template-columns:260px minmax(0,1fr);max-width:1920px}
+    .side{
+      background:rgba(20,22,31,.96);border-right:1px solid #282d3b;
+      box-shadow:12px 0 40px rgba(0,0,0,.12);padding:27px 17px 20px;
+    }
+    .brand{gap:12px;padding:0 10px 38px;font-size:18px;letter-spacing:-.6px}
+    .logo{
+      width:39px;height:39px;border-radius:12px;
+      background:linear-gradient(145deg,#5ca0ff 0%,#3476ef 58%,#2855c9 100%);
+      box-shadow:0 7px 22px rgba(48,111,239,.28),inset 0 1px rgba(255,255,255,.25);
+    }
+    .navlabel,.navgroup-label{padding-left:13px;color:#707b91;font-size:9px;letter-spacing:1.5px}
+    .navgroup-label{padding-top:24px}
+    .nav{gap:4px}
+    .nav button{
+      min-height:42px;padding:10px 13px;border-radius:10px;
+      color:#aab2c2;font-size:13px;font-weight:550;
+    }
+    .nav button.active{
+      background:linear-gradient(100deg,rgba(55,113,224,.22),rgba(55,113,224,.08));
+      border-color:rgba(83,137,245,.22);
+      box-shadow:inset 3px 0 #4b8cff,0 5px 18px rgba(0,0,0,.12);
+    }
+    .nav button.active .ico{color:#80adff}
+    .nav .ico{width:20px;font-size:16px}
+    .sidebottom{
+      background:linear-gradient(145deg,#1b202d,#171a24);
+      border:1px solid #303648;border-radius:12px;padding:13px;
+    }
+    .avatar{width:35px;height:35px;border-radius:10px;background:#2c416b}
+    .main{max-width:1580px;padding:39px clamp(24px,4.3vw,66px)}
+    .top{align-items:center;padding-bottom:25px;margin-bottom:29px;border-bottom:1px solid rgba(53,60,77,.7)}
+    .eyebrow{display:inline-flex;align-items:center;gap:7px;color:#83adff;font-size:10px;letter-spacing:1.6px}
+    .eyebrow:before{content:"";width:6px;height:6px;border-radius:50%;background:#4b91ff;box-shadow:0 0 12px #4388ff}
+    .top h1{font-size:31px;line-height:1.15;font-weight:780;letter-spacing:-1.05px;margin:9px 0 7px}
+    .top p{font-size:13px;color:#9ca5b6}
+    .topactions{gap:9px}
+    .btn{padding:10px 15px;border-radius:9px;font-size:12px;font-weight:650}
+    .btn.primary{
+      background:linear-gradient(135deg,#438bff,#2864df);border-color:#4382ed;
+      box-shadow:0 6px 18px rgba(39,103,226,.2),inset 0 1px rgba(255,255,255,.14);
+    }
+    .btn.primary:hover{background:linear-gradient(135deg,#5b9aff,#3474ee);box-shadow:0 8px 22px rgba(39,103,226,.27)}
+    .stats{gap:14px;margin-bottom:34px}
+    .stat{
+      position:relative;overflow:hidden;min-height:122px;padding:19px 20px;
+      background:linear-gradient(145deg,#1b1e2a,#171923 78%);
+      border:1px solid #2d3343;border-radius:14px;
+      box-shadow:0 8px 24px rgba(0,0,0,.12);
+    }
+    .stat:after{
+      content:"";position:absolute;right:-25px;top:-38px;width:105px;height:105px;
+      border-radius:50%;background:rgba(67,136,255,.08);filter:blur(2px);pointer-events:none;
+    }
+    .stathead{font-size:11px;font-weight:650;color:#aab3c4}
+    .statnum{font-size:31px;font-weight:780;letter-spacing:-1px;margin-top:13px}
+    .statfoot{font-size:10px;color:#7e899e;margin-top:4px}
+    .sectionhead{margin:33px 0 14px}
+    .sectionhead h2{font-size:16px;font-weight:740;letter-spacing:-.3px}
+    .sectionhead span{font-size:10px;letter-spacing:.7px;text-transform:uppercase;color:#778399}
+    .bots{gap:15px}
+    .bot{
+      position:relative;overflow:hidden;padding:20px;
+      background:linear-gradient(145deg,#1c202c,#171923 76%);
+      border:1px solid #303647;border-radius:14px;
+      box-shadow:0 10px 28px rgba(0,0,0,.13);
+    }
+    .bot:before{content:"";position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(90deg,#4388ff,transparent 75%);opacity:.65}
+    .bothead{align-items:center}
+    .botavatar{width:46px;height:46px;border-radius:13px;background:linear-gradient(145deg,#2d426b,#202b43);font-size:20px}
+    .botname{font-size:15px;font-weight:750;letter-spacing:-.25px}
+    .botid{font-size:10px;color:#8995aa;margin-top:4px}
+    .status{border-radius:7px;padding:6px 9px;font-size:9px;letter-spacing:.35px}
+    .botdesc{font-size:12px;line-height:1.7;color:#a7afbf;margin:17px 0}
+    .botmetrics{gap:22px;border-top:1px solid #2d3342;padding-top:14px}
+    .metric b{font-size:16px;font-weight:750}
+    .metric span{font-size:10px;color:#8792a6}
+    .botactions{margin-top:17px}
+    .activity{border-radius:14px;background:#181b25;border:1px solid #2c3140}
+    .activityrow{padding:15px 17px}
+    .eventicon{width:34px;height:34px;border-radius:10px}
+    .eventtitle{font-size:12px;font-weight:650}
+    .eventsub,.time{font-size:10px;color:#8993a6}
+    .notice{padding:13px 15px;border-radius:11px;background:rgba(54,48,31,.38);border-color:#514832;color:#d8c58f}
+    .setting,.configbox{
+      background:linear-gradient(145deg,#1b1e29,#171923);
+      border:1px solid #2d3342;border-radius:13px;
+      box-shadow:0 8px 22px rgba(0,0,0,.1);
+    }
+    .setting{padding:19px}
+    .settingrow{align-items:center;gap:16px}
+    .setting h3,.configbox h3{font-size:13px;font-weight:720}
+    .setting p{font-size:11px;color:#929bad;line-height:1.6}
+    .configbox label{font-size:10px;letter-spacing:.2px;color:#aeb8ca}
+    .configbox input:not(.toggle),.configbox textarea,.modal input,.authbox input{
+      padding:11px 12px;background:#12151e;border:1px solid #343b4c;border-radius:9px;
+    }
+    .editor-context{
+      background:linear-gradient(145deg,#1b1e29,#171923);
+      border:1px solid #303647;border-radius:13px;padding:15px;
+      box-shadow:0 8px 22px rgba(0,0,0,.1);
+    }
+    .editor-picker label{font-size:9px;letter-spacing:1.25px;color:#8995aa}
+    .editor-tabs{gap:7px;margin:18px 0 20px}
+    .editor-tab{padding:12px 17px;font-size:12px;border-radius:9px 9px 0 0}
+    .editor-tab.active{color:#9dc0ff;border-bottom-color:#4388ff}
+    .editor-panel-head h2{font-size:17px;font-weight:750;letter-spacing:-.3px}
+    .editor-panel-head p{font-size:11px;color:#929bad}
+    .configgrid{gap:13px}
+    .configbox{padding:19px}
+    .configbox .toggleline{padding:12px 0}
+    .configbox .toggleline>span{font-size:12px}
+    .configbox input.toggle{box-shadow:0 0 0 1px rgba(255,255,255,.04)}
+    .editor-preview{
+      top:28px;background:linear-gradient(145deg,#1b1e29,#171923);
+      border:1px solid #303647;border-radius:13px;padding:17px;
+      box-shadow:0 10px 26px rgba(0,0,0,.13);
+    }
+    .preview-head{font-size:9px;letter-spacing:1.2px}
+    .preview-card{padding:17px;background:#222838;border:1px solid #343e53;border-radius:11px}
+    .preview-avatar{width:40px;height:40px;border-radius:12px}
+    .preview-name{font-size:13px;font-weight:750}
+    .preview-muted,.preview-card p,.preview-help p{font-size:10px;line-height:1.65;color:#9aa5b8}
+    .preview-help{margin-top:13px;padding:13px;background:#151923;border:1px solid #2e3545;border-radius:10px}
+    .preview-help b{font-size:11px}
+    .modal,.authbox{background:#1a1d28;border:1px solid #343b4b;border-radius:16px;box-shadow:0 28px 90px rgba(0,0,0,.55)}
+    .authbox{padding:32px}
+    .authbox h2{font-size:23px;font-weight:780;letter-spacing:-.6px}
+    .authbox p{font-size:12px;line-height:1.7;color:#9ba5b7}
+    .toast{border-radius:11px;box-shadow:0 14px 40px rgba(0,0,0,.35)}
+    .page{animation:botPageIn .2s ease both}
+    @keyframes botPageIn{from{opacity:.6;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:1050px){
+      .shell{grid-template-columns:225px minmax(0,1fr)}
+      .editor-layout{grid-template-columns:minmax(0,1fr)}
+      .editor-preview{position:static}
+    }
+    @media(max-width:850px){
+      .shell{grid-template-columns:1fr}
+      .side{position:relative;height:auto;padding:14px 16px;background:#15161e}
+      .brand{padding:0 8px 13px}
+      .nav{display:flex;overflow-x:auto;gap:5px;padding-bottom:3px}
+      .nav button{white-space:nowrap;width:auto;flex:0 0 auto}
+      .navlabel,.navgroup-label,.sidebottom{display:none}
+      .main{padding:25px 18px}
+    }
+    @media(max-width:600px){
+      .top{align-items:flex-start;flex-direction:column}
+      .top h1{font-size:26px}
+      .topactions{width:100%;flex-wrap:wrap}
+      .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+      .stat{min-height:105px;padding:14px}
+      .statnum{font-size:25px}
+      .bots,.settingsgrid,.configgrid{grid-template-columns:1fr}
+      .editor-context{align-items:stretch;flex-direction:column}
+      .editor-picker{min-width:0}
+      .editor-context>.btn{width:100%}
+      .editor-tabs{max-width:100%;overflow-x:auto}
+      .search{min-width:0;width:100%}
+    }
+
   </style>
 </head>
 <body>
