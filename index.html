@@ -549,7 +549,7 @@
     if (result.authenticated) {
       hideLogin();
       const owner = !!result.user?.isOwner;
-      document.getElementById('navAccess').hidden = !owner;
+      document.getElementById('navAccess').hidden = true;
       document.getElementById('navLogs').hidden = !owner;
       document.getElementById('botRegistryForm').hidden = !owner;
       const profileName = document.querySelector('.sidebottom .profile b');
@@ -557,7 +557,7 @@
       if (profileName) profileName.textContent = result.user?.globalName || result.user?.username || 'Discord user';
       if (profileMeta) profileMeta.textContent = owner ? 'Владелец BotControl' : 'Администратор Discord';
       loadBots();
-      if (owner) loadAccess();
+      // Access is automatic: Discord Administrator permission + bot membership.
     } else showLogin();
   }).catch(showLogin);
 })();
