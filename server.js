@@ -564,7 +564,16 @@ async function botControlRequest(bot, method = "GET", body, endpoint = "/control
   });
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
-    const error = new Error(data.error || "API бота вернул HTTP " + response.status);
+    let message = data.error || "API бота вернул HTTP " + response.status;
+    if (response.status === 404) {
+      const route = String(endpoint).split("?")[0];
+      let host = "адрес из BOT_SERVICES";
+      try { host = new URL(bot.controlUrl).host; } catch {}
+      message = "Бот недоступен по маршруту " + route + " (HTTP 404) на " + host + ". Это означает, что по этому адресу такой API-маршрут не найден. Для IvynX открой Render → сервис IvynX → Settings → Build & Deploy и проверь Branch: нужна botcontrol-v2-guild-settings. Затем сделай Manual Deploy → Deploy latest commit. Старый main не содержит нужных маршрутов. Секрет BOTCONTROL_SHARED_SECRET обычно не вызывает 404 — пока его не меняй.";
+    } else if (response.status === 401 || response.status === 403) {
+      message = "Бот отклонил запрос (HTTP " + response.status + "). Проверь, что BOTCONTROL_SHARED_SECRET одинаковый в Render у BotControl и IvynX.";
+    }
+    const error = new Error(message);
     error.status = response.status;
     throw error;
   }
