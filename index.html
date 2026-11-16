@@ -416,6 +416,10 @@
     .editor-picker{display:flex;flex-direction:column;gap:6px;min-width:210px}
     .editor-picker label{font-size:9px;font-weight:750;letter-spacing:1.1px;color:#8492a6}
     .editor-picker .search{width:100%;min-width:0}
+    .configbox select.channel-picker{width:100%;min-height:46px;padding:11px 13px;border:1px solid #35445b;border-radius:12px;background:linear-gradient(145deg,#101827,#0b111b);color:#edf2ff;font:inherit}
+    .configbox select.channel-picker:focus{border-color:#9275ff;box-shadow:0 0 0 3px #9275ff22}
+    .configbox select.channel-picker[multiple]{min-height:150px;padding:8px}
+    .channel-hint{font-size:10px;color:#8492a8;margin-top:7px;line-height:1.5}
     .editor-tabs{display:flex;gap:5px;overflow-x:auto;border-bottom:1px solid #293342;margin-bottom:18px}
     .editor-tab{flex:0 0 auto;padding:12px 16px;background:transparent;border:0;border-bottom:2px solid transparent;color:#9aa7b8;font-size:12px;font-weight:650}
     .editor-tab:hover{color:#fff;background:#171f2b}
@@ -1098,10 +1102,17 @@
   let currentManifest = null;
   let currentConfig = {};
 
-  function renderBotConfig(config, manifest) {
+  async function renderBotConfig(config, manifest) {
     currentManifest = manifest;
     currentConfig = config || {};
     configEditor.replaceChildren();
+    let availableChannels = [];
+    try {
+      const channelResult = await api('/api/bots/' + encodeURIComponent(selectedBotId) + '/channels?guild_id=' + encodeURIComponent(selectedGuildId));
+      availableChannels = channelResult.channels || [];
+    } catch (error) {
+      configNotice.textContent = 'Не удалось загрузить список каналов: ' + error.message;
+    }
     (manifest.sections || []).forEach(section => {
       const card = document.createElement('div');
       card.className = 'card configbox';
@@ -1130,7 +1141,22 @@
           card.append(line);
           return;
         }
-        if (type === 'number' || type === 'discord_id' || type === 'text') {
+        if (type === 'channel_id' || type === 'channel_id_list') {
+          control = document.createElement('select');
+          control.className = 'channel-picker';
+          control.multiple = type === 'channel_id_list';
+          control.size = control.multiple ? Math.min(7, Math.max(4, availableChannels.length)) : 1;
+          const selected = control.multiple
+            ? (Array.isArray(currentConfig[field.key]) ? currentConfig[field.key].map(String) : [])
+            : [String(currentConfig[field.key] ?? '')];
+          if (!control.multiple) control.add(new Option('— Не выбран —', ''));
+          availableChannels.forEach(channel => {
+            const option = new Option('# ' + channel.name + (channel.category ? ' · ' + channel.category : ''), channel.id);
+            option.selected = selected.includes(String(channel.id));
+            control.add(option);
+          });
+          if (!availableChannels.length) control.add(new Option('Нет доступных текстовых каналов', ''));
+        } else if (type === 'number' || type === 'discord_id' || type === 'text') {
           control = document.createElement('input');
           control.type = type === 'number' ? 'number' : 'text';
           if (type === 'discord_id') control.inputMode = 'numeric';
@@ -1153,6 +1179,12 @@
         control.dataset.configKey = field.key;
         control.dataset.configType = type;
         card.append(label, control);
+        if (type === 'channel_id_list') {
+          const hint = document.createElement('div');
+          hint.className = 'channel-hint';
+          hint.textContent = 'Выбери несколько каналов; удерживай Ctrl или Cmd для множественного выбора.';
+          card.append(hint);
+        }
         if (field.help) {
           const hint = document.createElement('div');
           hint.className = 'confighint';
@@ -1170,7 +1202,9 @@
     configEditor.querySelectorAll('[data-config-key]').forEach(control => {
       const key = control.dataset.configKey;
       const type = control.dataset.configType;
-      if (type === 'boolean') payload[key] = control.checked;
+      if (type === 'channel_id') payload[key] = control.value || null;
+      else if (type === 'channel_id_list') payload[key] = Array.from(control.selectedOptions).map(option => option.value).filter(Boolean);
+      else if (type === 'boolean') payload[key] = control.checked;
       else if (type === 'number') {
         const value = Number(control.value);
         if (!Number.isFinite(value)) throw new Error('Field “' + key + '” must be a number.');
@@ -1225,7 +1259,7 @@
         api('/api/bots/' + encodeURIComponent(selectedBotId) + '/manifest'),
         api('/api/bots/' + encodeURIComponent(selectedBotId) + '/config?guild_id=' + encodeURIComponent(selectedGuildId))
       ]);
-      renderBotConfig(configResult.config, manifestResult.manifest);
+      await renderBotConfig(configResult.config, manifestResult.manifest);
       configNotice.textContent = 'Settings for server "' + guildSelect.selectedOptions[0].textContent + '" loaded using bot schema "' + (manifestResult.manifest.name || selectedBotId) + '».';
     } catch (error) {
       configNotice.textContent = 'Could not load settings.\n\n' + error.message;
@@ -1237,7 +1271,7 @@
       if (!selectedGuildId || !selectedBotId) throw new Error('Choose a bot and a Discord server.');
       const payload = collectBotConfig();
       const result = await api('/api/bots/' + encodeURIComponent(selectedBotId) + '/config?guild_id=' + encodeURIComponent(selectedGuildId), { method: 'PUT', body: JSON.stringify(payload) });
-      renderBotConfig(result.config, currentManifest);
+      await renderBotConfig(result.config, currentManifest);
       configNotice.textContent = result.message || 'Settings applied.';
       toast('Settings saved and applied by the bot.');
     } catch (error) {
