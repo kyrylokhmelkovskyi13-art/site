@@ -202,6 +202,7 @@
         const restart = document.createElement('button');
         restart.className = 'btn small primary';
         restart.textContent = 'Перезапустить';
+        restart.hidden = !bot.canRestart;
         restart.disabled = !result.connected || bot.hostStatus === 'not_configured';
         restart.addEventListener('click', async () => {
           if (!confirm('Перезапустить сервис «' + bot.name + '» на Render?')) return;
@@ -491,7 +492,7 @@
       const result = await api('/api/bots/' + encodeURIComponent(selectedBotId) + '/guilds');
       guildSelect.replaceChildren();
       if (!result.guilds.length) {
-        guildSelect.add(new Option('Бот пока не состоит на серверах', ''));
+        guildSelect.add(new Option('Нет доступных серверов с Administrator', ''));
         selectedGuildId = '';
         return;
       }
@@ -500,7 +501,7 @@
       await loadBotConfig();
     } catch (error) {
       guildSelect.replaceChildren(new Option('Не удалось получить серверы', ''));
-      configNotice.textContent = error.message + ' Проверь BOTCONTROL_SHARED_SECRET и controlUrl в BOT_SERVICES.';
+      configNotice.textContent = error.message;
       toast(error.message);
     }
   }
@@ -554,7 +555,7 @@
       const profileName = document.querySelector('.sidebottom .profile b');
       const profileMeta = document.querySelector('.sidebottom .profile .muted');
       if (profileName) profileName.textContent = result.user?.globalName || result.user?.username || 'Discord user';
-      if (profileMeta) profileMeta.textContent = owner ? 'Владелец BotControl' : 'Ограниченный доступ';
+      if (profileMeta) profileMeta.textContent = owner ? 'Владелец BotControl' : 'Администратор Discord';
       loadBots();
       if (owner) loadAccess();
     } else showLogin();
