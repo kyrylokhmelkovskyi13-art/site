@@ -397,6 +397,61 @@ app.delete("/api/bots/:id", requireSameOrigin, requireAuth, requireOwner, async 
   }
 });
 
+
+app.post("/api/bot-applications", requireSameOrigin, requireAuth, async (req, res) => {
+  const body = req.body || {};
+  const botName = String(body.bot_name || "").trim().slice(0, 80);
+  const botId = String(body.bot_discord_id || "").trim();
+  const description = String(body.description || "").trim().slice(0, 1000);
+  const inviteUrl = String(body.invite_url || "").trim();
+  const avatarUrl = String(body.avatar_url || "").trim();
+  const supportUrl = String(body.support_url || "").trim();
+  if (botName.length < 2 || !/^\\d{15,22}$/.test(botId) || description.length < 10) {
+    return res.status(400).json({ error: "Enter a bot name, a valid Discord bot ID, and a description of at least 10 characters." });
+  }
+  const validHttps = value => { if (!value) return true; try { return new URL(value).protocol === "https:"; } catch { return false; } };
+  if (!validHttps(inviteUrl) || !validHttps(avatarUrl) || !validHttps(supportUrl) || !inviteUrl.startsWith("https://discord.com/oauth2/authorize")) {
+    return res.status(400).json({ error: "Use a valid Discord OAuth2 bot invite URL and HTTPS links." });
+  }
+  try {
+    const saved = await supabaseRequest("botcontrol_applications", "POST", {
+      applicant_discord_id: req.user.discordId, applicant_username: req.user.username,
+      bot_name: botName, bot_discord_id: botId, description, invite_url: inviteUrl,
+      avatar_url: avatarUrl || null, support_url: supportUrl || null, status: "pending"
+    });
+    res.json({ ok: true, application: saved[0] });
+  } catch (error) { res.status(error.status || 502).json({ error: error.message }); }
+});
+
+app.get("/api/bot-applications/mine", requireAuth, async (req, res) => {
+  try {
+    const rows = await supabaseRequest("botcontrol_applications?select=*&applicant_discord_id=eq." + encodeURIComponent(req.user.discordId) + "&order=created_at.desc&limit=50");
+    res.json({ ok: true, applications: rows });
+  } catch (error) { res.status(error.status || 502).json({ error: error.message }); }
+});
+
+app.get("/api/bot-applications", requireAuth, requireOwner, async (_req, res) => {
+  try {
+    const rows = await supabaseRequest("botcontrol_applications?select=*&order=created_at.desc&limit=200");
+    res.json({ ok: true, applications: rows });
+  } catch (error) { res.status(error.status || 502).json({ error: error.message }); }
+});
+
+app.patch("/api/bot-applications/:id", requireSameOrigin, requireAuth, requireOwner, async (req, res) => {
+  const id = String(req.params.id || "");
+  const status = String(req.body?.status || "");
+  if (!/^\\d+$/.test(id) || !["approved", "rejected"].includes(status)) {
+    return res.status(400).json({ error: "Invalid application or review status." });
+  }
+  try {
+    const rows = await supabaseRequest("botcontrol_applications?id=eq." + encodeURIComponent(id), "PATCH", {
+      status, reviewed_by: req.user.discordId, reviewed_at: new Date().toISOString()
+    });
+    if (!rows.length) return res.status(404).json({ error: "Application not found." });
+    res.json({ ok: true, application: rows[0] });
+  } catch (error) { res.status(error.status || 502).json({ error: error.message }); }
+});
+
 app.get("/api/access", requireAuth, requireOwner, async (_req, res) => {
   try {
     const rows = await supabaseRequest("botcontrol_access?select=*&order=created_at.desc&limit=500");
@@ -566,7 +621,7 @@ async function discordGuildsForUser(user) {
       if (guild.owner === true) return true;
       try { return (BigInt(String(guild.permissions || "0")) & 8n) === 8n; }
       catch { return false; }
-    }).map(guild => ({ id: String(guild.id), name: String(guild.name || "Discord server") }));
+    }).map(guild => ({ id: String(guild.id), name: String(guild.name || "Discord server"), icon: guild.icon ? "https://cdn.discordapp.com/icons/" + guild.id + "/" + guild.icon + ".png?size=128" : null }));
   })();
 
   discordGuildRequests.set(userId, request);
