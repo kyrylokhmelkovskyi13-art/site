@@ -66,7 +66,47 @@
   @media(max-width:850px){.shell{grid-template-columns:1fr}.side{position:relative;height:auto;padding:13px 15px}.brand{padding:3px 8px 12px}.nav{gap:4px}.nav button.active{box-shadow:inset 0 -2px #9b88ff}.main{padding:24px 16px}}
   @media(max-width:600px){.main{padding:20px 14px}.top h1{font-size:25px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat{padding:14px}.statnum{font-size:25px}.bot{padding:16px}}
 
-  </style>
+  
+  /* Product-level finishing */
+  html{scroll-behavior:smooth}
+  body{min-height:100vh}
+  .main{min-width:0}
+  .page{animation:page-in .22s ease both}
+  @keyframes page-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+  .nav button:focus-visible,.btn:focus-visible,.search:focus-visible{outline:2px solid #a99aff;outline-offset:3px}
+  .nav button{font-weight:560}
+  .nav button .ico{flex:0 0 18px}
+  .topactions{flex-wrap:wrap}
+  .stats .stat{min-width:0}
+  .statnum{font-variant-numeric:tabular-nums}
+  .bot{min-width:0}
+  .bothead{gap:10px}
+  .botidentity{min-width:0}
+  .botname{overflow-wrap:anywhere}
+  .status{white-space:nowrap}
+  .botactions{flex-wrap:wrap}
+  .toolbar{flex-wrap:wrap}
+  .toolbar .search{flex:1 1 260px}
+  .empty[hidden]{display:none}
+  .empty:not([hidden]){display:block}
+  .configactions{flex-wrap:wrap}
+  .notice{max-width:100%}
+  @media(max-width:850px){
+    .side{z-index:3}
+    .nav{padding-bottom:2px;scrollbar-width:thin}
+    .nav button{flex:0 0 auto}
+    .sidebottom{display:none}
+    .main{max-width:none}
+  }
+  @media(max-width:520px){
+    .topactions .btn{flex:1}
+    .activityrow{grid-template-columns:32px minmax(0,1fr);align-items:start}
+    .activityrow .time{grid-column:2}
+    .botmetrics{gap:14px;flex-wrap:wrap}
+    .botmetrics .metric{min-width:62px}
+  }
+
+</style>
 </head>
 <body>
 
@@ -93,28 +133,28 @@
       <button data-page="botconfig"><span class="ico">🛠</span>Настройки бота</button>
       <button data-page="voidmanager"><span class="ico">◉</span>VOID Clan Manager</button>
     </nav>
-    <div class="sidebottom"><div class="profile"><div class="avatar">K</div><div><b>Личный аккаунт</b><div class="muted" style="font-size:11px">Локальный предпросмотр</div></div></div></div>
+    <div class="sidebottom"><div class="profile"><div class="avatar">K</div><div><b>Личный аккаунт</b><div class="muted" style="font-size:11px">Владелец пространства</div></div></div></div>
   </aside>
   <main class="main">
     <section class="page active" id="overview">
-      <header class="top"><div><div class="eyebrow">Панель управления</div><h1>С возвращением 👋</h1><p>Всё состояние Discord-ботов в одном месте.</p></div><div class="topactions"><button class="btn" id="refresh">↻ Обновить</button><button class="btn logout" id="logout">Выйти</button><button class="btn primary" id="addBot">＋ Добавить бота</button></div></header>
+      <header class="top"><div><div class="eyebrow">Панель управления</div><h1>С возвращением 👋</h1><p>Управляй подключёнными сервисами и настройками из одного пространства.</p></div><div class="topactions"><button class="btn" id="refresh">↻ Обновить</button><button class="btn logout" id="logout">Выйти</button><button class="btn primary" id="addBot">＋ Добавить бота</button></div></header>
       <div class="stats">
         <div class="stat"><div class="stathead">Всего ботов <span>◈</span></div><div class="statnum" id="totalBots">1</div><div class="statfoot">В этом пространстве</div></div>
         <div class="stat"><div class="stathead">В сети <span style="color:var(--cyan)">●</span></div><div class="statnum" id="onlineBots">—</div><div class="statfoot">Нет подключения к API</div></div>
         <div class="stat"><div class="stathead">Ошибки <span style="color:var(--red)">!</span></div><div class="statnum">—</div><div class="statfoot">Ожидают интеграции</div></div>
         <div class="stat"><div class="stathead">Аптайм <span>◷</span></div><div class="statnum">—</div><div class="statfoot">Будет доступен после подключения</div></div>
       </div>
-      <div class="sectionhead"><h2>Твои Discord-боты</h2><span>Первое подключение</span></div>
+      <div class="sectionhead"><h2>Твои Discord-боты</h2><span>Состояние хостинга</span></div>
       <div class="bots" id="botCards">
         <article class="card bot"><div class="bothead"><div class="botidentity"><div class="botavatar">👑</div><div><div class="botname">Kingdom of IvynX</div><div class="botid">Python · Disnake · Render</div></div></div><span class="status off">Не подключён</span></div><div class="botdesc">Бот модерации и проверки сообщений. Подключение к панели ещё не настроено.</div><div class="botmetrics"><div class="metric"><b>—</b><span>Серверов</span></div><div class="metric"><b>—</b><span>Задержка</span></div><div class="metric"><b>—</b><span>Последний запуск</span></div></div><div class="botactions"><button class="btn small primary" data-action="connect">Настроить подключение</button><button class="btn small" data-action="details">Подробнее</button></div></article>
       </div>
-      <div class="notice">ⓘ Сейчас это интерфейс-предпросмотр. Статус, логи и управление станут реальными после подключения защищённого backend API. Никакие токены ботов здесь не запрашиваются.</div>
+      <div class="notice">ⓘ Сейчас это интерфейс-предпросмотр. Статус здесь отражает состояние хостинга Render, а не присутствие бота в Discord. Метрики Discord и поток логов пока не подключены. Никакие токены ботов здесь не запрашиваются.</div>
       <div class="sectionhead"><h2>Последние события</h2><span>Демо-данные</span></div>
       <div class="card activity"><div class="activityrow"><div class="eventicon">🔒</div><div><div class="eventtitle">Панель создана</div><div class="eventsub">Интерфейс готов к следующему этапу интеграции</div></div><span class="time">Сейчас</span></div><div class="activityrow"><div class="eventicon">🤖</div><div><div class="eventtitle">Kingdom of IvynX добавлен в список</div><div class="eventsub">Ожидает настройки безопасного подключения</div></div><span class="time">Сейчас</span></div></div>
     </section>
     <section class="page" id="bots">
       <header class="top"><div><div class="eyebrow">Управление</div><h1>Мои боты</h1><p>Добавляй и подключай Discord-ботов.</p></div><button class="btn primary" id="addBot2">＋ Добавить бота</button></header>
-      <div class="bots" id="botCards2"></div>
+      <div class="toolbar"><input class="search" id="botSearch" type="search" placeholder="Поиск по названию или хостингу…" aria-label="Поиск ботов"><span class="muted" id="botCount" aria-live="polite">Все боты</span></div><div class="bots" id="botCards2"></div><div class="empty" id="botEmpty" hidden>По этому запросу боты не найдены.</div>
       <div class="notice">Подключение требует серверной части. Секретные токены нельзя вставлять в HTML, JavaScript браузера или GitHub.</div>
     </section>
     <section class="page" id="logs">
@@ -436,5 +476,38 @@
   }).catch(showLogin);
 })();
 </script>
+
+<script>
+(() => {
+  const search = document.getElementById('botSearch');
+  if (!search) return;
+  const list = document.getElementById('botCards2');
+  const count = document.getElementById('botCount');
+  const empty = document.getElementById('botEmpty');
+  function filterBots() {
+    const query = search.value.trim().toLocaleLowerCase();
+    const cards = [...list.querySelectorAll('.bot')];
+    let visible = 0;
+    cards.forEach(card => {
+      const match = card.textContent.toLocaleLowerCase().includes(query);
+      card.hidden = !match;
+      if (match) visible++;
+    });
+    count.textContent = query ? visible + ' из ' + cards.length + ' ботов' : cards.length + ' ботов';
+    empty.hidden = visible !== 0;
+  }
+  search.addEventListener('input', filterBots);
+  const observer = new MutationObserver(filterBots);
+  observer.observe(list, {childList:true,subtree:true});
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      const modal = document.getElementById('modal');
+      if (modal?.classList.contains('show')) modal.classList.remove('show');
+    }
+  });
+  filterBots();
+})();
+</script>
+
 </body>
 </html>
