@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#0b0d14">
   <title>BotControl — Discord bot dashboard</title>
   <style>
+
     :root{color-scheme:dark;--bg:#0b0d14;--panel:#111522;--panel2:#151b2b;--line:#252c40;--muted:#8992aa;--text:#eef1fa;--purple:#8b6cff;--cyan:#56d6c9;--red:#ff6b7a;--yellow:#f5c56b}
     *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 70% -15%,#29204c 0,transparent 38%),var(--bg);color:var(--text);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
     button,input{font:inherit}button{cursor:pointer}.shell{display:grid;grid-template-columns:250px 1fr;min-height:100vh}.side{padding:26px 17px;border-right:1px solid var(--line);background:#0d101a;display:flex;flex-direction:column}.brand{display:flex;align-items:center;gap:12px;padding:0 10px 30px;font-size:17px;font-weight:750;letter-spacing:.2px}.logo{width:36px;height:36px;border-radius:12px;background:linear-gradient(140deg,#a78bfa,#6650df);display:grid;place-items:center;font-size:19px;box-shadow:0 7px 25px #8062ff44}.muted{color:var(--muted)}.navlabel{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#69728b;padding:14px 12px 8px}.nav button{width:100%;border:0;background:transparent;color:#aeb6ca;text-align:left;padding:11px 12px;border-radius:10px;margin:2px 0;display:flex;align-items:center;gap:12px}.nav button:hover,.nav button.active{background:#211d38;color:#fff}.nav .ico{width:18px;text-align:center;font-size:16px}.sidebottom{margin-top:auto;border:1px solid var(--line);background:var(--panel);border-radius:13px;padding:14px}.profile{display:flex;align-items:center;gap:10px}.avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#30274d;color:#c8baff;font-weight:700}.main{padding:30px clamp(20px,4vw,54px);max-width:1600px;width:100%;margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:30px}.eyebrow{color:#a99aff;font-size:11px;text-transform:uppercase;letter-spacing:1.7px;font-weight:700}.top h1{font-size:27px;margin:5px 0 3px;letter-spacing:-.7px}.top p{margin:0;color:var(--muted)}.topactions{display:flex;gap:10px;align-items:center}.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:10px 14px;border-radius:10px;font-weight:600}.btn:hover{border-color:#6553a8}.btn.primary{background:linear-gradient(135deg,#8b6cff,#6548d6);border:0;box-shadow:0 7px 22px #7458ef33}.btn.small{padding:7px 10px;font-size:12px}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:24px}.stat,.card{border:1px solid var(--line);background:linear-gradient(145deg,#151a29,#101420);border-radius:15px}.stat{padding:17px 18px}.stathead{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.statnum{font-size:27px;font-weight:750;margin-top:8px;letter-spacing:-1px}.statfoot{font-size:11px;color:var(--muted);margin-top:3px}.dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--cyan);box-shadow:0 0 10px currentColor;margin-right:6px}.sectionhead{display:flex;justify-content:space-between;align-items:center;margin:27px 0 13px}.sectionhead h2{font-size:16px;margin:0}.sectionhead span{color:var(--muted);font-size:12px}.bots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.bot{padding:19px}.bothead{display:flex;justify-content:space-between;align-items:flex-start}.botidentity{display:flex;gap:12px;align-items:center}.botavatar{width:43px;height:43px;border-radius:13px;background:linear-gradient(145deg,#33315d,#222943);display:grid;place-items:center;font-size:21px}.botname{font-size:15px;font-weight:700}.botid{font-size:11px;color:var(--muted);margin-top:2px}.status{font-size:11px;border-radius:20px;padding:5px 9px;background:#12332f;color:#71e0c9}.status.off{background:#38232b;color:#ff8794}.botdesc{color:#9ca5ba;font-size:12px;margin:16px 0}.botmetrics{display:flex;gap:22px;border-top:1px solid var(--line);padding-top:13px}.metric b{display:block;font-size:15px}.metric span{font-size:10px;color:var(--muted)}.botactions{display:flex;gap:8px;margin-top:15px}.activity{overflow:hidden}.activityrow{display:grid;grid-template-columns:35px 1fr auto;gap:11px;align-items:center;padding:13px 17px;border-top:1px solid var(--line)}.activityrow:first-child{border-top:0}.eventicon{width:30px;height:30px;border-radius:9px;background:#1e2940;display:grid;place-items:center}.eventtitle{font-size:12px;font-weight:600}.eventsub{font-size:11px;color:var(--muted)}.time{font-size:11px;color:var(--muted)}.empty{padding:26px;text-align:center;color:var(--muted)}.notice{border:1px solid #51452c;background:#211d16;color:#e5c98b;padding:12px 14px;border-radius:11px;font-size:12px;margin-top:20px}.page{display:none}.page.active{display:block}.toolbar{display:flex;gap:10px;align-items:center;margin:14px 0}.search{background:var(--panel);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:10px;min-width:230px;outline:none}.search:focus{border-color:var(--purple)}.logitem{padding:14px 17px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}.logitem:last-child{border:0}.tag{font-size:10px;padding:3px 7px;border-radius:6px;background:#322a4e;color:#c6b8ff}.settingsgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.setting{padding:18px}.setting h3{margin:0 0 5px;font-size:14px}.setting p{margin:0;color:var(--muted);font-size:12px}.toggle{appearance:none;width:36px;height:21px;border-radius:20px;background:#343b50;position:relative;cursor:pointer;flex:none}.toggle:checked{background:#765ce8}.toggle:before{content:"";position:absolute;width:15px;height:15px;left:3px;top:3px;border-radius:50%;background:white;transition:.15s}.toggle:checked:before{left:18px}.settingrow{display:flex;justify-content:space-between;gap:15px;align-items:center}.modalback{position:fixed;inset:0;background:#05060bbd;display:none;place-items:center;padding:20px;z-index:5}.modalback.show{display:grid}.modal{width:min(440px,100%);background:#151a29;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 25px 90px #0009}.modal h2{margin:0 0 7px}.modal p{color:var(--muted);font-size:12px}.field{display:block;margin:15px 0 6px;color:#b8c0d3;font-size:12px}.modal input{width:100%;padding:11px;border:1px solid var(--line);border-radius:9px;background:#0d111c;color:white}.modalactions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}.toast{position:fixed;bottom:20px;right:20px;background:#1c2637;border:1px solid #39465e;padding:12px 16px;border-radius:10px;display:none;z-index:9}.toast.show{display:block}
@@ -106,139 +107,537 @@
     .botmetrics .metric{min-width:62px}
   }
 
+
+/* Additional component styles only; main branch appearance rules remain authoritative. */
+@media(max-width:850px){.nav{display:flex;overflow:auto}}
+@media(max-width:850px){.nav{gap:4px}}
+@media(max-width:850px){.nav{padding-bottom:2px;scrollbar-width:thin}}
+@media(max-width:520px){.topactions .btn{flex:1}
+.activityrow .time{grid-column:2}
+.botmetrics .metric{min-width:62px}}
+/* Functional page styles not present in main's original design. */
+.nav button[hidden]{display:none}
+@media(max-width:850px){.nav{display:flex;overflow:auto}}
+.btn.primary:hover{filter:brightness(1.1);box-shadow:0 10px 28px #7656e955}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #a18aff;outline-offset:3px}
+@media(max-width:600px){.botactions .btn{flex:1}}
+@keyframes pageIn{from{opacity:.65;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+/* Fix boolean setting switches: generic config inputs must not stretch them. */
+    .configbox input.toggle,
+    .configbox .toggleline input.toggle {
+      appearance:none;
+      -webkit-appearance:none;
+      display:block;
+      width:39px;
+      min-width:39px;
+      max-width:39px;
+      height:23px;
+      min-height:23px;
+      padding:0;
+      margin:0;
+      flex:0 0 39px;
+      border:0;
+      border-radius:999px;
+      background:#39445b;
+      position:relative;
+      cursor:pointer;
+      box-shadow:none;
+    }
+.configbox input.toggle:checked { background:#9275ff; }
+.configbox input.toggle::before {
+      content:"";
+      position:absolute;
+      width:17px;
+      height:17px;
+      left:3px;
+      top:3px;
+      border-radius:50%;
+      background:#fff;
+      transition:transform .15s ease;
+    }
+.configbox input.toggle:checked::before { left:19px; }
+.configbox .toggleline > span { flex:1 1 auto; min-width:0; }
+/* BotControl redesign: clean control-panel layout, restrained colors, clear hierarchy */
+    :root{
+      --bg:#0c0f14;--panel:#141922;--panel2:#1a2230;--line:#293342;
+      --muted:#929eae;--text:#edf1f6;--purple:#718cff;--cyan:#58c9a5;
+      --surface:#10151d;
+    }
+.btn.primary:hover{background:#7890ff;border-color:#7890ff;filter:none}
+.configbox .toggleline:last-child{border-bottom:0}
+.configbox .toggleline>span{font-size:12px;color:#c5ceda;flex:1 1 auto;min-width:0}
+.configbox input.toggle,.configbox .toggleline input.toggle{
+      appearance:none;-webkit-appearance:none;display:block;
+      width:38px;min-width:38px;max-width:38px;height:22px;min-height:22px;
+      padding:0;margin:0;flex:0 0 38px;border:0;border-radius:999px;
+      background:#3a4658;position:relative;cursor:pointer;box-shadow:none;
+    }
+.configbox input.toggle:checked{background:#718cff}
+.configbox input.toggle::before{
+      content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;
+      border-radius:50%;background:#fff;transition:left .15s ease;
+    }
+.configbox input.toggle:checked::before{left:19px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+      outline:2px solid #8da2ff;outline-offset:2px;
+    }
+@media(max-width:850px){.nav{display:flex;overflow-x:auto;gap:3px}}
+@media(max-width:600px){.activityrow .time{grid-column:2}}
+/* Tickety-inspired editor structure */
+    .navgroup-label{padding:19px 12px 7px;color:#718096;font-size:9px;font-weight:750;letter-spacing:1.35px}
+.editor-top{margin-bottom:18px}
+.editor-context{display:flex;align-items:end;gap:12px;padding:14px 15px;background:#141a23;border:1px solid #293342;border-radius:10px;margin-bottom:17px}
+.editor-picker{display:flex;flex-direction:column;gap:6px;min-width:210px}
+.editor-picker label{font-size:9px;font-weight:750;letter-spacing:1.1px;color:#8492a6}
+.editor-picker .search{width:100%;min-width:0}
+.configbox select.channel-picker{width:100%;min-height:46px;padding:11px 13px;border:1px solid #35445b;border-radius:12px;background:linear-gradient(145deg,#101827,#0b111b);color:#edf2ff;font:inherit}
+.configbox select.channel-picker:focus{border-color:#9275ff;box-shadow:0 0 0 3px #9275ff22}
+.configbox select.channel-picker[multiple]{min-height:150px;padding:8px}
+.channel-hint{font-size:10px;color:#8492a8;margin-top:7px;line-height:1.5}
+.editor-tabs{display:flex;gap:5px;overflow-x:auto;border-bottom:1px solid #293342;margin-bottom:18px}
+.editor-tab{flex:0 0 auto;padding:12px 16px;background:transparent;border:0;border-bottom:2px solid transparent;color:#9aa7b8;font-size:12px;font-weight:650}
+.editor-tab:hover{color:#fff;background:#171f2b}
+.editor-tab.active{color:#fff;border-bottom-color:#718cff}
+.editor-layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:17px;align-items:start}
+.editor-main{min-width:0}
+.editor-panel-head{display:flex;justify-content:space-between;align-items:center;margin:4px 0 14px}
+.editor-panel-head h2{font-size:16px;margin:0 0 4px}
+.editor-panel-head p{font-size:11px;color:#929eae;margin:0}
+.editor-preview{position:sticky;top:22px;background:#141a23;border:1px solid #293342;border-radius:11px;padding:14px}
+.preview-head{display:flex;justify-content:space-between;font-size:9px;font-weight:750;letter-spacing:1px;color:#8d9aae;margin-bottom:13px}
+.preview-live{color:#66cda5}
+.preview-card{background:#202a39;border:1px solid #35445a;border-radius:9px;padding:14px}
+.preview-avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#354766;margin-bottom:10px}
+.preview-name{font-size:12px;font-weight:750}
+.preview-muted{font-size:10px;color:#8f9daf;margin-top:2px}
+.preview-rule{height:1px;background:#39475a;margin:12px 0}
+.preview-card p,.preview-help p{font-size:10px;line-height:1.6;color:#a4afbe;margin:0}
+.preview-help{margin-top:14px;padding:12px;border-radius:8px;background:#10161f;border:1px solid #293342}
+.preview-help b{display:block;font-size:11px;margin-bottom:5px}
+.editor-placeholder{padding:24px;background:#141a23;border:1px dashed #3a4658;border-radius:10px;color:#dbe2ec}
+.editor-placeholder p{font-size:12px;color:#929eae;line-height:1.6;margin-bottom:0}
+@media(max-width:1050px){.editor-layout{grid-template-columns:1fr}
+.editor-preview{position:static}
+.editor-preview{max-width:none}}
+@media(max-width:650px){.editor-context{align-items:stretch;flex-direction:column}
+.editor-picker{min-width:0}
+.editor-context>.btn{width:100%}}
+.btn.primary:hover{background:#3475f5;border-color:#3475f5}
+.configbox input.toggle:checked{background:#2563eb}
+.editor-context{background:#191b25;border-color:#2b2e3a;border-radius:11px;padding:13px}
+.editor-tabs{border-color:#2b2e3a}
+.editor-tab{border-radius:7px 7px 0 0}
+.editor-tab:hover{background:#20232e}
+.editor-tab.active{color:#8bb1ff;border-bottom-color:#3b82f6}
+.editor-layout{grid-template-columns:minmax(0,1fr) 270px;gap:16px}
+.editor-preview{background:#191b25;border:1px solid #2b2e3a;border-radius:12px;padding:16px}
+.preview-card{background:#202431;border-color:#343b4b;border-radius:10px}
+.preview-help{background:#151923;border-color:#303646;border-radius:9px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #75a4ff;outline-offset:2px}
+@media(max-width:1050px){.editor-layout{grid-template-columns:minmax(0,1fr)}
+.editor-preview{position:static}}
+@media(max-width:600px){.editor-context{align-items:stretch;flex-direction:column}
+.editor-picker{min-width:0}
+.editor-context>.btn{width:100%}
+.editor-tabs{max-width:100%}}
+/* Premium dashboard refinement — CSS only, existing controls and handlers unchanged */
+    :root{
+      --bg:#101117;--panel:#171923;--panel2:#1c202c;--line:#2b3040;
+      --muted:#929bad;--text:#f4f6fb;--purple:#4388ff;--cyan:#53d6ae;
+      --surface:#141722;--red:#f07886;--yellow:#eab64f;
+    }
+.navgroup-label{padding-top:24px}
+.nav{gap:4px}
+.nav button.active .ico{color:#80adff}
+.eyebrow:before{content:"";width:6px;height:6px;border-radius:50%;background:#4b91ff;box-shadow:0 0 12px #4388ff}
+.btn.primary:hover{background:linear-gradient(135deg,#5b9aff,#3474ee);box-shadow:0 8px 22px rgba(39,103,226,.27)}
+.stat:after{
+      content:"";position:absolute;right:-25px;top:-38px;width:105px;height:105px;
+      border-radius:50%;background:rgba(67,136,255,.08);filter:blur(2px);pointer-events:none;
+    }
+.bot:before{content:"";position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(90deg,#4388ff,transparent 75%);opacity:.65}
+.editor-context{
+      background:linear-gradient(145deg,#1b1e29,#171923);
+      border:1px solid #303647;border-radius:13px;padding:15px;
+      box-shadow:0 8px 22px rgba(0,0,0,.1);
+    }
+.editor-picker label{font-size:9px;letter-spacing:1.25px;color:#8995aa}
+.editor-tabs{gap:7px;margin:18px 0 20px}
+.editor-tab{padding:12px 17px;font-size:12px;border-radius:9px 9px 0 0}
+.editor-tab.active{color:#9dc0ff;border-bottom-color:#4388ff}
+.editor-panel-head h2{font-size:17px;font-weight:750;letter-spacing:-.3px}
+.editor-panel-head p{font-size:11px;color:#929bad}
+.configbox .toggleline>span{font-size:12px}
+.configbox input.toggle{box-shadow:0 0 0 1px rgba(255,255,255,.04)}
+.editor-preview{
+      top:28px;background:linear-gradient(145deg,#1b1e29,#171923);
+      border:1px solid #303647;border-radius:13px;padding:17px;
+      box-shadow:0 10px 26px rgba(0,0,0,.13);
+    }
+.preview-head{font-size:9px;letter-spacing:1.2px}
+.preview-card{padding:17px;background:#222838;border:1px solid #343e53;border-radius:11px}
+.preview-avatar{width:40px;height:40px;border-radius:12px}
+.preview-name{font-size:13px;font-weight:750}
+.preview-muted,.preview-card p,.preview-help p{font-size:10px;line-height:1.65;color:#9aa5b8}
+.preview-help{margin-top:13px;padding:13px;background:#151923;border:1px solid #2e3545;border-radius:10px}
+.preview-help b{font-size:11px}
+@keyframes botPageIn{from{opacity:.6;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:1050px){.editor-layout{grid-template-columns:minmax(0,1fr)}
+.editor-preview{position:static}}
+@media(max-width:850px){.nav{display:flex;overflow-x:auto;gap:5px;padding-bottom:3px}}
+@media(max-width:600px){.editor-context{align-items:stretch;flex-direction:column}
+.editor-picker{min-width:0}
+.editor-context>.btn{width:100%}
+.editor-tabs{max-width:100%;overflow-x:auto}}
+.welcome-screen{position:fixed;inset:0;z-index:30;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at 50% 10%,rgba(91,70,190,.28),transparent 48%),#080a11;padding:28px}
+.welcome-screen.hidden{display:none}
+.welcome-glow{position:absolute;width:620px;height:620px;border-radius:50%;border:1px solid rgba(154,130,255,.08);box-shadow:0 0 0 70px rgba(154,130,255,.018),0 0 0 140px rgba(154,130,255,.012);pointer-events:none}
+.welcome-card{position:relative;width:min(650px,100%);text-align:center;padding:62px 48px;border:1px solid rgba(157,142,220,.2);border-radius:28px;background:linear-gradient(145deg,rgba(23,27,45,.92),rgba(12,16,28,.94));box-shadow:0 35px 120px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.045);backdrop-filter:blur(22px)}
+.welcome-logo{width:76px;height:76px;margin:0 auto 25px;border-radius:24px;display:grid;place-items:center;font-size:39px;color:white;background:linear-gradient(145deg,#a995ff,#6547d8);box-shadow:0 15px 45px rgba(123,92,240,.38)}
+.welcome-kicker{font-size:10px;font-weight:800;letter-spacing:2.8px;color:#a995ff}
+.welcome-card h1{font-size:clamp(38px,6vw,60px);line-height:1.04;letter-spacing:-2.8px;margin:18px 0}
+.welcome-card h1 span{background:linear-gradient(90deg,#c0b2ff,#7d9bff);background-clip:text;color:transparent}
+.welcome-card p{max-width:440px;margin:0 auto;color:#9ba8bf;font-size:15px;line-height:1.8}
+.welcome-continue{margin-top:32px;min-width:210px;padding:14px 22px;font-size:14px;border-radius:13px}
+.welcome-continue span{margin-left:15px;font-size:18px}
+.welcome-foot{margin-top:28px;color:#75839c;font-size:11px}
+.welcome-foot span{color:#5ee0c1;margin-right:7px}
+.welcome-side-note{position:absolute;bottom:28px;left:32px;font-size:9px;letter-spacing:2px;color:#63708a}
+.welcome-side-note span{color:#a995ff;margin:0 8px}
+#authWall{z-index:40}
+@media(max-width:600px){.welcome-card{padding:44px 23px;border-radius:22px}
+.welcome-card h1{letter-spacing:-1.8px}
+.welcome-side-note{left:0;right:0;text-align:center}}
+/* Guided bot -> server -> settings flow */
+    .shell.wizard-mode{grid-template-columns:minmax(0,1fr)}
+.shell.wizard-mode>.side{display:none}
+.shell.wizard-mode>.main{max-width:1180px;padding-top:7vh}
+#bots .top .eyebrow,#serverPicker .top .eyebrow{color:#a995ff}
+#bots .bots{grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+#bots .bot{cursor:pointer;min-height:170px;transition:transform .2s,border-color .2s,box-shadow .2s}
+#bots .bot:hover{transform:translateY(-4px);border-color:#9275ff88;box-shadow:0 18px 50px #0006}
+#bots .botactions,#bots .botmetrics,#bots .botdesc,#bots>.notice{display:none}
+#bots .bothead{align-items:center}
+#bots .botavatar{width:58px;height:58px;font-size:27px}
+#bots .botname{font-size:18px}
+#bots .botid{margin-top:6px}
+#bots .bot:after{content:'Select bot  →';display:block;margin-top:24px;padding-top:13px;border-top:1px solid var(--line);color:#a995ff;font-weight:700;font-size:12px}
+.picker-back{margin:-12px 0 22px}
+.server-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.server-card{position:relative;overflow:hidden;min-height:145px;padding:20px;border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,#1a2031,#101521);cursor:pointer;display:flex;align-items:center;gap:15px;transition:.2s}
+.server-card:hover{transform:translateY(-3px);border-color:#9275ff;box-shadow:0 18px 45px #0005}
+.server-icon{width:58px;height:58px;flex:none;border-radius:18px;background:linear-gradient(145deg,#51418d,#242b43);display:grid;place-items:center;font-size:23px;font-weight:800}
+.server-name{font-size:15px;font-weight:750;overflow-wrap:anywhere}
+.server-meta{font-size:11px;color:var(--muted);margin-top:5px}
+.server-arrow{margin-left:auto;color:#a995ff;font-size:22px}
+@media(max-width:600px){.shell.wizard-mode>.main{padding:30px 16px}
+.server-grid{grid-template-columns:1fr}}
+/* Bot settings workspace — refined layout */
+    #botconfig #saveBotConfig[hidden]{display:none!important}
+#botconfig{max-width:1500px}
+#botconfig .editor-top{align-items:flex-end;gap:24px;padding:4px 0 26px;margin-bottom:24px}
+#botconfig .editor-top h1{font-size:34px;letter-spacing:-1.4px}
+#botconfig .editor-context{
+      display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;
+      padding:18px;background:linear-gradient(135deg,rgba(24,31,49,.94),rgba(14,20,32,.96));
+      border:1px solid rgba(151,166,198,.17);border-radius:17px;margin:0 0 18px;
+      box-shadow:0 12px 35px rgba(0,0,0,.14)
+    }
+#botconfig .editor-picker{display:flex;flex-direction:column;gap:7px;flex:1;min-width:210px}
+#botconfig .editor-picker label{font-size:10px;font-weight:800;letter-spacing:1.5px;color:#8998b2}
+#botconfig .editor-picker .search{width:100%;min-width:0;height:44px;background:#0b111d}
+#botconfig #loadGuilds{height:44px}
+#botconfig .editor-tabs{
+      display:flex;gap:7px;overflow-x:auto;padding:7px;margin:0 0 18px;
+      background:rgba(13,18,30,.82);border:1px solid rgba(151,166,198,.13);
+      border-radius:14px;scrollbar-width:thin
+    }
+#botconfig .editor-tab{
+      flex:none;border:1px solid transparent;background:transparent;color:#91a0b8;
+      padding:10px 16px;border-radius:10px;font:600 12px/1.2 inherit;cursor:pointer;transition:.18s
+    }
+#botconfig .editor-tab:hover{background:rgba(255,255,255,.045);color:#fff}
+#botconfig .editor-tab.active{
+      color:#fff;background:linear-gradient(135deg,rgba(147,119,255,.24),rgba(103,75,216,.12));
+      border-color:rgba(160,137,255,.27);box-shadow:0 5px 18px rgba(93,69,180,.13)
+    }
+#botconfig #botConfigNotice{margin:0 0 20px;padding:13px 16px;border-radius:12px}
+#botconfig .editor-layout{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:20px;align-items:start}
+#botconfig .editor-main{min-width:0}
+#botconfig .editor-panel-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 15px}
+#botconfig .editor-panel-head h2{font-size:18px;letter-spacing:-.45px;margin:0 0 4px}
+#botconfig .editor-panel-head p{font-size:12px;color:#8998b2;margin:0}
+#botconfig .configgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+#botconfig .configbox{
+      min-width:0;padding:19px;border-radius:15px;
+      background:linear-gradient(145deg,rgba(20,28,44,.98),rgba(13,19,31,.98));
+      border:1px solid rgba(151,166,198,.16);box-shadow:0 9px 26px rgba(0,0,0,.12)
+    }
+#botconfig .configbox h3{
+      display:flex;align-items:center;gap:9px;font-size:13px;font-weight:800;
+      letter-spacing:.1px;margin:0 0 16px;padding-bottom:13px;border-bottom:1px solid rgba(151,166,198,.13)
+    }
+#botconfig .configbox h3:before{content:"";width:7px;height:7px;border-radius:3px;background:#a48aff;box-shadow:0 0 12px #9878ff88}
+#botconfig .configbox label{display:block;margin:13px 0 7px;color:#aab7cc;font-size:11px;font-weight:700;letter-spacing:.03em}
+#botconfig .configbox input:not(.toggle),#botconfig .configbox textarea,#botconfig .configbox select{
+      width:100%;min-width:0;background:#0a101b;color:#eef2fb;border:1px solid #2a354a;
+      border-radius:10px;padding:11px 12px;font:13px/1.45 inherit;transition:border-color .18s,box-shadow .18s
+    }
+#botconfig .configbox input:not(.toggle):focus,#botconfig .configbox textarea:focus,#botconfig .configbox select:focus{
+      outline:none;border-color:#9a80ff;box-shadow:0 0 0 3px rgba(154,128,255,.13)
+    }
+#botconfig .configbox textarea{min-height:112px;resize:vertical}
+#botconfig .configbox .toggleline{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      margin:8px 0;padding:12px 13px;border:1px solid rgba(151,166,198,.13);
+      background:rgba(9,15,26,.58);border-radius:11px
+    }
+#botconfig .configbox .toggleline span{font-size:12px;font-weight:650;color:#dce4f3}
+#botconfig .configbox .toggleline .toggle{margin-left:auto}
+#botconfig .channel-picker[multiple]{min-height:130px;padding:8px}
+#botconfig .channel-picker option{padding:7px;border-radius:5px}
+#botconfig .channel-hint,#botconfig .confighint{font-size:11px;line-height:1.55;color:#8190a9;margin-top:8px}
+#botconfig .configactions{margin:16px 0 0}
+#botconfig .editor-preview{
+      position:sticky;top:22px;padding:17px;border:1px solid rgba(151,166,198,.16);
+      border-radius:16px;background:linear-gradient(155deg,rgba(20,27,42,.96),rgba(12,17,28,.98))
+    }
+#botconfig .preview-head{display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:800;letter-spacing:1.5px;color:#9ba9c0;margin-bottom:15px}
+#botconfig .preview-live{color:#66d9bd;letter-spacing:.5px}
+#botconfig .preview-card{padding:18px;border:1px solid rgba(151,166,198,.14);border-radius:13px;background:#0b111c;text-align:center}
+#botconfig .preview-avatar{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;margin:0 auto 10px;background:#242544;font-size:23px}
+#botconfig .preview-name{font-size:14px;font-weight:800}
+#botconfig .preview-muted{font-size:10px;color:#8795ad;margin-top:3px}
+#botconfig .preview-rule{height:1px;background:rgba(151,166,198,.15);margin:15px 0}
+#botconfig .preview-card p,#botconfig .preview-help p{font-size:11px;line-height:1.6;color:#8998b2;margin:0}
+#botconfig .preview-help{margin-top:13px;padding:13px;border-radius:11px;background:rgba(145,118,255,.07);border:1px solid rgba(145,118,255,.15)}
+#botconfig .preview-help b{display:block;font-size:11px;margin-bottom:5px;color:#c8bcff}
+@media(max-width:1050px){#botconfig .editor-layout{grid-template-columns:minmax(0,1fr)}
+#botconfig .editor-preview{position:static;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#botconfig .preview-head{grid-column:1/-1;margin:0}}
+@media(max-width:700px){#botconfig .configgrid{grid-template-columns:1fr}
+#botconfig .editor-preview{display:block}
+#botconfig .preview-head{margin-bottom:12px}
+#botconfig .editor-top{align-items:flex-start;flex-direction:column}
+#botconfig .editor-top .topactions{width:100%}
+#botconfig .editor-top .topactions button{flex:1}
+#botconfig .editor-picker{min-width:100%}
+#botconfig #loadGuilds{width:100%}}
+.application-form{max-width:900px}
+.application-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px}
+.application-grid label{display:block;margin:13px 0 7px;color:#aebbd0;font-size:11px;font-weight:700}
+.application-grid input,.application-grid textarea{width:100%;padding:11px 12px;background:#12151e;border:1px solid #343b4c;border-radius:9px;color:#f4f6fb;font:13px inherit}
+.application-grid textarea{min-height:105px;resize:vertical}
+.application-wide{grid-column:1/-1}
+.application-row{display:flex;align-items:center;gap:13px;padding:15px 18px;border-bottom:1px solid #2b3040}
+.application-row:last-child{border-bottom:0}
+.application-avatar{width:46px;height:46px;object-fit:cover;border-radius:13px}
+.application-info{min-width:0;flex:1}
+.application-info b{display:block}
+.application-meta{font-size:11px;color:#929bad;overflow-wrap:anywhere}
+.application-actions{display:flex;gap:7px;flex-wrap:wrap}
+.application-status{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#9dc0ff}
+.server-icon img{width:58px;height:58px;object-fit:cover;border-radius:18px}
+@media(max-width:650px){.application-grid{grid-template-columns:1fr}
+.application-wide{grid-column:auto}
+.application-row{align-items:flex-start;flex-wrap:wrap}
+.application-actions{width:100%}}
+\n  
+
+  /* Ticketly-inspired visual refresh */
+  :root{--bg:#090b13;--panel:#101522;--panel2:#171e2e;--line:#252d43;--muted:#8d98b2;--text:#f4f5fb;--purple:#8b78ff;--cyan:#65dfd0}
+@media(max-width:850px){.nav{gap:4px}}
+@media(max-width:850px){.nav{padding-bottom:2px;scrollbar-width:thin}}
+@media(max-width:520px){.topactions .btn{flex:1}
+.activityrow .time{grid-column:2}
+.botmetrics .metric{min-width:62px}}
 </style>
 </head>
 <body>
-
+<div class="welcome-screen" id="welcomeScreen">
+  <div class="welcome-glow"></div>
+  <div class="welcome-card">
+    <div class="welcome-logo">⌘</div><div class="welcome-kicker">DISCORD BOT CONTROL CENTER</div>
+    <h1>All your bots.<br><span>One control panel.</span></h1>
+    <p>Connect with Discord, choose a bot and a server, then manage its settings in one clean workspace.</p>
+    <button type="button" class="btn primary welcome-continue" id="welcomeContinue" >Continue <span>→</span></button>
+    <div class="welcome-foot"><span>●</span> Secure Discord sign-in · Server-scoped settings</div>
+  </div><div class="welcome-side-note">BOTCONTROL <span>/</span> CONTROL YOUR COMMUNITY</div>
+</div>
 <div class="authwall" id="authWall">
-  <form class="authbox" id="loginForm">
+  <div class="authbox">
     <div class="brand" style="padding:0 0 18px"><div class="logo">⌘</div><span>BotControl</span></div>
-    <h2>Вход владельца</h2>
-    <p>Панель доступна только владельцу. Пароль проверяется сервером.</p>
-    <label class="field" for="ownerPassword">Пароль</label>
-    <input id="ownerPassword" type="password" autocomplete="current-password" required>
-    <div class="autherror" id="authError"></div>
-    <button class="btn primary" style="width:100%" type="submit">Войти</button>
-  </form>
+    <h2>Sign in with Discord</h2>
+    <p>Sign in with your Discord account to manage bots on servers where you have Administrator permissions.</p>
+    <a class="btn primary" style="display:block;text-align:center;text-decoration:none;width:100%" href="/auth/discord">Continue with Discord</a>
+  </div>
 </div>
 <div class="shell">
   <aside class="side">
     <div class="brand"><div class="logo">⌘</div><span>BotControl</span></div>
-    <div class="navlabel">Рабочее пространство</div>
+    <div class="navlabel">WORKSPACE</div>
     <nav class="nav">
-      <button class="active" data-page="overview"><span class="ico">▦</span>Обзор</button>
-      <button data-page="bots"><span class="ico">◈</span>Мои боты</button>
-      <button data-page="logs"><span class="ico">≋</span>Журнал событий</button>
-      <button data-page="settings"><span class="ico">⚙</span>Настройки</button>
-      <button data-page="botconfig"><span class="ico">🛠</span>Настройки бота</button>
-      <button data-page="voidmanager"><span class="ico">◉</span>VOID Clan Manager</button>
+      <button class="active" data-page="overview"><span class="ico">⌂</span>Overview</button>
+      <div class="navgroup-label">TICKETS</div>
+      <button data-page="botconfig"><span class="ico">▤</span>Panel Editor</button>
+      <button data-page="settings"><span class="ico">⚙</span>Configuration</button>
+      <div class="navgroup-label">BOT MANAGEMENT</div>
+      <button data-page="bots"><span class="ico">◈</span>My Bots</button>
+      <button data-page="logs" id="navLogs"><span class="ico">≋</span>Activity Log</button>
+      <button data-page="access" id="navAccess"><span class="ico">♙</span>Access</button>
+      <button data-page="applications"><span class="ico">✉</span>Bot Applications</button>
     </nav>
-    <div class="sidebottom"><div class="profile"><div class="avatar">K</div><div><b>Личный аккаунт</b><div class="muted" style="font-size:11px">Владелец пространства</div></div></div></div>
+    <div class="sidebottom"><div class="profile"><div class="avatar">K</div><div><b>Personal Account</b><div class="muted" style="font-size:11px">Dashboard</div></div></div></div>
   </aside>
   <main class="main">
     <section class="page active" id="overview">
-      <header class="top"><div><div class="eyebrow">Панель управления</div><h1>С возвращением 👋</h1><p>Управляй подключёнными сервисами и настройками из одного пространства.</p></div><div class="topactions"><button class="btn" id="refresh">↻ Обновить</button><button class="btn logout" id="logout">Выйти</button><button class="btn primary" id="addBot">＋ Добавить бота</button></div></header>
+      <header class="top"><div><div class="eyebrow">DASHBOARD</div><h1>Welcome back 👋</h1><p>Manage your Discord bots from one place.</p></div><div class="topactions"><button class="btn" id="refresh">↻ Refresh</button><button class="btn logout" id="logout">Sign out</button> </div></header>
       <div class="stats">
-        <div class="stat"><div class="stathead">Всего ботов <span>◈</span></div><div class="statnum" id="totalBots">1</div><div class="statfoot">В этом пространстве</div></div>
-        <div class="stat"><div class="stathead">В сети <span style="color:var(--cyan)">●</span></div><div class="statnum" id="onlineBots">—</div><div class="statfoot">Нет подключения к API</div></div>
-        <div class="stat"><div class="stathead">Ошибки <span style="color:var(--red)">!</span></div><div class="statnum">—</div><div class="statfoot">Ожидают интеграции</div></div>
-        <div class="stat"><div class="stathead">Аптайм <span>◷</span></div><div class="statnum">—</div><div class="statfoot">Будет доступен после подключения</div></div>
+        <div class="stat"><div class="stathead">Total Bots <span>◈</span></div><div class="statnum" id="totalBots">1</div><div class="statfoot">In this workspace</div></div>
+        <div class="stat"><div class="stathead">Online <span style="color:var(--cyan)">●</span></div><div class="statnum" id="onlineBots">—</div><div class="statfoot">No API connection</div></div>
+        <div class="stat"><div class="stathead">Errors <span style="color:var(--red)">!</span></div><div class="statnum">—</div><div class="statfoot">Awaiting integration</div></div>
+        <div class="stat"><div class="stathead">Uptime <span>◷</span></div><div class="statnum">—</div><div class="statfoot">Available after connection</div></div>
       </div>
-      <div class="sectionhead"><h2>Твои Discord-боты</h2><span>Состояние хостинга</span></div>
+      <div class="sectionhead"><h2>Your Discord Bots</h2><span>Connected services</span></div>
       <div class="bots" id="botCards">
-        <article class="card bot"><div class="bothead"><div class="botidentity"><div class="botavatar">👑</div><div><div class="botname">Kingdom of IvynX</div><div class="botid">Python · Disnake · Render</div></div></div><span class="status off">Не подключён</span></div><div class="botdesc">Бот модерации и проверки сообщений. Подключение к панели ещё не настроено.</div><div class="botmetrics"><div class="metric"><b>—</b><span>Серверов</span></div><div class="metric"><b>—</b><span>Задержка</span></div><div class="metric"><b>—</b><span>Последний запуск</span></div></div><div class="botactions"><button class="btn small primary" data-action="connect">Настроить подключение</button><button class="btn small" data-action="details">Подробнее</button></div></article>
+        <article class="card bot"><div class="bothead"><div class="botidentity"><div class="botavatar">👑</div><div><div class="botname">Kingdom of IvynX</div><div class="botid">Python · Disnake · Render</div></div></div><span class="status off">Not connected</span></div><div class="botdesc">Moderation and message review bot. Dashboard connection is not configured yet.</div><div class="botmetrics"><div class="metric"><b>—</b><span>Servers</span></div><div class="metric"><b>—</b><span>Latency</span></div><div class="metric"><b>—</b><span>Last started</span></div></div><div class="botactions"><button class="btn small primary" data-action="connect">Configure connection</button><button class="btn small" data-action="details">Details</button></div></article>
       </div>
-      <div class="notice">ⓘ Сейчас это интерфейс-предпросмотр. Статус здесь отражает состояние хостинга Render, а не присутствие бота в Discord. Метрики Discord и поток логов пока не подключены. Никакие токены ботов здесь не запрашиваются.</div>
-      <div class="sectionhead"><h2>Последние события</h2><span>Демо-данные</span></div>
-      <div class="card activity"><div class="activityrow"><div class="eventicon">🔒</div><div><div class="eventtitle">Панель создана</div><div class="eventsub">Интерфейс готов к следующему этапу интеграции</div></div><span class="time">Сейчас</span></div><div class="activityrow"><div class="eventicon">🤖</div><div><div class="eventtitle">Kingdom of IvynX добавлен в список</div><div class="eventsub">Ожидает настройки безопасного подключения</div></div><span class="time">Сейчас</span></div></div>
+      <div class="notice">ⓘ Preview information may be shown until a bot API is connected. Bot tokens are never requested here.</div>
+      <div class="sectionhead"><h2>Recent Activity</h2><span>Demo data</span></div>
+      <div class="card activity"><div class="activityrow"><div class="eventicon">🔒</div><div><div class="eventtitle">Dashboard created</div><div class="eventsub">Interface is ready for the next integration step</div></div><span class="time">Just now</span></div><div class="activityrow"><div class="eventicon">🤖</div><div><div class="eventtitle">Kingdom of IvynX added</div><div class="eventsub">Waiting for secure connection setup</div></div><span class="time">Just now</span></div></div>
     </section>
     <section class="page" id="bots">
-      <header class="top"><div><div class="eyebrow">Управление</div><h1>Мои боты</h1><p>Добавляй и подключай Discord-ботов.</p></div><button class="btn primary" id="addBot2">＋ Добавить бота</button></header>
-      <div class="toolbar"><input class="search" id="botSearch" type="search" placeholder="Поиск по названию или хостингу…" aria-label="Поиск ботов"><span class="muted" id="botCount" aria-live="polite">Все боты</span></div><div class="bots" id="botCards2"></div><div class="empty" id="botEmpty" hidden>По этому запросу боты не найдены.</div>
-      <div class="notice">Подключение требует серверной части. Секретные токены нельзя вставлять в HTML, JavaScript браузера или GitHub.</div>
+      <header class="top"><div><div class="eyebrow">MANAGEMENT</div><h1>My Bots</h1><p>Register existing Discord bots hosted on Render.</p></div></header>
+      <div class="card configbox" id="botRegistryForm" hidden>
+        <h3>Connect an existing Render service</h3>
+        <label for="newBotId">Internal bot ID</label><input id="newBotId" placeholder="e.g. moderation-bot">
+        <label for="newBotName">Display name</label><input id="newBotName" placeholder="Bot display name">
+        <label for="newBotRenderId">Render Service ID</label><input id="newBotRenderId" placeholder="srv-...">
+        <label for="newBotControlUrl">Public control API URL</label><input id="newBotControlUrl" placeholder="https://my-bot.onrender.com">
+        <div class="confighint">The bot must be deployed on Render and support the protected /control/manifest, /control/guilds, and /control/config routes.</div>
+        <div class="configactions"><button class="btn primary" id="registerBot">Add Bot</button></div>
+      </div>
+      <div class="bots" id="botCards2"></div>
+      <div class="notice">Do not enter Discord tokens or Render API keys here. Keep them in Render environment secrets.</div>
+    </section>
+    <section class="page" id="serverPicker">
+      <header class="top"><div><div class="eyebrow">STEP 2 OF 2</div><h1>Choose a server</h1><p>Select the Discord server where you want to configure this bot.</p></div></header>
+      <div class="picker-back"><button class="btn" id="backToBots">← Back to bots</button></div>
+      <div class="server-grid" id="serverCards"><div class="empty">Loading your servers…</div></div>
     </section>
     <section class="page" id="logs">
-      <header class="top"><div><div class="eyebrow">Мониторинг</div><h1>Журнал событий</h1><p>Запуски, ошибки и действия ботов.</p></div></header>
-      <div class="toolbar"><input class="search" id="logSearch" placeholder="Поиск по событиям…"></div>
-      <div class="card" id="logList"><div class="logitem"><span>🔒</span><div><b>Интерфейс BotControl инициализирован</b><div class="muted">Демо-событие · Реальные логи появятся после подключения API</div></div><span class="tag">INFO</span></div></div>
+      <header class="top"><div><div class="eyebrow">MONITORING</div><h1>Activity Log</h1><p>Bot deployments, errors, and actions.</p></div></header>
+      <div class="toolbar"><input class="search" id="logSearch" placeholder="Search activity…"></div>
+      <div class="card" id="logList"><div class="logitem"><span>🔒</span><div><b>BotControl initialized</b><div class="muted">Demo event · Live logs appear when the API is connected</div></div><span class="tag">INFO</span></div></div>
+    </section>
+    <section class="page" id="access">
+      <header class="top"><div><div class="eyebrow">OWNER</div><h1>User Access</h1><p>Manage access to specific bots and Discord servers.</p></div><button class="btn" id="reloadAccess">↻ Refresh</button></header>
+      <div class="card configbox">
+        <h3>Grant or update access</h3>
+        <label for="accessDiscordId">User Discord ID</label><input id="accessDiscordId" inputmode="numeric" placeholder="e.g. 123456789012345678">
+        <label for="accessBotId">Bot ID from BOT_SERVICES</label><input id="accessBotId" value="ivynx" placeholder="ivynx">
+        <label for="accessGuildId">Discord server (* = all bot servers)</label><input id="accessGuildId" value="*" placeholder="* or server ID">
+        <div class="settingsgrid">
+          <label class="settingrow"><span>View settings</span><input class="toggle" id="accessView" type="checkbox" checked></label>
+          <label class="settingrow"><span>Edit settings</span><input class="toggle" id="accessConfigure" type="checkbox"></label>
+          <label class="settingrow"><span>Restart bot</span><input class="toggle" id="accessRestart" type="checkbox"></label>
+        </div>
+        <div class="configactions"><button class="btn primary" id="grantAccess">Save Access</button></div>
+      </div>
+      <div class="sectionhead"><h2>Granted Permissions</h2><span>ACCESS MANAGEMENT</span></div>
+      <div class="card" id="accessList"><div class="empty">Loading…</div></div>
+    </section>
+    <section class="page" id="applications">
+      <header class="top"><div><div class="eyebrow">COMMUNITY</div><h1>Bot Applications</h1><p>Submit a bot for review or track your application status.</p></div></header>
+      <div class="card configbox application-form">
+        <h3>Apply for Bot Listing</h3>
+        <div class="application-grid">
+          <div><label for="appBotName">Bot name</label><input id="appBotName" maxlength="80" placeholder="My Discord Bot"></div>
+          <div><label for="appBotId">Bot Discord ID</label><input id="appBotId" inputmode="numeric" maxlength="22" placeholder="123456789012345678"></div>
+          <div><label for="appInvite">Bot invite URL</label><input id="appInvite" type="url" placeholder="https://discord.com/oauth2/authorize?..."></div>
+          <div><label for="appAvatar">Bot icon URL (optional)</label><input id="appAvatar" type="url" placeholder="https://..."></div>
+          <div><label for="appSupport">Support server URL (optional)</label><input id="appSupport" type="url" placeholder="https://discord.gg/..."></div>
+          <div class="application-wide"><label for="appDescription">Description</label><textarea id="appDescription" maxlength="1000" placeholder="What does your bot do?"></textarea></div>
+        </div>
+        <div class="configactions"><button class="btn primary" id="submitBotApplication">Submit Application</button></div>
+        <div class="confighint">Applications are reviewed by the BotControl owner. Never submit bot tokens or private credentials.</div>
+      </div>
+      <div class="sectionhead"><h2>My Applications</h2><span>YOUR SUBMISSIONS</span></div>
+      <div class="card" id="myApplications"><div class="empty">Loading applications…</div></div>
+      <div id="reviewApplicationsWrap" hidden>
+        <div class="sectionhead"><h2>Review Applications</h2><span>OWNER ONLY</span></div>
+        <div class="card" id="allApplications"><div class="empty">Loading…</div></div>
+      </div>
     </section>
     <section class="page" id="settings">
-      <header class="top"><div><div class="eyebrow">Конфигурация</div><h1>Настройки</h1><p>Параметры будущей панели управления.</p></div></header>
+      <header class="top"><div><div class="eyebrow">CONFIGURATION</div><h1>Settings</h1><p>Dashboard preferences.</p></div></header>
       <div class="settingsgrid">
-        <div class="card setting"><div class="settingrow"><div><h3>Уведомления об ошибках</h3><p>Показывать оповещения о сбоях ботов.</p></div><input class="toggle" type="checkbox" checked></div></div>
-        <div class="card setting"><div class="settingrow"><div><h3>Подтверждать перезапуск</h3><p>Запрашивать подтверждение перед действием.</p></div><input class="toggle" type="checkbox" checked></div></div>
-        <div class="card setting"><div class="settingrow"><div><h3>Автообновление статуса</h3><p>Обновлять данные после подключения backend.</p></div><input class="toggle" type="checkbox"></div></div>
-        <div class="card setting"><div class="settingrow"><div><h3>Тёмная тема</h3><p>Основное оформление BotControl.</p></div><input class="toggle" type="checkbox" checked></div></div>
+        <div class="card setting"><div class="settingrow"><div><h3>Error notifications</h3><p>Show alerts when bots fail.</p></div><input class="toggle" type="checkbox" checked></div></div>
+        <div class="card setting"><div class="settingrow"><div><h3>Confirm before restart</h3><p>Ask for confirmation before taking action.</p></div><input class="toggle" type="checkbox" checked></div></div>
+        <div class="card setting"><div class="settingrow"><div><h3>Auto-refresh status</h3><p>Refresh data after the backend is connected.</p></div><input class="toggle" type="checkbox"></div></div>
+        <div class="card setting"><div class="settingrow"><div><h3>Dark theme</h3><p>BotControl appearance.</p></div><input class="toggle" type="checkbox" checked></div></div>
       </div>
-      <div class="notice">Настройки пока сохраняются только в текущем открытом окне. Постоянное хранение появится на серверной стороне.</div>
+      <div class="notice">These preferences currently apply only to this browser session. Persistent storage may be added later.</div>
     </section>
     <section class="page" id="botconfig">
-      <header class="top"><div><div class="eyebrow">Живая конфигурация</div><h1>Настройки Kingdom of IvynX</h1><p>Изменения отправляются напрямую в работающий бот.</p></div><button class="btn" id="loadBotConfig">↻ Загрузить</button></header>
-      <div class="notice" id="botConfigNotice">Загрузи текущую конфигурацию бота. Если API ещё не настроен, проверь переменные Render.</div>
-      <div class="configgrid">
-        <div class="card configbox">
-          <h3>Основные настройки</h3>
-          <div class="toggleline"><span>Мониторинг сообщений</span><input class="toggle" id="cfgMonitoring" type="checkbox"></div>
-          <label for="cfgRulesChannel">ID канала правил</label><input id="cfgRulesChannel" inputmode="numeric" placeholder="Оставь пустым, если не задан">
-          <label for="cfgReportsChannel">ID канала жалоб</label><input id="cfgReportsChannel" inputmode="numeric" placeholder="Оставь пустым, если не задан">
-          <label for="cfgSpamLimit">Лимит сообщений для спам-флага (2–20)</label><input id="cfgSpamLimit" type="number" min="2" max="20">
-          <label for="cfgSpamWindow">Окно спама в секундах (1–120)</label><input id="cfgSpamWindow" type="number" min="1" max="120">
-        </div>
-        <div class="card configbox">
-          <h3>Списки Discord ID</h3>
-          <label for="cfgRestricted">Ограниченные каналы (через запятую)</label><textarea id="cfgRestricted" placeholder="123456789012345678, 234567890123456789"></textarea>
-          <label for="cfgExempt">Исключённые роли (через запятую)</label><textarea id="cfgExempt" placeholder="ID ролей"></textarea>
-          <label for="cfgOwners">Отслеживаемые владельцы (через запятую)</label><textarea id="cfgOwners" placeholder="ID пользователей"></textarea>
-        </div>
-        <div class="card configbox">
-          <h3>Запрещённые слова — правило 13</h3>
-          <label for="cfgWords">Слова через запятую</label><textarea id="cfgWords" placeholder="word1, word2, word3"></textarea>
-          <div class="confighint">Пустой список отключает проверку по пользовательским словам. Бот не наказывает пользователей — только отправляет сигналы на проверку.</div>
-        </div>
-        <div class="card configbox">
-          <h3>Ключевые фразы для ручной проверки</h3>
-          <label for="cfgKeywords">JSON-объект по номерам правил</label><textarea id="cfgKeywords" spellcheck="false" placeholder='{"1":["phrase"],"9":["another phrase"]}'></textarea>
-          <div class="confighint">Поддерживаются правила 1, 2, 4, 9, 11, 12, 15 и 16. Каждая фраза — 2–80 символов.</div>
-        </div>
+      <header class="top editor-top"><div><div class="eyebrow">BOT CONFIGURATION</div><h1>Bot Settings</h1><p>Manage how your bot works on the selected Discord server.</p></div><div class="topactions"><button class="btn" id="loadBotConfig">↻ Reload</button><button class="btn primary" id="saveBotConfig" hidden>Save &amp; Apply</button></div></header>
+      <div class="editor-context">
+        <div class="editor-picker"><label for="botSelect">BOT</label><select class="search" id="botSelect"><option value="">Loading bots…</option></select></div>
+        <div class="editor-picker"><label for="botGuildSelect">DISCORD SERVER</label><select class="search" id="botGuildSelect"><option value="">Choose a bot first</option></select></div>
+        <button class="btn" id="loadGuilds">↻ Refresh servers</button>
       </div>
-      <div class="configactions"><button class="btn primary" id="saveBotConfig">Сохранить и применить</button><button class="btn" id="reloadBotConfig">Отменить изменения</button></div>
-    </section>
-    <section class="page" id="voidmanager">
-      <header class="top"><div><div class="eyebrow">VOID Clan Manager</div><h1>Управление VOID</h1><p>Правила, требования, проверки, состав и привилегии бустеров.</p></div><button class="btn" id="voidLoad">↻ Загрузить</button></header>
-      <div class="notice" id="voidNotice">Подключи VOID в BOT_SERVICES на Render, чтобы редактировать данные бота.</div>
-      <div class="card configbox">
-        <h3>Настройки VOID</h3>
-        <p class="confighint">Редактируй JSON. Каналы указываются по Discord ID. В sections можно менять title, description и список items.</p>
-        <label for="voidJson">Конфигурация VOID</label>
-        <textarea id="voidJson" spellcheck="false" style="min-height:440px;font-family:ui-monospace,monospace"></textarea>
-        <div class="configactions"><button class="btn primary" id="voidSave">Сохранить в VOID</button><button class="btn" id="voidPublish">Как опубликовать</button></div>
+      <nav class="editor-tabs" aria-label="Editor sections">
+        <button class="editor-tab active" data-editor-tab="general">General</button>
+        <button class="editor-tab" data-editor-tab="embed">Embed</button>
+        <button class="editor-tab" data-editor-tab="messages">Messages</button>
+        <button class="editor-tab" data-editor-tab="forms">Forms</button>
+        <button class="editor-tab" data-editor-tab="logging">Logging</button>
+        <button class="editor-tab" data-editor-tab="advanced">Advanced</button>
+      </nav>
+      <div class="notice" id="botConfigNotice" role="status" aria-live="polite">Select a bot and a Discord server to get started.</div>
+      <div class="editor-layout">
+        <div class="editor-main">
+          <div class="editor-panel-head"><div><h2 id="editorSectionTitle">General</h2><p id="editorSectionDescription">Main settings for the selected bot and server.</p></div></div>
+          <div class="configgrid" id="configEditor"><div class="empty">Your bot settings will appear here once a server is selected.</div></div>
+          <div class="editor-placeholder" id="editorPlaceholder" hidden><b>This section is not connected yet</b><p>Only settings provided by the bot's configuration API can be edited here. We will add the remaining editor sections after the base layout is approved.</p></div>
+          <div class="configactions"><button class="btn" id="reloadBotConfig">Discard Changes</button></div>
+        </div>
+        <aside class="editor-preview">
+          <div class="preview-head"><span>PREVIEW</span><span class="preview-live">● CONFIG</span></div>
+          <div class="preview-card"><div class="preview-avatar">🤖</div><div class="preview-name">BotControl</div><div class="preview-muted">Configuration preview</div><div class="preview-rule"></div><p>Changes made in the editor apply to the selected Discord server after you press Save Changes.</p></div>
+          <div class="preview-help"><b>Server-scoped settings</b><p>Each Discord server keeps its own configuration. Choose another server above to edit its settings.</p></div>
+        </aside>
       </div>
     </section>
   </main>
 </div>
-<div class="modalback" id="modal"><div class="modal"><h2 id="modalTitle">Добавить бота</h2><p id="modalText">Добавим бота в список панели. Это пока локальная запись — токен не нужен.</p><label class="field" for="botName">Название бота</label><input id="botName" placeholder="Например, My Discord Bot"><label class="field" for="botHost">Хостинг (необязательно)</label><input id="botHost" placeholder="Например, Render"><div class="modalactions"><button class="btn" id="cancelModal">Отмена</button><button class="btn primary" id="saveBot">Добавить</button></div></div></div>
 <div class="toast" id="toast"></div>
 <script>
   const $=s=>document.querySelector(s);const $$=s=>document.querySelectorAll(s);
   function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2600)}
   function showPage(id){$$('.page').forEach(p=>p.classList.toggle('active',p.id===id));$$('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id))}
   $$('.nav button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
-  $('#refresh').addEventListener('click',()=>toast('Backend ещё не подключён — обновлять реальные статусы пока неоткуда.'));
-  function openModal(){$('#modal').classList.add('show');$('#botName').focus()}
-  $('#addBot').onclick=openModal;$('#addBot2').onclick=openModal;$('#cancelModal').onclick=()=>$('#modal').classList.remove('show');
-  function card(name,host){const el=document.createElement('article');el.className='card bot';const avatar=name.toLowerCase().includes('ivyn')?'👑':'🤖';el.innerHTML='<div class="bothead"><div class="botidentity"><div class="botavatar">'+avatar+'</div><div><div class="botname"></div><div class="botid"></div></div></div><span class="status off">Не подключён</span></div><div class="botdesc">Добавлен в список панели. Для мониторинга и управления нужно настроить backend-интеграцию.</div><div class="botmetrics"><div class="metric"><b>—</b><span>Серверов</span></div><div class="metric"><b>—</b><span>Задержка</span></div><div class="metric"><b>—</b><span>Аптайм</span></div></div><div class="botactions"><button class="btn small primary" data-action="connect">Настроить подключение</button><button class="btn small" data-action="details">Подробнее</button></div>';el.querySelector('.botname').textContent=name;el.querySelector('.botid').textContent='Discord · '+(host||'Хостинг не указан');return el}
-  $('#saveBot').onclick=()=>{const name=$('#botName').value.trim();if(!name){toast('Введи название бота.');return}const host=$('#botHost').value.trim();$('#botCards').append(card(name,host));$('#botCards2').append(card(name,host));$('#totalBots').textContent=document.querySelectorAll('#botCards .bot').length;$('#modal').classList.remove('show');$('#botName').value='';$('#botHost').value='';toast('Бот добавлен в этот предпросмотр.');};
-  document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;if(b.dataset.action==='connect')toast('Следующий этап: защищённый backend и интеграция с хостингом.');else toast('Карточка бота. Подробные данные появятся после подключения.')});
+  $('#refresh').addEventListener('click',()=>toast('Backend ещё не подключён — обновлять реальные статусы пока неоткуyes.'));
   $('#logSearch').addEventListener('input',e=>{$$('#logList .logitem').forEach(x=>x.style.display=x.textContent.toLowerCase().includes(e.target.value.toLowerCase())?'flex':'none')});
+
+  // Editor tabs are a visual shell for the staged Tickety-style rebuild.
+  document.querySelectorAll('[data-editor-tab]').forEach(tab => tab.addEventListener('click', () => {
+    document.querySelectorAll('[data-editor-tab]').forEach(item => item.classList.toggle('active', item === tab));
+    const general = tab.dataset.editorTab === 'general';
+    document.getElementById('configEditor').hidden = !general;
+    document.getElementById('editorPlaceholder').hidden = general;
+    document.getElementById('editorSectionTitle').textContent = tab.textContent;
+    document.getElementById('editorSectionDescription').textContent = general
+      ? 'Main settings provided by the selected bot.'
+      : 'This editor section is reserved for the next implementation stage.';
+  }));
+
 </script>
 
 <script>
 (() => {
   const wall = document.getElementById('authWall');
-  const form = document.getElementById('loginForm');
-  const errorBox = document.getElementById('authError');
-  const passwordInput = document.getElementById('ownerPassword');
-  const cards = document.getElementById('botCards');
+    const cards = document.getElementById('botCards');
   const cards2 = document.getElementById('botCards2');
 
   async function api(url, options = {}) {
@@ -248,18 +647,18 @@
       headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }
     });
     const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.error || 'Ошибка API: ' + response.status);
+    if (!response.ok) throw new Error(data.error || 'API error: ' + response.status);
     return data;
   }
 
   function statusLabel(status) {
     const map = {
-      live: ['Работает на хостинге', true],
-      suspended: ['Приостановлен', false],
-      not_configured: ['Render не настроен', false],
-      error: ['Ошибка подключения', false]
+      live: ['Hosting online', true],
+      suspended: ['Suspended', false],
+      not_configured: ['Render not configured', false],
+      error: ['Connection error', false]
     };
-    return map[status] || ['Статус: ' + (status || 'неизвестен'), false];
+    return map[status] || ['Status: ' + (status || 'unknown'), false];
   }
 
   async function loadBots() {
@@ -268,6 +667,12 @@
       cards.replaceChildren();
       cards2.replaceChildren();
       let online = 0;
+      const botSelect = document.getElementById('botSelect');
+      const previousBotId = botSelect.value;
+      botSelect.replaceChildren();
+      result.bots.forEach(bot => botSelect.add(new Option(bot.name, bot.id)));
+      if (result.bots.some(bot => bot.id === previousBotId)) botSelect.value = previousBotId;
+      selectedBotId = botSelect.value;
       result.bots.forEach(bot => {
         const [label, healthy] = statusLabel(bot.hostStatus);
         if (healthy) online++;
@@ -279,7 +684,8 @@
         identity.className = 'botidentity';
         const avatar = document.createElement('div');
         avatar.className = 'botavatar';
-        avatar.textContent = bot.id === 'ivynx' ? '👑' : '🤖';
+        if (bot.iconUrl) { const image=document.createElement('img'); image.src=bot.iconUrl; image.alt=''; image.onerror=()=>{avatar.textContent=bot.id==='ivynx'?'👑':'🤖';}; avatar.append(image); }
+        else avatar.textContent = bot.id === 'ivynx' ? '👑' : '🤖';
         const nameWrap = document.createElement('div');
         const name = document.createElement('div');
         name.className = 'botname';
@@ -295,18 +701,19 @@
         head.append(identity, badge);
         const desc = document.createElement('div');
         desc.className = 'botdesc';
-        desc.textContent = bot.error || 'Статус сервиса получен из Render API. Это не подтверждает подключение Discord Gateway.';
+        desc.textContent = bot.error || 'Service status was returned by the Render API. This does not confirm a Discord Gateway connection.';
         const metrics = document.createElement('div');
         metrics.className = 'botmetrics';
-        metrics.innerHTML = '<div class="metric"><b>—</b><span>Discord-серверов</span></div><div class="metric"><b>—</b><span>Задержка</span></div><div class="metric"><b>—</b><span>Аптайм</span></div>';
+        metrics.innerHTML = '<div class="metric"><b>—</b><span>Discord servers</span></div><div class="metric"><b>—</b><span>Latency</span></div><div class="metric"><b>—</b><span>Uptime</span></div>';
         const actions = document.createElement('div');
         actions.className = 'botactions';
         const restart = document.createElement('button');
         restart.className = 'btn small primary';
-        restart.textContent = 'Перезапустить';
+        restart.textContent = 'Restart';
+        restart.hidden = !bot.canRestart;
         restart.disabled = !result.connected || bot.hostStatus === 'not_configured';
         restart.addEventListener('click', async () => {
-          if (!confirm('Перезапустить сервис «' + bot.name + '» на Render?')) return;
+          if (!confirm('Restart service "' + bot.name + '" on Render?')) return;
           restart.disabled = true;
           try {
             const response = await api('/api/bots/' + encodeURIComponent(bot.id) + '/restart', {
@@ -319,12 +726,42 @@
             restart.disabled = false;
           }
         });
-        actions.append(restart);
+        const configure = document.createElement('button');
+        configure.className = 'btn small';
+        configure.textContent = 'Settings';
+        configure.addEventListener('click', () => {
+          showPage('botconfig');
+          botSelect.value = bot.id;
+          selectedBotId = bot.id;
+          loadGuilds();
+        });
+        actions.append(restart, configure);
+        if (bot.managed) {
+          const remove = document.createElement('button');
+          remove.className = 'btn small';
+          remove.textContent = 'Remove from dashboard';
+          remove.addEventListener('click', async () => {
+            if (!confirm('Remove "' + bot.name + '" from BotControl? The Render service itself will not be deleted.')) return;
+            try {
+              await api('/api/bots/' + encodeURIComponent(bot.id), { method: 'DELETE', body: '{}' });
+              await loadBots();
+              toast('Bot removed from the dashboard.');
+            } catch (error) { toast(error.message); }
+          });
+          actions.append(remove);
+        }
         article.append(head, desc, metrics, actions);
         cards.append(article);
         const copy = article.cloneNode(true);
-        const copyRestart = copy.querySelector('button');
-        copyRestart.addEventListener('click', () => restart.click());
+        copy.querySelector('.botactions')?.remove();
+        copy.querySelector('.botmetrics')?.remove();
+        copy.querySelector('.botdesc')?.remove();
+        copy.addEventListener('click', () => chooseBot(bot));
+
+        const copyButtons = copy.querySelectorAll('button');
+        copyButtons[0]?.addEventListener('click', () => restart.click());
+        copyButtons[1]?.addEventListener('click', () => configure.click());
+        if (bot.managed) copyButtons[2]?.addEventListener('click', () => article.querySelectorAll('button')[2]?.click());
         cards2.append(copy);
       });
       document.getElementById('totalBots').textContent = result.bots.length;
@@ -333,28 +770,48 @@
       foot.textContent = 'Статус хостинга Render';
       document.querySelector('#overview .notice').textContent =
         result.connected
-          ? 'Подключено к Render API. Показан статус хостинга, а не подтверждение соединения бота с Discord.'
-          : 'Render API ещё не настроен. Добавь RENDER_API_TOKEN и BOT_SERVICES в секретные переменные сервера.';
+          ? 'Connected to the Render API. This shows hosting status, not the bot’s Discord connection status.'
+          : 'Render API is not configured. Add RENDER_API_TOKEN and BOT_SERVICES to the service environment variables.';
     } catch (error) {
-      if (error.message.includes('Требуется вход')) showLogin();
+      if (error.message.includes('войти через Discord')) showLogin();
       else toast(error.message);
     }
   }
 
-  function showLogin() { wall.classList.add('show'); setTimeout(() => passwordInput.focus(), 50); }
-  function hideLogin() { wall.classList.remove('show'); passwordInput.value = ''; errorBox.textContent = ''; }
-
-  form.addEventListener('submit', async event => {
-    event.preventDefault();
-    errorBox.textContent = '';
+  async function chooseBot(bot) {
+    selectedBotId = bot.id;
+    document.querySelector('.shell').classList.add('wizard-mode');
+    showPage('serverPicker');
+    const grid = document.getElementById('serverCards');
+    grid.innerHTML = '<div class="empty">Loading servers…</div>';
     try {
-      await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ password: passwordInput.value }) });
-      hideLogin();
-      await loadBots();
-    } catch (error) {
-      errorBox.textContent = error.message;
-    }
-  });
+      const result = await api('/api/bots/' + encodeURIComponent(bot.id) + '/guilds');
+      grid.replaceChildren();
+      if (!result.guilds.length) { grid.append(Object.assign(document.createElement('div'), {className:'empty',textContent:'No servers found where this bot is installed and you have Administrator permission.'})); return; }
+      result.guilds.forEach(guild => {
+        const card = document.createElement('article'); card.className = 'server-card';
+        const icon = document.createElement('div'); icon.className = 'server-icon';
+        if (guild.icon) { const image=document.createElement('img'); image.src=guild.icon; image.alt=''; image.onerror=()=>{icon.textContent=(guild.name||'S').trim().charAt(0).toUpperCase();}; icon.append(image); }
+        else icon.textContent = (guild.name || 'S').trim().charAt(0).toUpperCase();
+        const info = document.createElement('div'); const name = document.createElement('div'); name.className = 'server-name'; name.textContent = guild.name;
+        const meta = document.createElement('div'); meta.className = 'server-meta'; meta.textContent = 'Discord server'; info.append(name,meta);
+        const arrow = document.createElement('div'); arrow.className = 'server-arrow'; arrow.textContent = '→'; card.append(icon,info,arrow);
+        card.addEventListener('click', async () => {
+          selectedGuildId = guild.id;
+          document.getElementById('botSelect').value = bot.id;
+          guildSelect.replaceChildren(new Option(guild.name, guild.id));
+          document.querySelector('.shell').classList.remove('wizard-mode');
+          showPage('botconfig'); await loadBotConfig();
+        });
+        grid.append(card);
+      });
+    } catch(error) { grid.replaceChildren(Object.assign(document.createElement('div'), {className:'empty',textContent:'Could not load servers: ' + error.message})); }
+  }
+  document.getElementById('backToBots')?.addEventListener('click', () => showPage('bots'));
+
+  function showLogin() { document.querySelector('.shell')?.classList.remove('wizard-mode'); document.getElementById('welcomeScreen')?.classList.remove('hidden'); wall.classList.remove('show'); document.querySelector('.shell').style.display = 'none'; }
+  function hideLogin() { wall.classList.remove('show'); document.getElementById('welcomeScreen')?.classList.add('hidden'); document.querySelector('.shell').style.display = 'grid'; }
+  document.getElementById('welcomeContinue')?.addEventListener('click', () => { document.getElementById('welcomeScreen').classList.add('hidden'); wall.classList.add('show'); });
 
   document.getElementById('logout').addEventListener('click', async () => {
     try { await api('/api/auth/logout', { method: 'POST', body: '{}' }); } catch {}
@@ -362,152 +819,368 @@
   });
 
   document.getElementById('refresh').addEventListener('click', () => loadBots());
-  const configFields = {
-    monitoring: document.getElementById('cfgMonitoring'),
-    rules: document.getElementById('cfgRulesChannel'),
-    reports: document.getElementById('cfgReportsChannel'),
-    spamLimit: document.getElementById('cfgSpamLimit'),
-    spamWindow: document.getElementById('cfgSpamWindow'),
-    restricted: document.getElementById('cfgRestricted'),
-    exempt: document.getElementById('cfgExempt'),
-    owners: document.getElementById('cfgOwners'),
-    words: document.getElementById('cfgWords'),
-    keywords: document.getElementById('cfgKeywords')
-  };
-  const configNotice = document.getElementById('botConfigNotice');
-  const listToText = values => (values || []).join(', ');
-  const textToList = value => value.split(',').map(x => x.trim()).filter(Boolean);
-  function showBotConfig(config) {
-    configFields.monitoring.checked = !!config.monitoring_enabled;
-    configFields.rules.value = config.rules_channel_id || '';
-    configFields.reports.value = config.violations_channel_id || '';
-    configFields.spamLimit.value = config.spam_limit ?? 5;
-    configFields.spamWindow.value = config.spam_window_seconds ?? 8;
-    configFields.restricted.value = listToText(config.restricted_channel_ids);
-    configFields.exempt.value = listToText(config.exempt_role_ids);
-    configFields.owners.value = listToText(config.owner_user_ids);
-    configFields.words.value = listToText(config.forbidden_words);
-    configFields.keywords.value = JSON.stringify(config.review_keywords || {}, null, 2);
-  }
-  async function loadBotConfig() {
-    configNotice.textContent = 'Загружаю настройки бота…';
+
+  async function loadAccess() {
+    const list = document.getElementById('accessList');
+    list.replaceChildren(Object.assign(document.createElement('div'), { className: 'empty', textContent: 'Loading…' }));
     try {
-      const result = await api('/api/bots/ivynx/config');
-      showBotConfig(result.config);
-      configNotice.textContent = 'Настройки загружены с Kingdom of IvynX. Можно редактировать.';
+      const result = await api('/api/access');
+      list.replaceChildren();
+      if (!result.access.length) {
+        list.append(Object.assign(document.createElement('div'), { className: 'empty', textContent: 'No access has been granted yet.' }));
+        return;
+      }
+      result.access.forEach(row => {
+        const item = document.createElement('div');
+        item.className = 'logitem';
+        const info = document.createElement('div');
+        info.style.flex = '1';
+        const title = document.createElement('b');
+        title.textContent = row.discord_id + ' · ' + row.bot_id;
+        const detail = document.createElement('div');
+        detail.className = 'muted';
+        detail.textContent = 'Server: ' + (row.guild_id === '*' ? 'all' : row.guild_id) +
+          ' · View: ' + (row.can_view ? 'yes' : 'no') +
+          ' · Edit: ' + (row.can_configure ? 'yes' : 'no') +
+          ' · Restart: ' + (row.can_restart ? 'yes' : 'no');
+        info.append(title, detail);
+        const remove = document.createElement('button');
+        remove.className = 'btn small';
+        remove.textContent = 'Revoke';
+        remove.addEventListener('click', async () => {
+          if (!confirm('Revoke this permission?')) return;
+          try {
+            await api('/api/access', { method: 'DELETE', body: JSON.stringify({
+              discord_id: row.discord_id, bot_id: row.bot_id, guild_id: row.guild_id
+            })});
+            await loadAccess();
+          } catch (error) { toast(error.message); }
+        });
+        item.append(info, remove);
+        list.append(item);
+      });
     } catch (error) {
-      configNotice.textContent = error.message + ' Проверь BOTCONTROL_SHARED_SECRET и controlUrl в BOT_SERVICES.';
+      list.replaceChildren(Object.assign(document.createElement('div'), { className: 'empty', textContent: error.message }));
+    }
+  }
+
+  document.getElementById('grantAccess').addEventListener('click', async () => {
+    const discord_id = document.getElementById('accessDiscordId').value.trim();
+    const bot_id = document.getElementById('accessBotId').value.trim();
+    const guild_id = document.getElementById('accessGuildId').value.trim() || '*';
+    try {
+      await api('/api/access', { method: 'POST', body: JSON.stringify({
+        discord_id, bot_id, guild_id,
+        permissions: {
+          can_view: document.getElementById('accessView').checked,
+          can_configure: document.getElementById('accessConfigure').checked,
+          can_restart: document.getElementById('accessRestart').checked
+        }
+      })});
+      toast('Access saved.');
+      await loadAccess();
+    } catch (error) { toast(error.message); }
+  });
+  document.getElementById('registerBot').addEventListener('click', async () => {
+    const payload = {
+      id: document.getElementById('newBotId').value.trim(),
+      name: document.getElementById('newBotName').value.trim(),
+      render_service_id: document.getElementById('newBotRenderId').value.trim(),
+      control_url: document.getElementById('newBotControlUrl').value.trim()
+    };
+    try {
+      await api('/api/bots', { method: 'POST', body: JSON.stringify(payload) });
+      document.getElementById('newBotId').value = '';
+      document.getElementById('newBotName').value = '';
+      document.getElementById('newBotRenderId').value = '';
+      document.getElementById('newBotControlUrl').value = '';
+      toast('Bot added to BotControl.');
+      await loadBots();
+    } catch (error) { toast(error.message); }
+  });
+  document.getElementById('reloadAccess').addEventListener('click', loadAccess);
+  document.querySelector('[data-page="access"]').addEventListener('click', loadAccess);
+
+  async function loadAuditLogs() {
+    const list = document.getElementById('logList');
+    try {
+      const result = await api('/api/logs');
+      list.replaceChildren();
+      if (!result.logs.length) {
+        list.append(Object.assign(document.createElement('div'), { className: 'empty', textContent: 'No events yet.' }));
+        return;
+      }
+      result.logs.forEach(log => {
+        const item = document.createElement('div');
+        item.className = 'logitem';
+        const body = document.createElement('div');
+        body.style.flex = '1';
+        const title = document.createElement('b');
+        title.textContent = log.action + (log.bot_id ? ' · ' + log.bot_id : '');
+        const sub = document.createElement('div');
+        sub.className = 'muted';
+        sub.textContent = (log.actor_username || log.actor_discord_id) + ' · ' + (log.guild_id || 'no server') + ' · ' + new Date(log.created_at).toLocaleString();
+        body.append(title, sub);
+        item.append(body);
+        list.append(item);
+      });
+    } catch (error) { toast(error.message); }
+  }
+  document.querySelector('[data-page="logs"]').addEventListener('click', loadAuditLogs);
+  function applicationRow(item, ownerView = false) {
+    const row=document.createElement('div'); row.className='application-row';
+    const avatar=document.createElement('img'); avatar.className='application-avatar'; avatar.alt=''; avatar.src=item.avatar_url || 'https://cdn.discordapp.com/embed/avatars/0.png';
+    const info=document.createElement('div'); info.className='application-info';
+    const title=document.createElement('b'); title.textContent=item.bot_name;
+    const meta=document.createElement('div'); meta.className='application-meta'; meta.textContent='By '+(item.applicant_username||item.applicant_discord_id)+' · Bot ID: '+item.bot_discord_id;
+    const status=document.createElement('div'); status.className='application-status'; status.textContent=item.status;
+    const desc=document.createElement('div'); desc.className='application-meta'; desc.textContent=item.description;
+    info.append(title,meta,status,desc);
+    const actions=document.createElement('div'); actions.className='application-actions';
+    const invite=document.createElement('a'); invite.className='btn small'; invite.textContent='Invite'; invite.href=item.invite_url; invite.target='_blank'; invite.rel='noopener noreferrer'; actions.append(invite);
+    if(item.support_url){const support=document.createElement('a');support.className='btn small';support.textContent='Support';support.href=item.support_url;support.target='_blank';support.rel='noopener noreferrer';actions.append(support);}
+    if(ownerView && item.status==='pending'){
+      for(const pair of [['approved','Approve'],['rejected','Reject']]){
+        const button=document.createElement('button');button.className='btn small'+(pair[0]==='approved'?' primary':'');button.textContent=pair[1];
+        button.addEventListener('click',async()=>{button.disabled=true;try{await api('/api/bot-applications/'+encodeURIComponent(item.id),{method:'PATCH',body:JSON.stringify({status:pair[0]})});await loadApplications();toast('Application '+pair[0]+'.');}catch(error){button.disabled=false;toast(error.message);}});
+        actions.append(button);
+      }
+    }
+    row.append(avatar,info,actions);return row;
+  }
+  async function loadApplications(){
+    const mine=document.getElementById('myApplications'),all=document.getElementById('allApplications');
+    try{
+      const own=await api('/api/bot-applications/mine');mine.replaceChildren();
+      if(!own.applications.length)mine.append(Object.assign(document.createElement('div'),{className:'empty',textContent:'You have not submitted any applications yet.'}));
+      else own.applications.forEach(item=>mine.append(applicationRow(item)));
+      try{const review=await api('/api/bot-applications');document.getElementById('reviewApplicationsWrap').hidden=false;all.replaceChildren();if(!review.applications.length)all.append(Object.assign(document.createElement('div'),{className:'empty',textContent:'No applications to review.'}));else review.applications.forEach(item=>all.append(applicationRow(item,true)));}catch{document.getElementById('reviewApplicationsWrap').hidden=true;}
+    }catch(error){mine.replaceChildren(Object.assign(document.createElement('div'),{className:'empty',textContent:error.message}));}
+  }
+  document.getElementById('submitBotApplication').addEventListener('click',async()=>{
+    const button=document.getElementById('submitBotApplication');button.disabled=true;
+    const payload={bot_name:document.getElementById('appBotName').value.trim(),bot_discord_id:document.getElementById('appBotId').value.trim(),invite_url:document.getElementById('appInvite').value.trim(),avatar_url:document.getElementById('appAvatar').value.trim(),support_url:document.getElementById('appSupport').value.trim(),description:document.getElementById('appDescription').value.trim()};
+    try{await api('/api/bot-applications',{method:'POST',body:JSON.stringify(payload)});['appBotName','appBotId','appInvite','appAvatar','appSupport','appDescription'].forEach(id=>document.getElementById(id).value='');toast('Application submitted for review.');await loadApplications();}catch(error){toast(error.message);}finally{button.disabled=false;}
+  });
+  document.querySelector('[data-page="applications"]').addEventListener('click',loadApplications);
+
+  const configNotice = document.getElementById('botConfigNotice');
+  const guildSelect = document.getElementById('botGuildSelect');
+  const configEditor = document.getElementById('configEditor');
+  let selectedGuildId = '';
+  let selectedBotId = '';
+  let currentManifest = null;
+  let currentConfig = {};
+
+  async function renderBotConfig(config, manifest) {
+    currentManifest = manifest;
+    currentConfig = config || {};
+    configEditor.replaceChildren();
+    let availableChannels = [];
+    try {
+      const channelResult = await api('/api/bots/' + encodeURIComponent(selectedBotId) + '/channels?guild_id=' + encodeURIComponent(selectedGuildId));
+      availableChannels = channelResult.channels || [];
+    } catch (error) {
+      configNotice.textContent = 'Could not load channel list: ' + error.message;
+    }
+    (manifest.sections || []).forEach(section => {
+      const card = document.createElement('div');
+      card.className = 'card configbox';
+      const heading = document.createElement('h3');
+      heading.textContent = section.title || section.id || 'Settings';
+      card.append(heading);
+      (section.fields || []).forEach(field => {
+        const id = 'cfg-' + field.key;
+        const label = document.createElement('label');
+        label.htmlFor = id;
+        label.textContent = field.label || field.key;
+        const type = field.type || 'text';
+        let control;
+        if (type === 'boolean') {
+          const line = document.createElement('div');
+          line.className = 'toggleline';
+          const caption = document.createElement('span');
+          caption.textContent = field.label || field.key;
+          control = document.createElement('input');
+          control.type = 'checkbox';
+          control.className = 'toggle';
+          control.checked = !!currentConfig[field.key];
+          control.dataset.configKey = field.key;
+          control.dataset.configType = type;
+          line.append(caption, control);
+          card.append(line);
+          return;
+        }
+        if (type === 'channel_id' || type === 'channel_id_list') {
+          control = document.createElement('select');
+          control.className = 'channel-picker';
+          control.multiple = type === 'channel_id_list';
+          control.size = control.multiple ? Math.min(7, Math.max(4, availableChannels.length)) : 1;
+          const selected = control.multiple
+            ? (Array.isArray(currentConfig[field.key]) ? currentConfig[field.key].map(String) : [])
+            : [String(currentConfig[field.key] ?? '')];
+          if (!control.multiple) control.add(new Option('— Not selected —', ''));
+          availableChannels.forEach(channel => {
+            const option = new Option('# ' + channel.name + (channel.category ? ' · ' + channel.category : ''), channel.id);
+            option.selected = selected.includes(String(channel.id));
+            control.add(option);
+          });
+          if (!availableChannels.length) control.add(new Option('No text channels available', ''));
+        } else if (type === 'number' || type === 'discord_id' || type === 'text') {
+          control = document.createElement('input');
+          control.type = type === 'number' ? 'number' : 'text';
+          if (type === 'discord_id') control.inputMode = 'numeric';
+          if (field.min !== undefined) control.min = field.min;
+          if (field.max !== undefined) control.max = field.max;
+          control.value = currentConfig[field.key] ?? field.default ?? '';
+          control.placeholder = field.placeholder || '';
+        } else {
+          control = document.createElement('textarea');
+          if (type === 'json') {
+            control.spellcheck = false;
+            control.value = JSON.stringify(currentConfig[field.key] ?? field.default ?? {}, null, 2);
+          } else {
+            const value = currentConfig[field.key] ?? field.default ?? [];
+            control.value = Array.isArray(value) ? value.join(', ') : String(value);
+          }
+          control.placeholder = field.placeholder || '';
+        }
+        control.id = id;
+        control.dataset.configKey = field.key;
+        control.dataset.configType = type;
+        card.append(label, control);
+        if (type === 'channel_id_list') {
+          const hint = document.createElement('div');
+          hint.className = 'channel-hint';
+          hint.textContent = 'Select multiple channels. Hold Ctrl or Cmd while clicking to choose more than one.';
+          card.append(hint);
+        }
+        if (field.help) {
+          const hint = document.createElement('div');
+          hint.className = 'confighint';
+          hint.textContent = field.help;
+          card.append(hint);
+        }
+      });
+      configEditor.append(card);
+    });
+  }
+
+  function collectBotConfig() {
+    if (!currentManifest) throw new Error('The bot settings schema has not been loaded.');
+    const payload = {};
+    configEditor.querySelectorAll('[data-config-key]').forEach(control => {
+      const key = control.dataset.configKey;
+      const type = control.dataset.configType;
+      if (type === 'channel_id') payload[key] = control.value || null;
+      else if (type === 'channel_id_list') payload[key] = Array.from(control.selectedOptions).map(option => option.value).filter(Boolean);
+      else if (type === 'boolean') payload[key] = control.checked;
+      else if (type === 'number') {
+        const value = Number(control.value);
+        if (!Number.isFinite(value)) throw new Error('Field “' + key + '” must be a number.');
+        payload[key] = value;
+      } else if (type === 'discord_id') {
+        const value = control.value.trim();
+        if (value && !/^[0-9]{15,22}$/.test(value)) throw new Error('Field “' + key + '”: enter a Discord ID containing 15–22 digits.');
+        payload[key] = value || null;
+      } else if (type === 'id_list') {
+        const values = control.value.split(',').map(value => value.trim()).filter(Boolean);
+        if (values.some(value => !/^[0-9]{15,22}$/.test(value))) throw new Error('Field “' + key + '”: each ID must contain 15–22 digits.');
+        payload[key] = values;
+      } else if (type === 'string_list') {
+        payload[key] = control.value.split(',').map(value => value.trim()).filter(Boolean);
+      } else if (type === 'json') {
+        try { payload[key] = JSON.parse(control.value || '{}'); }
+        catch { throw new Error('Field “' + key + '” must contain valid JSON.'); }
+      } else payload[key] = control.value;
+    });
+    return payload;
+  }
+  async function loadGuilds() {
+    guildSelect.replaceChildren(new Option('Loading servers…', ''));
+    try {
+      selectedBotId = document.getElementById('botSelect').value;
+      if (!selectedBotId) throw new Error('No available bots.');
+      const result = await api('/api/bots/' + encodeURIComponent(selectedBotId) + '/guilds');
+      guildSelect.replaceChildren();
+      if (!result.guilds.length) {
+        guildSelect.add(new Option('No servers available with Administrator permission', ''));
+        selectedGuildId = '';
+        return;
+      }
+      result.guilds.forEach(guild => guildSelect.add(new Option(guild.name, guild.id)));
+      selectedGuildId = guildSelect.value;
+      await loadBotConfig();
+    } catch (error) {
+      guildSelect.replaceChildren(new Option('Bot API unavailable', ''));
+      configNotice.textContent = 'Could not load the server list.\n\n' + error.message;
       toast(error.message);
     }
   }
-  function parseDiscordIds(value, fieldName) {
-    const values = textToList(value);
-    if (values.some(x => !/^[0-9]{15,22}$/.test(x))) throw new Error(fieldName + ': каждый ID должен содержать 15–22 цифры.');
-    return values;
+  async function loadBotConfig() {
+    selectedGuildId = guildSelect.value;
+    if (!selectedGuildId) {
+      configNotice.textContent = 'Choose a Discord server where the bot is installed first.';
+      return;
+    }
+    configNotice.textContent = 'Loading settings for the selected server…';
+    try {
+      const [manifestResult, configResult] = await Promise.all([
+        api('/api/bots/' + encodeURIComponent(selectedBotId) + '/manifest'),
+        api('/api/bots/' + encodeURIComponent(selectedBotId) + '/config?guild_id=' + encodeURIComponent(selectedGuildId))
+      ]);
+      await renderBotConfig(configResult.config, manifestResult.manifest);
+      setConfigDirty(false);
+      configNotice.textContent = 'Settings for server "' + guildSelect.selectedOptions[0].textContent + '" loaded using bot schema "' + (manifestResult.manifest.name || selectedBotId) + '».';
+    } catch (error) {
+      configNotice.textContent = 'Could not load settings.\n\n' + error.message;
+      toast(error.message);
+    }
   }
+  function setConfigDirty(dirty) { document.getElementById('saveBotConfig').hidden = !dirty; }
+  configEditor.addEventListener('input', () => setConfigDirty(true));
+  configEditor.addEventListener('change', () => setConfigDirty(true));
   async function saveBotConfig() {
     try {
-      const keywords = JSON.parse(configFields.keywords.value || '{}');
-      if (!keywords || Array.isArray(keywords) || typeof keywords !== 'object') throw new Error('Ключевые фразы должны быть JSON-объектом.');
-      const payload = {
-        monitoring_enabled: configFields.monitoring.checked,
-        rules_channel_id: configFields.rules.value.trim() || null,
-        violations_channel_id: configFields.reports.value.trim() || null,
-        spam_limit: Number(configFields.spamLimit.value),
-        spam_window_seconds: Number(configFields.spamWindow.value),
-        restricted_channel_ids: parseDiscordIds(configFields.restricted.value, 'Ограниченные каналы'),
-        exempt_role_ids: parseDiscordIds(configFields.exempt.value, 'Исключённые роли'),
-        owner_user_ids: parseDiscordIds(configFields.owners.value, 'Владельцы'),
-        forbidden_words: textToList(configFields.words.value),
-        review_keywords: keywords
-      };
-      for (const key of ['rules_channel_id','violations_channel_id']) {
-        if (payload[key] !== null && !/^[0-9]{15,22}$/.test(payload[key])) throw new Error('ID каналов должен содержать 15–22 цифры.');
-      }
-      const result = await api('/api/bots/ivynx/config', { method: 'PUT', body: JSON.stringify(payload) });
-      showBotConfig(result.config);
-      configNotice.textContent = result.message || 'Настройки применены.';
-      toast('Настройки сохранены и применены ботом.');
+      if (!selectedGuildId || !selectedBotId) throw new Error('Choose a bot and a Discord server.');
+      const payload = collectBotConfig();
+      payload._publish_rules = true;
+      const result = await api('/api/bots/' + encodeURIComponent(selectedBotId) + '/config?guild_id=' + encodeURIComponent(selectedGuildId), { method: 'PUT', body: JSON.stringify(payload) });
+      await renderBotConfig(result.config, currentManifest);
+      setConfigDirty(false);
+      configNotice.textContent = 'Settings saved. Rules published to the selected rules channel. Message monitoring uses the saved configuration.';
+      toast('Saved & applied. Rules published.');
     } catch (error) {
-      configNotice.textContent = error.message;
+      configNotice.textContent = 'Could not save settings.\n\n' + error.message;
       toast(error.message);
     }
   }
   document.getElementById('loadBotConfig').addEventListener('click', loadBotConfig);
+  document.getElementById('botSelect').addEventListener('change', loadGuilds);
+  document.getElementById('loadGuilds').addEventListener('click', loadGuilds);
+  guildSelect.addEventListener('change', loadBotConfig);
   document.getElementById('reloadBotConfig').addEventListener('click', loadBotConfig);
   document.getElementById('saveBotConfig').addEventListener('click', saveBotConfig);
-  document.querySelector('[data-page="botconfig"]').addEventListener('click', loadBotConfig);
-
-  const voidJson = document.getElementById('voidJson');
-  const voidNotice = document.getElementById('voidNotice');
-  async function loadVoidConfig() {
-    voidNotice.textContent = 'Загружаю конфигурацию VOID…';
-    try {
-      const result = await api('/api/bots/void/config');
-      voidJson.value = JSON.stringify(result.config, null, 2);
-      voidNotice.textContent = 'VOID подключён. Конфигурация загружена.';
-    } catch (error) {
-      voidNotice.textContent = error.message + ' Проверь BOT_SERVICES, controlUrl и общий секрет на Render.';
-    }
-  }
-  async function saveVoidConfig() {
-    try {
-      const payload = JSON.parse(voidJson.value);
-      if (!payload || typeof payload !== 'object' || Array.isArray(payload)) throw new Error('Нужен JSON-объект.');
-      const result = await api('/api/bots/void/config', { method: 'PUT', body: JSON.stringify(payload) });
-      voidJson.value = JSON.stringify(result.config, null, 2);
-      voidNotice.textContent = 'Изменения сохранены в VOID.';
-      toast('VOID обновлён.');
-    } catch (error) {
-      voidNotice.textContent = error.message;
-      toast(error.message);
-    }
-  }
-  document.getElementById('voidLoad').addEventListener('click', loadVoidConfig);
-  document.getElementById('voidSave').addEventListener('click', saveVoidConfig);
-  document.getElementById('voidPublish').addEventListener('click', () => {
-    toast('Сначала сохрани изменения, затем используй /void publish rules, requirements, checks, roster или boosts в Discord.');
-  });
-  document.querySelector('[data-page="voidmanager"]').addEventListener('click', loadVoidConfig);
+  document.querySelector('[data-page="botconfig"]').addEventListener('click', loadGuilds);
 
   api('/api/auth/me').then(result => {
-    if (result.authenticated) loadBots();
-    else showLogin();
+    if (result.authenticated) {
+      hideLogin();
+      const owner = !!result.user?.isOwner;
+      document.getElementById('navAccess').hidden = true;
+      document.getElementById('navLogs').hidden = !owner;
+      document.getElementById('botRegistryForm').hidden = !owner;
+      const profileName = document.querySelector('.sidebottom .profile b');
+      const profileMeta = document.querySelector('.sidebottom .profile .muted');
+      if (profileName) profileName.textContent = result.user?.globalName || result.user?.username || 'Discord user';
+      if (profileMeta) profileMeta.textContent = owner ? 'OWNER BotControl' : 'Discord Administrator';
+      document.querySelector('.shell').classList.add('wizard-mode');
+      showPage('bots');
+      loadBots();
+      // Access is automatic: Discord Administrator permission + bot membership.
+    } else showLogin();
   }).catch(showLogin);
 })();
 </script>
-
-<script>
-(() => {
-  const search = document.getElementById('botSearch');
-  if (!search) return;
-  const list = document.getElementById('botCards2');
-  const count = document.getElementById('botCount');
-  const empty = document.getElementById('botEmpty');
-  function filterBots() {
-    const query = search.value.trim().toLocaleLowerCase();
-    const cards = [...list.querySelectorAll('.bot')];
-    let visible = 0;
-    cards.forEach(card => {
-      const match = card.textContent.toLocaleLowerCase().includes(query);
-      card.hidden = !match;
-      if (match) visible++;
-    });
-    count.textContent = query ? visible + ' из ' + cards.length + ' ботов' : cards.length + ' ботов';
-    empty.hidden = visible !== 0;
-  }
-  search.addEventListener('input', filterBots);
-  const observer = new MutationObserver(filterBots);
-  observer.observe(list, {childList:true,subtree:true});
-  document.addEventListener('keydown', event => {
-    if (event.key === 'Escape') {
-      const modal = document.getElementById('modal');
-      if (modal?.classList.contains('show')) modal.classList.remove('show');
-    }
-  });
-  filterBots();
-})();
-</script>
-
 </body>
 </html>

@@ -1,30 +1,19 @@
 # BotControl
 
-Private dashboard for managing Discord bot hosting services.
+Private Discord bot management dashboard. BotControl runs as a Node.js web service on Render and keeps bot tokens, Render credentials, OAuth secrets, and Supabase service credentials on the server.
 
-## Current status
+## Current implementation
 
-- Responsive dashboard UI with owner login.
-- Node.js/Express backend with signed HTTP-only sessions.
-- Owner-only API to inspect configured Render services and request a restart.
-- Render credentials and owner password are read only from server environment variables.
-- The API allowlists service IDs through `BOT_SERVICES`.
+- Discord OAuth2 sign-in with `identify guilds` scopes.
+- Automatic access: a user can manage a bot on a Discord server only when they own that server or have the Discord `Administrator` permission and the bot is a member of that same server.
+- Discord server permissions are checked by the backend on guild listing and every settings read/write request.
+- The Discord OAuth access token is encrypted in the signed, HTTP-only session cookie and is never returned to browser JavaScript.
+- Owner-only bot registry, Render restart controls, and audit logs.
+- Supabase-backed bot registry, per-guild settings, user profiles, and audit events.
+- Authenticated bot control API using a shared secret.
+- IvynX guild discovery and guild-specific settings.
+- Dynamic settings editor driven by each bot's manifest.
 
-See [BACKEND.md](BACKEND.md) for setup and deployment instructions.
+## Important
 
-## Run locally
-
-Requires Node.js 20+.
-
-```bash
-npm install
-cp .env.example .env
-# Fill in local environment values; never commit .env.
-npm start
-```
-
-## Deploy
-
-The repository includes `render.yaml` for a Render Blueprint. You must still create/deploy the service and set the secret environment values in Render.
-
-**Important:** The dashboard reports Render service status, not Discord Gateway presence. Live Discord metrics and application log streaming are not implemented yet.
+This branch is a development build. It has not been production-tested. Run the Supabase SQL migration and configure the required Render environment variables before exposing it. Each bot must expose the documented control API endpoints. See [BACKEND.md](BACKEND.md) for setup and security details.

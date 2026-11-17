@@ -1,52 +1,91 @@
-# BotControl backend
+# BotControl backend setup
 
-This repository now includes a Node.js/Express backend. It serves the existing dashboard and exposes a small owner-only API.
+BotControl is a Node.js/Express web service. Users sign in through Discord OAuth2. Access to each bot's settings is based on current Discord server permissions, not manual invitations.
 
-## What is implemented
+## 1. Supabase database
 
-- Owner login using the server-side `OWNER_PASSWORD` secret.
-- Signed, HTTP-only, SameSite=Strict session cookie (12-hour lifetime).
-- Origin checks on state-changing requests.
-- Basic per-IP login attempt limiting.
-- `GET /api/health` health check.
-- `GET /api/auth/me`, `POST /api/auth/login`, `POST /api/auth/logout`.
-- `GET /api/bots` reads configured Render services.
-- `POST /api/bots/:id/restart` restarts only a service explicitly listed in `BOT_SERVICES`.
-- `GET /api/bots/:id/config` reads the bot configuration through its authenticated control API.
-- `PUT /api/bots/:id/config` validates and applies live configuration changes without restarting the bot.
+Open the Supabase SQL Editor and run `supabase/schema.sql`.
 
-## Configure on Render
+The schema creates:
+- `botcontrol_users`: Discord profiles.
+- `botcontrol_bots`: bots registered through the owner dashboard (existing `BOT_SERVICES` entries remain supported).
+- `botcontrol_guild_configs`: per-server bot settings.
+- `botcontrol_audit`: owner-visible audit events.
+- `botcontrol_access`: retained for compatibility with earlier builds; it is no longer used to authorize dashboard access.
 
-1. Create a new **Web Service** from this GitHub repository.
-2. Runtime: Node. Build command: `npm install`. Start command: `npm start`.
-3. Add environment variables in Render:
-   - `OWNER_PASSWORD`: a long, unique dashboard password.
-   - `SESSION_SECRET`: a random secret with at least 32 bytes.
-   - `RENDER_API_TOKEN`: a Render API key. Keep it only in Render's secret environment settings.
-   - `BOTCONTROL_SHARED_SECRET`: a long random secret; set the same value in BotControl and the IvynX bot service.
-   - `BOT_SERVICES`: JSON array containing the Render service ID and bot service base URL:
-     `[{"id":"ivynx","name":"Kingdom of IvynX","renderServiceId":"srv-dbssmff3r2c73b9d05g","controlUrl":"https://ivynx.onrender.com"}]`
-4. Do not put bot tokens, Render API keys, or passwords in `index.html`, browser JavaScript, or GitHub.
-5. Open the service URL after deployment.
+Row Level Security is enabled with no public policies. BotControl accesses these tables only from its backend using the Supabase service-role key. Never put that key in browser code or GitHub.
 
-You can also deploy the included `render.yaml` Blueprint. It deliberately leaves secret values for you to enter.
+## 2. Discord OAuth2
 
-## Important limitations
+In the Discord Developer Portal, create or select the OAuth2 application for BotControl.
 
-- The API reports **Render host/service status**, not Discord Gateway presence. A running web service does not prove that the Discord bot is connected.
-- The dashboard includes an owner-only live settings editor for the IvynX bot. It requires the bot API deployment and matching shared secret.
-- Live application logs and Discord guild/member/latency metrics are not implemented yet.
-- The IvynX service must deploy the matching control API and have `BOTCONTROL_SHARED_SECRET` set to the exact same value. Its `config.json` is stored on the bot service filesystem; configure persistent storage on that service if the host filesystem is ephemeral, otherwise config changes may be lost after a redeploy/restart.
-- Restart is a real action against Render once a valid API key and service ID are configured. The API only permits IDs in the server-side allowlist.
-- Render API keys are powerful secrets. Use a dedicated key if possible and revoke it if exposed.
+Add this exact redirect URI:
 
-## Local development
+`https://YOUR-BOTCONTROL.onrender.com/auth/discord/callback`
 
-```bash
-npm install
-cp .env.example .env
-# Edit .env with local test values; never commit it.
-npm start
-```
+OAuth scopes required:
+- `identify`
+- `guilds`
 
-Node.js 20 or newer is required.
+Set these Render environment variables:
+- `DISCORD_CLIENT_ID`
+- `DISCORD_CLIENT_SECRET`
+- `DISCORD_REDIRECT_URI` (must exactly match the Developer Portal redirect)
+- `BOTCONTROL_OWNER_DISCORD_ID` (your Discord user ID)
+- `SESSION_SECRET` (a long random value)
+
+Any Discord user can sign in. A user can see and configure a bot on a server only if:
+1. They own that Discord server or currently have the Discord `Administrator` permission there.
+2. The bot is currently a member of that same server.
+
+BotControl checks the Discord guild list through the user's OAuth token and intersects it with the bot's own `/control/guilds` response. The backend repeats this check for settings reads and writes. If the user loses Administrator permission or the bot leaves the server, access is denied.
+
+After changing OAuth scopes, users should sign out and sign in again so Discord issues a session with the `guilds` scope.
+
+## 3. Render secrets and bot registration
+
+Configure the BotControl Web Service from this repository:
+- Runtime: Node
+- Build: `npm install`
+- Start: `npm start`
+- Health check: `/api/health`
+
+Set:
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `RENDER_API_TOKEN`
+- `BOTCONTROL_SHARED_SECRET`
+- `BOT_SERVICES` as a JSON array, for example:
+  `[{"id":"ivynx","name":"Kingdom of IvynX","renderServiceId":"srv-REPLACE_ME","controlUrl":"https://ivynx.onrender.com"}]`
+
+Use the same `BOTCONTROL_SHARED_SECRET` value in the BotControl service and each bot service. Never commit real values.
+
+## 4. Bot control API
+
+Deploy the matching `botcontrol-v2-guild-settings` branch of each bot repository. Set `BOTCONTROL_SHARED_SECRET` on its Render service.
+
+Each bot must expose:
+- `GET /control/manifest`
+- `GET /control/guilds`
+- `GET /control/config?guild_id=DISCORD_SERVER_ID`
+- `PUT /control/config?guild_id=DISCORD_SERVER_ID`
+
+Every settings request requires a valid guild ID, and the bot must actually be a member of that server. Runtime configuration is stored separately by guild ID.
+
+For IvynX, the corresponding routes are present on the `botcontrol-v2-guild-settings` branch. The Render service must deploy that branch; the older `main` branch does not expose all required routes.
+
+## 5. Permissions and security
+
+- BotControl does not require an owner to manually add Discord IDs for normal settings access.
+- Discord server ownership or the `Administrator` permission (permission bit `0x8`) is required.
+- Bot membership in the same server is required.
+- Permission checks happen on the server for every guild listing and settings read/write request.
+- OAuth access tokens are encrypted with AES-256-GCM before being placed in the signed HTTP-only session cookie; they are not exposed to browser JavaScript.
+- Session cookies are HTTP-only, Secure in production, and expire after 12 hours.
+- Only the BotControl owner can register/remove bots, view audit logs, or restart Render services.
+- Render service IDs are allowlisted through `BOT_SERVICES`.
+- Bot-to-panel requests use a shared bearer secret.
+- Audit writes are best-effort; if Supabase is unavailable, an action may complete without its audit event being stored.
+- Render host status is not proof that the Discord Gateway connection is healthy.
+
+This branch still needs a successful deployment and end-to-end testing with a non-owner Discord account before production use.
