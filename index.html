@@ -44,6 +44,7 @@
       <button data-page="logs"><span class="ico">≋</span>Журнал событий</button>
       <button data-page="settings"><span class="ico">⚙</span>Настройки</button>
       <button data-page="botconfig"><span class="ico">🛠</span>Настройки бота</button>
+      <button data-page="voidmanager"><span class="ico">◉</span>VOID Clan Manager</button>
     </nav>
     <div class="sidebottom"><div class="profile"><div class="avatar">K</div><div><b>Личный аккаунт</b><div class="muted" style="font-size:11px">Локальный предпросмотр</div></div></div></div>
   </aside>
@@ -114,6 +115,17 @@
         </div>
       </div>
       <div class="configactions"><button class="btn primary" id="saveBotConfig">Сохранить и применить</button><button class="btn" id="reloadBotConfig">Отменить изменения</button></div>
+    </section>
+    <section class="page" id="voidmanager">
+      <header class="top"><div><div class="eyebrow">VOID Clan Manager</div><h1>Управление VOID</h1><p>Правила, требования, проверки, состав и привилегии бустеров.</p></div><button class="btn" id="voidLoad">↻ Загрузить</button></header>
+      <div class="notice" id="voidNotice">Подключи VOID в BOT_SERVICES на Render, чтобы редактировать данные бота.</div>
+      <div class="card configbox">
+        <h3>Настройки VOID</h3>
+        <p class="confighint">Редактируй JSON. Каналы указываются по Discord ID. В sections можно менять title, description и список items.</p>
+        <label for="voidJson">Конфигурация VOID</label>
+        <textarea id="voidJson" spellcheck="false" style="min-height:440px;font-family:ui-monospace,monospace"></textarea>
+        <div class="configactions"><button class="btn primary" id="voidSave">Сохранить в VOID</button><button class="btn" id="voidPublish">Как опубликовать</button></div>
+      </div>
     </section>
   </main>
 </div>
@@ -338,6 +350,38 @@
   document.getElementById('reloadBotConfig').addEventListener('click', loadBotConfig);
   document.getElementById('saveBotConfig').addEventListener('click', saveBotConfig);
   document.querySelector('[data-page="botconfig"]').addEventListener('click', loadBotConfig);
+
+  const voidJson = document.getElementById('voidJson');
+  const voidNotice = document.getElementById('voidNotice');
+  async function loadVoidConfig() {
+    voidNotice.textContent = 'Загружаю конфигурацию VOID…';
+    try {
+      const result = await api('/api/bots/void/config');
+      voidJson.value = JSON.stringify(result.config, null, 2);
+      voidNotice.textContent = 'VOID подключён. Конфигурация загружена.';
+    } catch (error) {
+      voidNotice.textContent = error.message + ' Проверь BOT_SERVICES, controlUrl и общий секрет на Render.';
+    }
+  }
+  async function saveVoidConfig() {
+    try {
+      const payload = JSON.parse(voidJson.value);
+      if (!payload || typeof payload !== 'object' || Array.isArray(payload)) throw new Error('Нужен JSON-объект.');
+      const result = await api('/api/bots/void/config', { method: 'PUT', body: JSON.stringify(payload) });
+      voidJson.value = JSON.stringify(result.config, null, 2);
+      voidNotice.textContent = 'Изменения сохранены в VOID.';
+      toast('VOID обновлён.');
+    } catch (error) {
+      voidNotice.textContent = error.message;
+      toast(error.message);
+    }
+  }
+  document.getElementById('voidLoad').addEventListener('click', loadVoidConfig);
+  document.getElementById('voidSave').addEventListener('click', saveVoidConfig);
+  document.getElementById('voidPublish').addEventListener('click', () => {
+    toast('Сначала сохрани изменения, затем используй /void publish rules, requirements, checks, roster или boosts в Discord.');
+  });
+  document.querySelector('[data-page="voidmanager"]').addEventListener('click', loadVoidConfig);
 
   api('/api/auth/me').then(result => {
     if (result.authenticated) loadBots();
