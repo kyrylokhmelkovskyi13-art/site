@@ -108,24 +108,19 @@
   }
 
 
+/* Additional component styles only; main branch appearance rules remain authoritative. */
+@media(max-width:850px){.nav{display:flex;overflow:auto}}
+@media(max-width:850px){.nav{gap:4px}}
+@media(max-width:850px){.nav{padding-bottom:2px;scrollbar-width:thin}}
+@media(max-width:520px){.topactions .btn{flex:1}
+.activityrow .time{grid-column:2}
+.botmetrics .metric{min-width:62px}}
 /* Functional page styles not present in main's original design. */
 .nav button[hidden]{display:none}
 @media(max-width:850px){.nav{display:flex;overflow:auto}}
-/* BotControl visual refresh */
-    :root{
-      color-scheme:dark;--bg:#090b12;--panel:#101521;--panel2:#151d2c;--line:#273247;
-      --muted:#93a0b7;--text:#f3f6fc;--purple:#9275ff;--cyan:#5ee0c1;
-      --red:#ff7188;--yellow:#f4c96c;--surface:#0d121d;
-    }
 .btn.primary:hover{filter:brightness(1.1);box-shadow:0 10px 28px #7656e955}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #a18aff;outline-offset:3px}
 @media(max-width:600px){.botactions .btn{flex:1}}
-/* Dashboard appearance pass — visual only; keep existing API and behavior intact */
-    :root{
-      --bg:#080a11;--panel:#101522;--panel2:#151d2c;--line:rgba(151,166,198,.16);
-      --muted:#8e9bb2;--text:#f3f5fb;--purple:#9b82ff;--cyan:#62dfc4;
-      --surface:#0d1320;
-    }
 @keyframes pageIn{from{opacity:.65;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 /* Fix boolean setting switches: generic config inputs must not stretch them. */
     .configbox input.toggle,
@@ -227,12 +222,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 @media(max-width:650px){.editor-context{align-items:stretch;flex-direction:column}
 .editor-picker{min-width:0}
 .editor-context>.btn{width:100%}}
-/* BotControl UI polish v2 — presentation only */
-    :root{
-      --bg:#111218;--panel:#171923;--panel2:#1d202c;--line:#2a2e3b;
-      --muted:#9299aa;--text:#f4f5f8;--purple:#3b82f6;--cyan:#55c9a5;
-      --surface:#151720;--red:#f07886;--yellow:#eab64f;
-    }
 .btn.primary:hover{background:#3475f5;border-color:#3475f5}
 .configbox input.toggle:checked{background:#2563eb}
 .editor-context{background:#191b25;border-color:#2b2e3a;border-radius:11px;padding:13px}
