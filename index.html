@@ -19,7 +19,94 @@
     .logout{margin-left:8px}
     .configgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.configbox{padding:18px}.configbox h3{margin:0 0 12px;font-size:14px}.configbox label{display:block;color:#aeb6ca;font-size:12px;margin:12px 0 5px}.configbox input,.configbox textarea{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:9px;background:#0d111c;color:white;font:inherit}.configbox textarea{min-height:90px;resize:vertical}.configbox .toggleline{display:flex;align-items:center;justify-content:space-between;margin:10px 0}.configactions{display:flex;gap:9px;margin:16px 0}.confighint{color:var(--muted);font-size:11px;margin-top:6px}
     @media(max-width:600px){.configgrid{grid-template-columns:1fr}}
-  </style>
+  
+  /* Ticketly-inspired visual refresh */
+  :root{--bg:#090b13;--panel:#101522;--panel2:#171e2e;--line:#252d43;--muted:#8d98b2;--text:#f4f5fb;--purple:#8b78ff;--cyan:#65dfd0}
+  body{background:radial-gradient(ellipse at 82% -12%,rgba(111,83,220,.24),transparent 34%),radial-gradient(ellipse at 4% 45%,rgba(48,108,166,.09),transparent 32%),var(--bg);letter-spacing:.01em}
+  .shell{grid-template-columns:264px minmax(0,1fr)}
+  .side{position:sticky;top:0;height:100vh;padding:28px 18px;background:rgba(11,14,24,.94);border-right:1px solid rgba(130,145,190,.14);backdrop-filter:blur(18px)}
+  .brand{padding:0 11px 34px;font-size:18px;letter-spacing:.35px}
+  .logo{width:39px;height:39px;border-radius:13px;background:linear-gradient(145deg,#9b8aff,#6045d8);box-shadow:0 8px 28px rgba(117,91,238,.32)}
+  .navlabel{padding:16px 12px 10px;color:#78829b;font-size:10px;font-weight:750}
+  .nav button{padding:12px 13px;border:1px solid transparent;color:#aab4ca;transition:background .18s,border-color .18s,transform .18s}
+  .nav button:hover{background:rgba(130,111,245,.10);border-color:rgba(145,126,255,.14);transform:translateX(2px)}
+  .nav button.active{background:linear-gradient(100deg,rgba(130,108,255,.22),rgba(130,108,255,.07));border-color:rgba(151,133,255,.2);color:#fff;box-shadow:inset 3px 0 #9b88ff}
+  .nav .ico{color:#a99aff}
+  .sidebottom{background:linear-gradient(145deg,#171d2d,#101522);border-color:rgba(135,149,190,.18);padding:15px}
+  .main{padding:34px clamp(20px,4vw,58px);max-width:1680px}
+  .top{margin-bottom:34px}
+  .eyebrow{font-size:10px;letter-spacing:2px;color:#aa9dff}
+  .top h1{font-size:clamp(25px,3vw,32px);font-weight:760;letter-spacing:-1px}
+  .top p{font-size:13px;color:#9aa5bd}
+  .btn{border-color:rgba(135,149,190,.2);background:#171e2d;transition:transform .16s,border-color .16s,filter .16s}
+  .btn:hover{border-color:#8876ee;transform:translateY(-1px);filter:brightness(1.08)}
+  .btn.primary{background:linear-gradient(135deg,#927eff,#674cdb);box-shadow:0 8px 24px rgba(111,82,226,.25)}
+  .stat,.card{background:linear-gradient(145deg,rgba(24,31,48,.96),rgba(15,20,32,.98));border-color:rgba(137,151,190,.17);box-shadow:0 12px 34px rgba(0,0,0,.12)}
+  .stat{padding:19px 20px;border-radius:17px;transition:transform .18s,border-color .18s}
+  .stat:hover,.bot:hover{transform:translateY(-2px);border-color:rgba(151,132,255,.38)}
+  .stathead{font-size:12px;color:#a4aec4}
+  .statnum{font-size:30px;letter-spacing:-1.2px}
+  .sectionhead{margin:31px 0 15px}
+  .sectionhead h2{font-size:16px;font-weight:720}
+  .bots{gap:16px}
+  .bot{padding:21px;border-radius:17px;transition:transform .18s,border-color .18s}
+  .botavatar{width:46px;height:46px;border:1px solid rgba(159,144,255,.18);background:linear-gradient(145deg,#39345f,#202943)}
+  .botname{font-size:15px}
+  .botdesc{line-height:1.65;color:#a5aec2}
+  .botmetrics{border-color:rgba(137,151,190,.15)}
+  .activity{border-radius:16px}
+  .activityrow{padding:15px 18px;border-color:rgba(137,151,190,.13)}
+  .eventicon{background:#222b43}
+  .notice{border-color:rgba(222,184,105,.25);background:rgba(61,47,24,.38);line-height:1.6}
+  .search,.modal input,.authbox input,.configbox input,.configbox textarea{background:#0c111d;border-color:rgba(137,151,190,.22)}
+  .search:focus,.modal input:focus,.authbox input:focus,.configbox input:focus,.configbox textarea:focus{outline:none;border-color:#8b78ff;box-shadow:0 0 0 3px rgba(139,120,255,.12)}
+  .setting,.configbox{border-radius:16px}
+  .modal,.authbox{border-color:rgba(151,132,255,.22);background:linear-gradient(145deg,#1a2031,#111725)}
+  .toast{box-shadow:0 14px 38px #0007}
+  @media(max-width:850px){.shell{grid-template-columns:1fr}.side{position:relative;height:auto;padding:13px 15px}.brand{padding:3px 8px 12px}.nav{gap:4px}.nav button.active{box-shadow:inset 0 -2px #9b88ff}.main{padding:24px 16px}}
+  @media(max-width:600px){.main{padding:20px 14px}.top h1{font-size:25px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat{padding:14px}.statnum{font-size:25px}.bot{padding:16px}}
+
+  
+  /* Product-level finishing */
+  html{scroll-behavior:smooth}
+  body{min-height:100vh}
+  .main{min-width:0}
+  .page{animation:page-in .22s ease both}
+  @keyframes page-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+  .nav button:focus-visible,.btn:focus-visible,.search:focus-visible{outline:2px solid #a99aff;outline-offset:3px}
+  .nav button{font-weight:560}
+  .nav button .ico{flex:0 0 18px}
+  .topactions{flex-wrap:wrap}
+  .stats .stat{min-width:0}
+  .statnum{font-variant-numeric:tabular-nums}
+  .bot{min-width:0}
+  .bothead{gap:10px}
+  .botidentity{min-width:0}
+  .botname{overflow-wrap:anywhere}
+  .status{white-space:nowrap}
+  .botactions{flex-wrap:wrap}
+  .toolbar{flex-wrap:wrap}
+  .toolbar .search{flex:1 1 260px}
+  .empty[hidden]{display:none}
+  .empty:not([hidden]){display:block}
+  .configactions{flex-wrap:wrap}
+  .notice{max-width:100%}
+  @media(max-width:850px){
+    .side{z-index:3}
+    .nav{padding-bottom:2px;scrollbar-width:thin}
+    .nav button{flex:0 0 auto}
+    .sidebottom{display:none}
+    .main{max-width:none}
+  }
+  @media(max-width:520px){
+    .topactions .btn{flex:1}
+    .activityrow{grid-template-columns:32px minmax(0,1fr);align-items:start}
+    .activityrow .time{grid-column:2}
+    .botmetrics{gap:14px;flex-wrap:wrap}
+    .botmetrics .metric{min-width:62px}
+  }
+
+</style>
 </head>
 <body>
 
@@ -46,28 +133,28 @@
       <button data-page="botconfig"><span class="ico">🛠</span>Настройки бота</button>
       <button data-page="voidmanager"><span class="ico">◉</span>VOID Clan Manager</button>
     </nav>
-    <div class="sidebottom"><div class="profile"><div class="avatar">K</div><div><b>Личный аккаунт</b><div class="muted" style="font-size:11px">Локальный предпросмотр</div></div></div></div>
+    <div class="sidebottom"><div class="profile"><div class="avatar">K</div><div><b>Личный аккаунт</b><div class="muted" style="font-size:11px">Владелец пространства</div></div></div></div>
   </aside>
   <main class="main">
     <section class="page active" id="overview">
-      <header class="top"><div><div class="eyebrow">Панель управления</div><h1>С возвращением 👋</h1><p>Всё состояние Discord-ботов в одном месте.</p></div><div class="topactions"><button class="btn" id="refresh">↻ Обновить</button><button class="btn logout" id="logout">Выйти</button><button class="btn primary" id="addBot">＋ Добавить бота</button></div></header>
+      <header class="top"><div><div class="eyebrow">Панель управления</div><h1>С возвращением 👋</h1><p>Управляй подключёнными сервисами и настройками из одного пространства.</p></div><div class="topactions"><button class="btn" id="refresh">↻ Обновить</button><button class="btn logout" id="logout">Выйти</button><button class="btn primary" id="addBot">＋ Добавить бота</button></div></header>
       <div class="stats">
         <div class="stat"><div class="stathead">Всего ботов <span>◈</span></div><div class="statnum" id="totalBots">1</div><div class="statfoot">В этом пространстве</div></div>
         <div class="stat"><div class="stathead">В сети <span style="color:var(--cyan)">●</span></div><div class="statnum" id="onlineBots">—</div><div class="statfoot">Нет подключения к API</div></div>
         <div class="stat"><div class="stathead">Ошибки <span style="color:var(--red)">!</span></div><div class="statnum">—</div><div class="statfoot">Ожидают интеграции</div></div>
         <div class="stat"><div class="stathead">Аптайм <span>◷</span></div><div class="statnum">—</div><div class="statfoot">Будет доступен после подключения</div></div>
       </div>
-      <div class="sectionhead"><h2>Твои Discord-боты</h2><span>Первое подключение</span></div>
+      <div class="sectionhead"><h2>Твои Discord-боты</h2><span>Состояние хостинга</span></div>
       <div class="bots" id="botCards">
         <article class="card bot"><div class="bothead"><div class="botidentity"><div class="botavatar">👑</div><div><div class="botname">Kingdom of IvynX</div><div class="botid">Python · Disnake · Render</div></div></div><span class="status off">Не подключён</span></div><div class="botdesc">Бот модерации и проверки сообщений. Подключение к панели ещё не настроено.</div><div class="botmetrics"><div class="metric"><b>—</b><span>Серверов</span></div><div class="metric"><b>—</b><span>Задержка</span></div><div class="metric"><b>—</b><span>Последний запуск</span></div></div><div class="botactions"><button class="btn small primary" data-action="connect">Настроить подключение</button><button class="btn small" data-action="details">Подробнее</button></div></article>
       </div>
-      <div class="notice">ⓘ Сейчас это интерфейс-предпросмотр. Статус, логи и управление станут реальными после подключения защищённого backend API. Никакие токены ботов здесь не запрашиваются.</div>
+      <div class="notice">ⓘ Сейчас это интерфейс-предпросмотр. Статус здесь отражает состояние хостинга Render, а не присутствие бота в Discord. Метрики Discord и поток логов пока не подключены. Никакие токены ботов здесь не запрашиваются.</div>
       <div class="sectionhead"><h2>Последние события</h2><span>Демо-данные</span></div>
       <div class="card activity"><div class="activityrow"><div class="eventicon">🔒</div><div><div class="eventtitle">Панель создана</div><div class="eventsub">Интерфейс готов к следующему этапу интеграции</div></div><span class="time">Сейчас</span></div><div class="activityrow"><div class="eventicon">🤖</div><div><div class="eventtitle">Kingdom of IvynX добавлен в список</div><div class="eventsub">Ожидает настройки безопасного подключения</div></div><span class="time">Сейчас</span></div></div>
     </section>
     <section class="page" id="bots">
       <header class="top"><div><div class="eyebrow">Управление</div><h1>Мои боты</h1><p>Добавляй и подключай Discord-ботов.</p></div><button class="btn primary" id="addBot2">＋ Добавить бота</button></header>
-      <div class="bots" id="botCards2"></div>
+      <div class="toolbar"><input class="search" id="botSearch" type="search" placeholder="Поиск по названию или хостингу…" aria-label="Поиск ботов"><span class="muted" id="botCount" aria-live="polite">Все боты</span></div><div class="bots" id="botCards2"></div><div class="empty" id="botEmpty" hidden>По этому запросу боты не найдены.</div>
       <div class="notice">Подключение требует серверной части. Секретные токены нельзя вставлять в HTML, JavaScript браузера или GitHub.</div>
     </section>
     <section class="page" id="logs">
@@ -389,5 +476,38 @@
   }).catch(showLogin);
 })();
 </script>
+
+<script>
+(() => {
+  const search = document.getElementById('botSearch');
+  if (!search) return;
+  const list = document.getElementById('botCards2');
+  const count = document.getElementById('botCount');
+  const empty = document.getElementById('botEmpty');
+  function filterBots() {
+    const query = search.value.trim().toLocaleLowerCase();
+    const cards = [...list.querySelectorAll('.bot')];
+    let visible = 0;
+    cards.forEach(card => {
+      const match = card.textContent.toLocaleLowerCase().includes(query);
+      card.hidden = !match;
+      if (match) visible++;
+    });
+    count.textContent = query ? visible + ' из ' + cards.length + ' ботов' : cards.length + ' ботов';
+    empty.hidden = visible !== 0;
+  }
+  search.addEventListener('input', filterBots);
+  const observer = new MutationObserver(filterBots);
+  observer.observe(list, {childList:true,subtree:true});
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      const modal = document.getElementById('modal');
+      if (modal?.classList.contains('show')) modal.classList.remove('show');
+    }
+  });
+  filterBots();
+})();
+</script>
+
 </body>
 </html>
